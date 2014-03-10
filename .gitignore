@@ -1,6 +1,24 @@
 *.class
+**~
 
 # Package Files #
 *.jar
 *.war
 *.ear
+
+# Maven
+target
+
+# Eclipse
+.classpath
+.metadata
+.project
+.settings
+
+# IntelliJ
+.idea
+*.iml
+
+configuration.properties
+configuration.properties.local
+configuration.properties.prod
