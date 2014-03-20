@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="identity.db">
+
+  <insert id="create_registration_nesiuser" parameterType="id.db.RegistrationNesiUser">
+    INSERT INTO
+    registration_nesiuser (
+      username,
+      token,
+      provider,
+      email
+    )
+    values (
+      #{tuakiriUniqueId},
+      #{tuakiriSharedToken},
+      #{identityProvider},
+      #{email}
+    )
+  </insert>
+</mapper>

@@ -1,0 +1,14 @@
+A new researcher requested an account on the Pan cluster.
+
+Name       : __NAME__
+Institution: __INSTITUTION__
+Division   : __DIVISION__
+Department : __DEPARTMENT__
+E-Mail     : __EMAIL__
+Phone      : __PHONE__
+DN         : __DN__
+
+The researcher has been added to the project database in status "Pending".
+
+Link to researcher profile in project database:
+__LINK__

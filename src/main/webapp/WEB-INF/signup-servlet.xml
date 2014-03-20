@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:context="http://www.springframework.org/schema/context"
+  xmlns:aop="http://www.springframework.org/schema/aop"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context-3.0.xsd
+           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
+
+  <context:component-scan base-package="signup.controller" />
+
+  <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+    <property name="locations">
+      <list>
+        <value>classpath:configuration.properties</value>
+      </list>
+    </property>
+  </bean>
+
+  <bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+    <property name="exceptionMappings">
+      <props>
+        <prop key="common.util.CustomException">customexception</prop>
+      </props>
+    </property>
+  </bean>
+
+  <bean id="accountRequestController" class="signup.controller.AccountRequestController">
+    <property name="defaultPictureUrl" value="${pm.researcher.default.picture}" />
+    <property name="tuakiriIdpUrlAttribName" value="${http.header.tuakiri.idpurl}" />
+    <property name="tuakiriUniqueIdAttribName" value="${http.header.tuakiri.uniqueid}" />
+    <property name="tuakiriSharedTokenAttribName" value="${http.header.tuakiri.sharedtoken}" />
+    <property name="cnAttribName" value="${http.header.cn}" />
+    <property name="researcherStatusId" value="${pm.researcher.initial.status.id}" />
+    <property name="adminUser" value="${pm.admin.remote.user}"/>
+    <property name="emailFrom" value="${selfservice.email.from}"/>
+    <property name="emailTo" value="${selfservice.email.to}"/>
+    <property name="emailSubject" value="${selfservice.accountrequest.email.subject}"/>
+    <property name="emailBodyResource" value="${selfservice.accountrequest.email.template}"/>
+    <property name="researcherBaseUrl" value="${pm.html.researcher.baseurl}"/>
+  </bean>
+  
+  <bean id="projectRequestController" class="signup.controller.ProjectRequestController">
+    <property name="adminUser" value="${pm.admin.remote.user}"/>
+    <property name="initialResearcherRoleOnProject" value="${pm.researcher.initial.role.on.project.id}"/>
+    <property name="emailFrom" value="${selfservice.email.from}"/>
+    <property name="emailTo" value="${selfservice.email.to}"/>
+    <property name="emailMembershipSubject" value="${selfservice.project.membership.request.email.subject}"/>
+    <property name="emailNewProjectSubject" value="${selfservice.project.creation.request.email.subject}"/>
+    <property name="emailBodyMembershipRequest" value="${selfservice.project.membership.request.email.template}"/>
+    <property name="emailBodyProjectRequestNoSuperviser" value="${selfservice.project.creation.request.no.superviser.email.template}"/>
+    <property name="emailBodyProjectRequestWithSuperviser" value="${selfservice.project.creation.request.with.superviser.email.template}"/>
+    <property name="researcherBaseUrl" value="${pm.html.researcher.baseurl}"/>
+    <property name="projectBaseUrl" value="${pm.html.project.baseurl}"/>
+  </bean>
+  
+  <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+    <property name="prefix" value="/WEB-INF/jsp/selfservice/" />
+    <property name="suffix" value=".jsp" />
+  </bean>
+
+  <bean id="slcs" class="signup.slcs.SLCS">
+    <property name="slcsMapUrl" value="${slcs.mapping.url}" />    
+  </bean>
+  
+  <bean id="SignupTestFilter" class="signup.filter.TestFilter">
+  </bean>
+
+</beans>

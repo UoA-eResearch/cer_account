@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:context="http://www.springframework.org/schema/context"
+  xmlns:mockito="http://www.mockito.org/spring/mockito"
+  xmlns:aop="http://www.springframework.org/schema/aop"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context-3.0.xsd
+           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+           http://www.mockito.org/spring/mockito https://bitbucket.org/kubek2k/springockito/raw/tip/springockito/src/main/resources/spring/mockito.xsd">
+
+  <context:component-scan base-package="signup.controller" />
+  <context:component-scan base-package="pm.db" />
+  <context:component-scan base-package="common.util" />
+
+  <bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+    <property name="exceptionMappings">
+      <props>
+        <prop key="common.util.CustomException">customexception</prop>
+      </props>
+    </property>
+  </bean>
+
+  <bean id="accountRequestController" class="signup.controller.AccountRequestController">
+    <property name="defaultPictureUrl" value="http://some/picture.png" />
+    <property name="tuakiriTokenAttribName" value="X-Proxy-TUAKIRI-TOKEN" />
+    <property name="idpUrlAttribName" value="X-Proxy-IDP-URL" />
+    <property name="accountRequestEmailNotificationFrom" value="from@test.org"/>
+    <property name="accountRequestEmailNotificationReplyTo" value="replyto@test.org"/>    
+    <property name="accountRequestEmailNotificationTo" value="to@test.org"/>
+    <property name="accountRequestEmailNotificationCc" value="cc@test.org"/>
+    <property name="accountRequestEmailNotificationSubject" value="test account request"/>
+    <property name="accountRequestEmailNotificationBodyResource" value="classpath:template_email.tpl"/>
+  </bean>
+  
+  <mockito:mock id="slcs" class="signup.slcs.SLCS" />
+  
+  <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+    <property name="prefix" value="/WEB-INF/jsp/signup/" />
+    <property name="suffix" value=".jsp" />
+  </bean>
+
+  <bean id="SignupTestFilter" class="signup.filter.TestFilter">
+  </bean>
+
+</beans>

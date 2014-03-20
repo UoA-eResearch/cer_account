@@ -1,0 +1,13 @@
+A researcher requested membership on a project.
+
+Researcher  : __RESEARCHER_NAME__
+Project     : __PROJECT_TITLE__
+Project code: __PROJECT_CODE__
+
+The researcher has been added to the project as a member in status "Pending".
+
+Link to project in project database:
+__PROJECT_LINK__
+
+Link to researcher profile in project database:
+__RESEARCHER_LINK__
