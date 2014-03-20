@@ -83,7 +83,8 @@ public class ProjectRequestController {
     }
     
     private Project createProject(HttpServletRequest request, ProjectRequest pr) throws Exception {
-		Project p = this.projectDao.createProject(pr, this.adminUser);
+    	String hostInstitution = (String) request.getSession().getAttribute("hostInstitution");
+		Project p = this.projectDao.createProject(pr, hostInstitution, this.adminUser);
     	return p;
     }
     

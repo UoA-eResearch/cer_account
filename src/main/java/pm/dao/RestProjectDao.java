@@ -85,7 +85,7 @@ public class RestProjectDao implements ProjectDao {
 	}
 
 	@Override
-	public Project createProject(ProjectRequest pr, String adminUser) throws Exception {
+	public Project createProject(ProjectRequest pr, String hostInstitution, String adminUser) throws Exception {
 		String url = baseUrl + "projects/";
 		Gson gson = new Gson();
 		JSONObject json = new JSONObject();
@@ -94,6 +94,9 @@ public class RestProjectDao implements ProjectDao {
 			ProjectFacility pf = new ProjectFacility(1);
 			p.setName(pr.getProjectTitle());
 			p.setDescription(pr.getProjectDescription());
+			if (hostInstitution != null) {
+				p.setHostInstitution(hostInstitution);
+			}
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_JSON);
 			headers.set("RemoteUser", adminUser);

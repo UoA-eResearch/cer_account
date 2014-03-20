@@ -9,7 +9,7 @@ public class Project {
 	private String statusName;
 	private String name;
 	private String description;
-	private String hostInstitution = "University of Auckland";
+	private String hostInstitution = "";
 	private String startDate = "";
 	private String nextReviewDate = "";
 	private String nextFollowUpDate = "";

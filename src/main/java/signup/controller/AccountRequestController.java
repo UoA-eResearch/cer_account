@@ -104,6 +104,7 @@ public class AccountRequestController {
 		    s.setAttribute("institutionalRoleId", requestAccount.getInstitutionalRoleId());
 		    s.setAttribute("researcherName", requestAccount.getFullName());
 		    s.setAttribute("researcherDatabaseId", researcherDatabaseId);
+		    s.setAttribute("hostInstitution", r.getInstitution());
 		} catch (Exception e) {
 			e.printStackTrace();
 			bResult.addError(new ObjectError(bResult.getObjectName(), "Internal Error: " + e.getMessage()));
