@@ -2,10 +2,10 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>nz.ac.auckland.eresearch</groupId>
-  <artifactId>cer_selfservice</artifactId>
+  <artifactId>cer_dashboard</artifactId>
   <version>0.1-SNAPSHOT</version>
   <name>CeR Dashboard</name>
-  <description>Prototype for the CeR dashboard where people can request cluster accounts, projects membership, etc<description>
+  <description>Prototype for the CeR dashboard where people can request cluster accounts, projects membership, etc</description>
   <packaging>war</packaging>
   <properties>
     <spring.version>3.2.4.RELEASE</spring.version>
