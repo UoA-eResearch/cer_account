@@ -4,15 +4,15 @@
   <groupId>nz.ac.auckland.eresearch</groupId>
   <artifactId>cer_selfservice</artifactId>
   <version>0.1-SNAPSHOT</version>
-  <name>CeR Self Service Web Interface</name>
-  <description>Prototype for the CeR self service interface</description>
+  <name>CeR Dashboard</name>
+  <description>Prototype for the CeR dashboard where people can request cluster accounts, projects membership, etc<description>
   <packaging>war</packaging>
   <properties>
     <spring.version>3.2.4.RELEASE</spring.version>
   </properties>
 
   <build>
-    <finalName>selfservice</finalName>
+    <finalName>dashboard</finalName>
     <plugins>
       <plugin>
         <groupId>org.mortbay.jetty</groupId>
@@ -20,7 +20,7 @@
         <configuration>
           <scanIntervalSeconds>10</scanIntervalSeconds>
           <webAppConfig>
-            <contextPath>/selfservice</contextPath>
+            <contextPath>/dashboard</contextPath>
           </webAppConfig>
         </configuration>
       </plugin>
