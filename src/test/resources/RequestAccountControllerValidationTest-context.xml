@@ -24,14 +24,12 @@
 
   <bean id="accountRequestController" class="signup.controller.AccountRequestController">
     <property name="defaultPictureUrl" value="http://some/picture.png" />
-    <property name="tuakiriTokenAttribName" value="X-Proxy-TUAKIRI-TOKEN" />
-    <property name="idpUrlAttribName" value="X-Proxy-IDP-URL" />
-    <property name="accountRequestEmailNotificationFrom" value="from@test.org"/>
-    <property name="accountRequestEmailNotificationReplyTo" value="replyto@test.org"/>    
-    <property name="accountRequestEmailNotificationTo" value="to@test.org"/>
-    <property name="accountRequestEmailNotificationCc" value="cc@test.org"/>
-    <property name="accountRequestEmailNotificationSubject" value="test account request"/>
-    <property name="accountRequestEmailNotificationBodyResource" value="classpath:template_email.tpl"/>
+    <property name="tuakiriSharedTokenAttribName" value="X-Proxy-TUAKIRI-TOKEN" />
+    <property name="tuakiriIdpUrlAttribName" value="X-Proxy-IDP-URL" />
+    <property name="emailFrom" value="from@test.org"/>
+    <property name="emailTo" value="to@test.org"/>
+    <property name="emailSubject" value="test account request"/>
+    <property name="emailBodyResource" value="classpath:template_email.tpl"/>
   </bean>
   
   <mockito:mock id="slcs" class="signup.slcs.SLCS" />
@@ -41,7 +39,8 @@
     <property name="suffix" value=".jsp" />
   </bean>
 
-  <bean id="SignupTestFilter" class="signup.filter.TestFilter">
-  </bean>
+  <bean id="SignupTestFilter" class="signup.filter.TestFilter" />
+
+  <bean id="accountRequestValidator" class="signup.validation.AccountRequestValidator" />
 
 </beans>

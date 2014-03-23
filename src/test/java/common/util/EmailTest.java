@@ -91,22 +91,6 @@ public class EmailTest {
 
 	@Test(expected = Exception.class)
 	/**
-	 * Verify that exception is thrown if cc is null
-	 */
-	public void testSendCcNull() throws Exception {
-		this.email.send(from, to, null, replyto, subject, body);
-	}
-
-	@Test(expected = Exception.class)
-	/**
-	 * Verify that exception is thrown if reply-to is null
-	 */
-	public void testSendReplyToNull() throws Exception {
-		this.email.send(from, to, cc, null, subject, body);
-	}
-
-	@Test(expected = Exception.class)
-	/**
 	 * Verify that exception is thrown if subject is null
 	 */
 	public void testSendSubjectNull() throws Exception {

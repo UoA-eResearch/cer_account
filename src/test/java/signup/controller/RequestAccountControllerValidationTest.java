@@ -10,6 +10,7 @@ import java.util.LinkedList;
 import static org.mockito.Mockito.*;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -50,7 +51,7 @@ public class RequestAccountControllerValidationTest {
 		  when(projectDaoMock.getInstitutionalRoles()).thenReturn(new InstitutionalRole[0]);
 		  when(affiliationUtilMock.getAffiliationStrings((Affiliation[]) anyObject())).thenReturn(new LinkedList<String>());
 	      this.mockMvc.perform(post("/requestaccount").param("institution", "Test Institution")
-	        .param("institutionalRoleId", "42").param("email", "test@test.org"))
+	        .param("institutionalRoleId", "42").param("email", "test@test.org").param("phone", "12345"))
 	        .andExpect(status().isMovedTemporarily())
 	        .andExpect(redirectedUrl("requestproject"))
 	        .andExpect(model().attributeHasNoErrors("requestaccount"));
@@ -62,10 +63,35 @@ public class RequestAccountControllerValidationTest {
 		  when(projectDaoMock.getInstitutionalRoles()).thenReturn(new InstitutionalRole[0]);
 		  when(affiliationUtilMock.getAffiliationStrings((Affiliation[]) anyObject())).thenReturn(new LinkedList<String>());
 	      this.mockMvc.perform(post("/requestaccount").param("institution", "Test Institution")
-	        .param("institutionalRoleId", "42"))
+	        .param("institutionalRoleId", "42").param("phone", "12345"))
 	        .andExpect(status().isOk())
 	        .andExpect(view().name("requestaccount"))
+	        .andExpect(model().attributeErrorCount("requestaccount", 1))
 	        .andExpect(model().attributeHasFieldErrors("requestaccount", "email"));
+	  }
+
+	  @Test
+	  public void postAccountRequestMissingInstitution() throws Exception {
+		  when(projectDaoMock.getInstitutionalRoles()).thenReturn(new InstitutionalRole[0]);
+		  when(affiliationUtilMock.getAffiliationStrings((Affiliation[]) anyObject())).thenReturn(new LinkedList<String>());
+	      this.mockMvc.perform(post("/requestaccount")
+	        .param("institutionalRoleId", "42").param("email", "test@test.org").param("phone", "12345"))
+	        .andExpect(status().isOk())
+	        .andExpect(view().name("requestaccount"))
+	        .andExpect(model().attributeErrorCount("requestaccount", 1))
+	        .andExpect(model().attributeHasFieldErrors("requestaccount", "institution"));
+	  }
+
+	  @Test
+	  public void postAccountRequestMissingInstitutionalRoleId() throws Exception {
+		  when(projectDaoMock.getInstitutionalRoles()).thenReturn(new InstitutionalRole[0]);
+		  when(affiliationUtilMock.getAffiliationStrings((Affiliation[]) anyObject())).thenReturn(new LinkedList<String>());
+	      this.mockMvc.perform(post("/requestaccount").param("institution", "Test Institution")
+	        .param("email", "test@test.org").param("phone", "12345"))
+	        .andExpect(status().isOk())
+	        .andExpect(view().name("requestaccount"))
+	        .andExpect(model().attributeErrorCount("requestaccount", 1))
+	        .andExpect(model().attributeHasFieldErrors("requestaccount", "institutionalRoleId"));
 	  }
 
 	  @Test
@@ -73,20 +99,11 @@ public class RequestAccountControllerValidationTest {
 		  when(projectDaoMock.getInstitutionalRoles()).thenReturn(new InstitutionalRole[0]);
 		  when(affiliationUtilMock.getAffiliationStrings((Affiliation[]) anyObject())).thenReturn(new LinkedList<String>());
 	      this.mockMvc.perform(post("/requestaccount").param("institution", "Test Institution")
-	        .param("institutionalRoleId", "42").param("email", "test"))
+	        .param("institutionalRoleId", "42").param("email", "test").param("phone", "12345"))
 	        .andExpect(status().isOk())
 	        .andExpect(view().name("requestaccount"))
+	        .andExpect(model().attributeErrorCount("requestaccount", 1))
 	        .andExpect(model().attributeHasFieldErrors("requestaccount", "email"));
 	  }
 
-	  @Test
-	  public void postAccountRequest() throws Exception {
-		  when(projectDaoMock.getInstitutionalRoles()).thenReturn(new InstitutionalRole[0]);
-		  when(affiliationUtilMock.getAffiliationStrings((Affiliation[]) anyObject())).thenReturn(new LinkedList<String>());
-	      this.mockMvc.perform(post("/requestaccount"))
-	        .andExpect(status().isOk())
-	        .andExpect(view().name("requestaccount"))
-	        .andExpect(model().attributeHasFieldErrors("requestaccount",
-	        	"institution", "institutionalRoleId", "email"));
-	  }
 }

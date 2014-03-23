@@ -15,5 +15,6 @@
   <mockito:mock id="projectDao" class="pm.dao.ProjectDao" />
   <mockito:mock id="affiliationUtil" class="pm.util.AffiliationUtil"/>
   <mockito:mock id="templateEmail" class="common.util.TemplateEmail" />
+  <mockito:mock id="identityDao" class="id.db.IdentityDao" />
 
 </beans>
