@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="nz.ac.auckland.cer.jobaudit.project">
+
+  <select id="getAdviserByTuakiriSharedToken" parameterType="java.lang.String" resultType="nz.ac.auckland.cer.project.pojo.Adviser">
+    SELECT *
+    FROM adviser 
+    WHERE id IN (
+      SELECT adviserId 
+      FROM adviser_properties
+      WHERE propname = 'tuakiriSharedToken' AND
+            propvalue = #{sharedToken}
+    )
+  </select>	
+
+  <select id="getResearcherByTuakiriSharedToken" parameterType="java.lang.String" resultType="nz.ac.auckland.cer.project.pojo.Researcher">
+    SELECT *
+    FROM researcher 
+    WHERE id IN (
+      SELECT researcherId 
+      FROM researcher_properties
+      WHERE propname = 'tuakiriSharedToken' AND
+            propvalue = #{sharedToken}
+    )
+  </select> 
+	
+</mapper>
