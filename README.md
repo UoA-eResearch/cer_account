@@ -1,5 +1,5 @@
-CeR Dashboard
-=============
+cer_account
+===========
 
-Customer-facing web interface of the Centre for eResearch, where researchers can sign up for a cluster account,
-request project membership, create a new project, etc
+Web-based interface to view and edit information about an existing account, and to request a new account on the Auckland NeSI cluster.
+
