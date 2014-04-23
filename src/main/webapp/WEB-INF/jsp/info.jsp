@@ -21,40 +21,58 @@
 
   <h2>Get started on the Auckland NeSI cluster (Pan) of the Centre for eResearch</h2>
 
-  <p>Getting started on the Auckland NeSI cluster involves the following 3 steps:</p>
+  <p>Getting started on the Auckland NeSI cluster involves the following steps:</p>
 
-  <table cellpadding="10">
+  <table cellpadding="15">
     <tbody>
       <tr>
-        <td valign="top"><img src="<%=request.getContextPath()%>/pics/create_account.png" /></td>
-        <td valign="top"><b>1. Request an account</b><br> Provide us with some basic information about
-          yourself.<br> A staff member of the Centre for eResearch will verify your request, and set up an account
-          for you.<br> Once the account has been created, you will receive a notification e-mail with basic
-          instructions on how to use the Auckland NeSI cluster.<br></td>
+        <td valign="top"><img src="<%=request.getContextPath()%>/pics/create_account.png"/></td>
+        <td valign="top">
+          <b>1. Request an account</b>
+          <p>
+            Provide some basic information about yourself.<br>
+            A staff member of the Centre for eResearch will verify your request, and set
+            up an account for you.
+          </p>
+        </td>
       </tr>
       <tr>
         <td valign="top"><img src="<%=request.getContextPath()%>/pics/create_project.png" /></td>
-        <td valign="top"><b>2. Tell us what you want to do</b><br> Provide us with some information about the
-          research project you want to use the cluster for.<br> You can either join a project which is already
-          registered with the Auckland NeSI cluster, or request a new project to be created.<br> A staff member of
-          the Centre for eResearch will set up access to the project directory on the cluster filesystem for you.<br>
-          Once the access has been set up, you will receive a notification e-mail with basic instructions on how to
-          access your project directory.<br></td>
+        <td valign="top">
+          <b>2. Tell us what you want to do and how the cluster can help with that</b>
+          <p>
+            Provide information about the research project you want to use the cluster for.<br/>
+            You can
+            <ul>
+              <li>Join a project which is already registered with the Centre for eResearch.</li>
+              <li>Request a new project to be created.</li>
+            </ul>
+            A staff member of the Centre for eResearch will set up access to the
+            project directory on the cluster filesystem for you.
+          </p>
+        </td>
       </tr>
+      <!--
       <tr>
         <td valign="top"><img src="<%=request.getContextPath()%>/pics/survey.png" /></td>
-        <td valign="top"><b>3. Tell us how the Auckland NeSI cluster can help with your research</b><br>
+        <td valign="top">
+          <b>3. Tell us how the Auckland NeSI cluster can help with your research</b><br>
           Please tell us what is limiting you.<br> 
-          You will be guided through a survey with a few questions about the computing environment
-          you are currently using.<br></td>
+          You will be guided through a survey with a few questions about the computing 
+          environment you are currently using.<br>
+        </td>
       </tr>
+      -->
     </tbody>
   </table>
 
-  <p>Once your account and project has been set up, you will be able to submit jobs on the Auckland NeSI cluster.</p>
+  <p>
+    Once your account and project have been set up, you will be able to submit jobs on the 
+    Auckland NeSI cluster.
+  </p>
 
   <p>
-    <b><a href="requestaccount">Start</a></b>
+    <b><a href="requestaccount">Get started</a></b>
   </p>
 
 </body>
