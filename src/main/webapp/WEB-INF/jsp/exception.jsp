@@ -7,10 +7,8 @@
   <meta charset="utf-8">
   <link rel="stylesheet" href="<%=request.getContextPath()%>/style/common.css" type="text/css"/>  
 </head>
+
 <body>
-
-<%@include file="includes/header.jsp" %>
-
   <div id="body">
   <br>
   <h2>An unknown error occured</h2>
@@ -18,4 +16,5 @@
   </div>
   
 </body>
+
 </html>
