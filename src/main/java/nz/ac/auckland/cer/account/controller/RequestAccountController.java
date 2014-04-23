@@ -25,7 +25,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.WebDataBinder;
@@ -56,7 +55,7 @@ public class RequestAccountController {
 	@Autowired private SLCS slcs;
 	
 	@RequestMapping(value = "info", method = RequestMethod.GET)
-	public String showAccountRequestInfo(ModelMap modelMap) throws Exception {
+	public String showAccountRequestInfo(HttpServletRequest request) throws Exception {
 		return "info";
 	}
 
@@ -68,12 +67,13 @@ public class RequestAccountController {
 		this.augmentModel(m);
 		AccountRequest ar = new AccountRequest();
 		ar.setFullName((String)request.getAttribute("cn"));
+		ar.setEmail((String)request.getAttribute("mail"));
 		m.addAttribute("requestaccount", ar);
 		return "requestaccount";
 	}
 
 	/**
-	 * Handle cluster account request form submission
+	 * Process cluster account request form submission
 	 */
 	@RequestMapping(value = "requestaccount", method = RequestMethod.POST)
 	public String processAccountRequestForm(Model m, @Valid @ModelAttribute("requestaccount") AccountRequest requestAccount,
@@ -95,7 +95,7 @@ public class RequestAccountController {
 		    s.setAttribute("researcherDatabaseId", researcherDatabaseId);
 		    s.setAttribute("hostInstitution", r.getInstitution());
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e);
 			bResult.addError(new ObjectError(bResult.getObjectName(), "Internal Error: " + e.getMessage()));
 			this.augmentModel(m);
 			return "requestaccount";
@@ -113,7 +113,7 @@ public class RequestAccountController {
 
 	/**
 	 * Fetch institutional roles and affiliations, and add them to the model.
-	 * If an error occurs, an error message is added to the model.
+	 * If an error occurs, add error message to the model.
 	 */
 	private void augmentModel(Model m) throws Exception {
 		InstitutionalRole[] ir = null;
@@ -125,11 +125,11 @@ public class RequestAccountController {
 		  ir = this.projectDatabaseDao.getInstitutionalRoles();
 		  if (ir == null || ir.length == 0) {
 			  throw new Exception();
-		  } else {
-			for (InstitutionalRole role : ir) {
+		  }
+		  for (InstitutionalRole role : ir) {
 			  institutionalRoles.put(role.getId(), role.getName());
-			}
  		  }
+		  m.addAttribute("institutionalRoles", institutionalRoles);
 		} catch (Exception e) {
 			errorMessage += "Internal Error: Failed to load institutional roles. ";
 		}
@@ -139,6 +139,7 @@ public class RequestAccountController {
 		  if (af == null || af.length == 0) {
 			  throw new Exception();
 		  }
+		  m.addAttribute("affiliations", this.affiliationUtil.getAffiliationStrings(af));
 		} catch (Exception e) {
 			errorMessage += "Internal Error: Failed to load affiliations. ";
 		}
@@ -146,8 +147,6 @@ public class RequestAccountController {
 		if (errorMessage.trim().length() > 0) {
 			m.addAttribute("unexpected_error", errorMessage);
 		}
-		m.addAttribute("institutionalRoles", institutionalRoles);
-		m.addAttribute("affiliations", this.affiliationUtil.getAffiliationStrings(af));
 	}
 
 	/**
