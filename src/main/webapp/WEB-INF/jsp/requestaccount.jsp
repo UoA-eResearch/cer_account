@@ -11,8 +11,6 @@
 <link rel="stylesheet" href="<%=request.getContextPath()%>/style/common.css" type="text/css" />
 <link rel="stylesheet" href="<%=request.getContextPath()%>/style/jquery-ui.css" type="text/css" />
 <script type="text/javascript">
-  function beforeSubmit() {
-  }
 
   $(document).ready(function() {
 
@@ -64,7 +62,7 @@
 
 <body>
 
-  <form:form method="POST" commandName="requestaccount" onsubmit="beforeSubmit()" action='requestaccount'>
+  <form:form method="POST" commandName="requestaccount" action='requestaccount'>
 
     <!-- Applicants information -->
 
@@ -83,7 +81,7 @@
             <table cellpadding="5">
               <tbody>
                 <tr>
-                  <td>Full name (from Tuakiri):</td>
+                  <td>Full name:</td>
                   <td><form:input id="fullname" path="fullName" value="${requestaccount.fullName}" readonly="true"/></td>
                 </tr>
                 <tr>
@@ -96,8 +94,10 @@
                     <form:select path="institution">
                       <form:option value="" label="Please Select" />
                       <form:options items="${affiliations}" />
-                    </form:select><br>
-                    (If your institution/division/department is not listed, please choose "Other")
+                    </form:select>
+                    <p>
+                     If your institution/division/department is not listed, please choose "Other" and specify
+                    </p>
                     <div id="other_inst" style="display: none;">
                       <br>
                       Please specify:
@@ -113,17 +113,19 @@
                   <td><form:input id="email" path="email" /></td>
                 </tr>
                 <tr>
-                  <td>Institutional role:<br>(at institution you named above)
+                  <td>Institutional role:
                   </td>
                   <td valign="top"><form:select path="institutionalRoleId">
                       <form:option value="" label="Please Select" />
                       <form:options items="${institutionalRoles}" />
                     </form:select>
-                    <div id="other_institutionalRole" style="display: none;">
+                    <div id="other_institutionalRole" style="display:none;">
                       <br>
                       Please specify:
                       <form:input id="institutionalRole_other_value" value="" path="otherInstitutionalRole" />
-                    </div></td>
+                    </div>
+                    (at institution specified above)
+                  </td>
                 </tr>
               </tbody>
             </table></td>
