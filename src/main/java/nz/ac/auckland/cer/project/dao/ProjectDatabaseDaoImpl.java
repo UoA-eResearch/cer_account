@@ -1,12 +1,14 @@
 package nz.ac.auckland.cer.project.dao;
 
-
 import nz.ac.auckland.cer.common.util.SSLCertificateValidation;
+import nz.ac.auckland.cer.project.pojo.Adviser;
 import nz.ac.auckland.cer.project.pojo.Affiliation;
 import nz.ac.auckland.cer.project.pojo.InstitutionalRole;
 import nz.ac.auckland.cer.project.pojo.Researcher;
 
+import org.apache.log4j.Logger;
 import org.json.JSONObject;
+import org.mybatis.spring.support.SqlSessionDaoSupport;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -16,15 +18,23 @@ import org.springframework.web.client.RestTemplate;
 
 import com.google.gson.Gson;
 
-public class RestProjectDatabaseDao implements ProjectDatabaseDao {
+public class ProjectDatabaseDaoImpl extends SqlSessionDaoSupport implements ProjectDatabaseDao {
 
-	private String baseUrl;
+	private String restBaseUrl;
 	private RestTemplate restTemplate;
+	private Logger log = Logger.getLogger(ProjectDatabaseDaoImpl.class.getName());
 
+	public ProjectDatabaseDaoImpl() {
+		// disable host certificate validation until run in production,
+		// because the test REST service uses a self-signed certificate.
+		// FIXME in production: enable host certificate validation again.
+		SSLCertificateValidation.disable();
+	}
+	
 	@Override
 	public Affiliation[] getAffiliations() throws Exception {
 	    Affiliation[] affiliations = new Affiliation[0];
-		String url = baseUrl + "advisers/affil";
+		String url = restBaseUrl + "advisers/affil";
 		Gson gson = new Gson();
 		try {
 			ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
@@ -34,7 +44,7 @@ public class RestProjectDatabaseDao implements ProjectDatabaseDao {
 			JSONObject json = new JSONObject(tmp);
 			throw new Exception(json.getString("message"));
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e);
 			throw new Exception("An unexpected error occured.", e);
 		}
 		return affiliations;
@@ -43,7 +53,7 @@ public class RestProjectDatabaseDao implements ProjectDatabaseDao {
 	@Override
 	public InstitutionalRole[] getInstitutionalRoles() throws Exception {
 		InstitutionalRole[] iRoles = new InstitutionalRole[0];
-		String url = baseUrl + "researchers/iroles";
+		String url = restBaseUrl + "researchers/iroles";
 		Gson gson = new Gson();
 		try {
 			ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
@@ -53,7 +63,7 @@ public class RestProjectDatabaseDao implements ProjectDatabaseDao {
 			JSONObject json = new JSONObject(tmp);
 			throw new Exception(json.getString("message"));
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e);
 			throw new Exception("An unexpected error occured.", e);
 		}
 		return iRoles;
@@ -61,7 +71,7 @@ public class RestProjectDatabaseDao implements ProjectDatabaseDao {
 
 	@Override
 	public Integer createResearcher(Researcher r, String adminUser) throws Exception {
-		String url = baseUrl + "researchers/";
+		String url = restBaseUrl + "researchers/";
 		Gson gson = new Gson();
 		try {
 			HttpHeaders headers = new HttpHeaders();
@@ -75,18 +85,24 @@ public class RestProjectDatabaseDao implements ProjectDatabaseDao {
 			JSONObject json = new JSONObject(tmp);
 			throw new Exception(json.getString("message"));
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e);
 			throw new Exception("An unexpected error occured.", e);
 		}
 	}
 	
+	public Adviser getAdviserByTuakiriSharedToken(String sharedToken) throws Exception {
+		return getSqlSession().selectOne("getAdviserByTuakiriSharedToken", sharedToken);
+	}
+	public Researcher getResearcherByTuakiriSharedToken(String sharedToken) throws Exception {
+		return getSqlSession().selectOne("getResearcherByTuakiriSharedToken", sharedToken);
+	}
+
 	public void setRestTemplate(RestTemplate restTemplate) {
-		SSLCertificateValidation.disable();
 		this.restTemplate = restTemplate;
 	}
 
-	public void setBaseUrl(String baseUrl) {
-		this.baseUrl = baseUrl;
+	public void setRestBaseUrl(String restBaseUrl) {
+		this.restBaseUrl = restBaseUrl;
 	}
 
 }
