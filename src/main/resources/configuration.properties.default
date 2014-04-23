@@ -1,47 +1,21 @@
-# identity database
-id.jdbc.driver.className=
-id.jdbc.url=
-id.jdbc.username=
-id.jdbc.password=
-
 # project management rest service
-pm.html.project.baseurl=
-pm.html.researcher.baseurl=
-pm.rest.baseurl=
-pm.researcher.default.picture=
-pm.researcher.initial.status.id=
-pm.researcher.initial.role.on.project.id=
-pm.admin.remote.user=
+project.html.researcher.baseurl=
+project.rest.baseurl=
+project.researcher.default.picture=
+project.researcher.initial.status.id=
+project.researcher.initial.role.on.project.id=
+project.admin.remote.user=
 
-selfservice.email.from=
-selfservice.email.to=
-
-# cluster account request 
-selfservice.accountrequest.email.subject=
-selfservice.accountrequest.email.template=
-
-# project membership request
-selfservice.project.membership.request.email.subject=
-selfservice.project.membership.request.email.template=
-
-# project creation request
-selfservice.project.creation.request.email.subject=
-selfservice.project.creation.request.no.superviser.email.template=
-selfservice.project.creation.request.with.superviser.email.template=
+# email configuration
+email.smtp.server=
+accountrequest.email.from=
+accountrequest.email.to=
+accountrequest.email.subject=
+accountrequest.email.template.path=
 
 # Proxy configuration
 proxy=
 proxyIp=
 
-# mail configuration
-email.smtp.server=
-
 # SLCS
 slcs.mapping.url=
-
-# http headers expected in http requests to this webapp
-http.header.tuakiri.uniqueid=
-http.header.tuakiri.sharedtoken=
-http.header.tuakiri.idpurl=
-http.header.remoteaddress=
-http.header.cn=

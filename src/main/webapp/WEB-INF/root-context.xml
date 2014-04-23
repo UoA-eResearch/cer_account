@@ -26,7 +26,7 @@
     <property name="basename" value="messages" />
   </bean>
   
-  <bean id="affiliationUtil" class="pm.util.AffiliationUtil" />
+  <bean id="affiliationUtil" class="nz.ac.auckland.cer.project.util.AffiliationUtil" />
 
   <bean id="restTemplate" class="org.springframework.web.client.RestTemplate">
     <property name="messageConverters">
@@ -45,33 +45,8 @@
     </property>
   </bean>
 
-  <bean id="identityDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
-    <property name="driverClassName" value="${id.jdbc.driver.className}" />
-    <property name="url" value="${id.jdbc.url}" />
-    <property name="username" value="${id.jdbc.username}" />
-    <property name="password" value="${id.jdbc.password}" />
-    <property name="testOnBorrow" value="true" />
-    <property name="validationQuery" value="SELECT 1" />
-    <property name="initialSize" value="2" />
-    <property name="maxActive" value="2" />
-    <property name="maxIdle" value="2" />
-  </bean>
-
-  <bean id="identityMybatisSqlMapClient" class="org.mybatis.spring.SqlSessionFactoryBean">
-    <property name="configLocation" value="classpath:mybatis_sql_map_config.xml" />
-    <property name="dataSource" ref="identityDataSource" />
-  </bean>
-
-  <bean id="identitySqlSession" class="org.mybatis.spring.SqlSessionTemplate">
-    <constructor-arg index="0" ref="identityMybatisSqlMapClient" />
-  </bean>
-
-  <bean id="identityDao" class="id.db.MyBatisIdentityDao">
-    <property name="sqlSessionFactory" ref="identityMybatisSqlMapClient"></property>
-  </bean>
-
-  <bean id="projectDao" class="pm.dao.RestProjectDao">
-    <property name="baseUrl" value="${pm.rest.baseurl}" />
+  <bean id="projectDatabaseDao" class="nz.ac.auckland.cer.project.dao.RestProjectDatabaseDao">
+    <property name="baseUrl" value="${project.rest.baseurl}" />
     <property name="restTemplate" ref="restTemplate" />
   </bean>
 
@@ -79,7 +54,8 @@
     <property name="host" value="${email.smtp.server}" />
   </bean>
 
-  <bean id="email" class="common.util.Email" />
-  <bean id="templateEmail" class="common.util.TemplateEmail" />
+  <bean id="email" class="nz.ac.auckland.cer.common.util.Email" />
+  
+  <bean id="templateEmail" class="nz.ac.auckland.cer.common.util.TemplateEmail" />
 
 </beans>

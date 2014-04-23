@@ -5,7 +5,7 @@
 
 <mapper namespace="identity.db">
 
-  <insert id="create_registration_nesiuser" parameterType="id.db.RegistrationNesiUser">
+  <insert id="create_registration_nesiuser" parameterType="nz.ac.auckland.cer.identity.db.RegistrationNesiUser">
     INSERT INTO
     registration_nesiuser (
       username,

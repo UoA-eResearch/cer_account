@@ -18,7 +18,7 @@
    <context:component-scan base-package="signup.slcs" />
    <mvc:annotation-driven />
  
-   <bean id="slcs" class="signup.slcs.SLCS">
+   <bean id="slcs" class="nz.ac.auckland.cer.account.slcs.SLCS">
        <property name="slcsMapUrl" value="https://slcs1.nesi.org.nz/idp-acl.txt"/>
    </bean>
 

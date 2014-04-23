@@ -10,10 +10,8 @@
            http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
            http://www.mockito.org/spring/mockito https://bitbucket.org/kubek2k/springockito/raw/tip/springockito/src/main/resources/spring/mockito.xsd">
 
-  <context:component-scan base-package="signup.controller" />
-  <context:component-scan base-package="pm.db" />
-  <context:component-scan base-package="common.util" />
-
+  <context:component-scan base-package="nz.ac.auckland.cer.account.controller" />
+  
   <bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
     <property name="exceptionMappings">
       <props>
@@ -22,25 +20,23 @@
     </property>
   </bean>
 
-  <bean id="accountRequestController" class="signup.controller.AccountRequestController">
+  <bean id="requestAccountController" class="nz.ac.auckland.cer.account.controller.RequestAccountController">
     <property name="defaultPictureUrl" value="http://some/picture.png" />
-    <property name="tuakiriSharedTokenAttribName" value="X-Proxy-TUAKIRI-TOKEN" />
-    <property name="tuakiriIdpUrlAttribName" value="X-Proxy-IDP-URL" />
     <property name="emailFrom" value="from@test.org"/>
     <property name="emailTo" value="to@test.org"/>
     <property name="emailSubject" value="test account request"/>
     <property name="emailBodyResource" value="classpath:template_email.tpl"/>
   </bean>
   
-  <mockito:mock id="slcs" class="signup.slcs.SLCS" />
+  <mockito:mock id="slcs" class="nz.ac.auckland.cer.account.slcs.SLCS" />
   
   <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
     <property name="prefix" value="/WEB-INF/jsp/signup/" />
     <property name="suffix" value=".jsp" />
   </bean>
 
-  <bean id="SignupTestFilter" class="signup.filter.TestFilter" />
+  <bean id="SignupTestFilter" class="nz.ac.auckland.cer.account.filter.TestFilter" />
 
-  <bean id="accountRequestValidator" class="signup.validation.AccountRequestValidator" />
+  <bean id="RequestAccountValidator" class="nz.ac.auckland.cer.account.validation.RequestAccountValidator" />
 
 </beans>

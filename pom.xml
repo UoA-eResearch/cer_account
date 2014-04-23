@@ -1,18 +1,18 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>nz.ac.auckland.eresearch</groupId>
-  <artifactId>cer_dashboard</artifactId>
+  <groupId>nz.ac.auckland.cer</groupId>
+  <artifactId>account</artifactId>
   <version>0.1-SNAPSHOT</version>
-  <name>CeR Dashboard</name>
-  <description>Prototype for the CeR dashboard where people can request cluster accounts, projects membership, etc</description>
+  <name>account web app</name>
+  <description>Web-based interface to view or request an account on the Auckland NeSI cluster.</description>
   <packaging>war</packaging>
   <properties>
-    <spring.version>3.2.4.RELEASE</spring.version>
+    <spring.version>3.2.8.RELEASE</spring.version>
   </properties>
 
   <build>
-    <finalName>dashboard</finalName>
+    <finalName>ceraccount</finalName>
     <plugins>
       <plugin>
         <groupId>org.mortbay.jetty</groupId>
@@ -20,7 +20,7 @@
         <configuration>
           <scanIntervalSeconds>10</scanIntervalSeconds>
           <webAppConfig>
-            <contextPath>/dashboard</contextPath>
+            <contextPath>/account</contextPath>
           </webAppConfig>
         </configuration>
       </plugin>
@@ -31,18 +31,6 @@
         <configuration>
           <source>1.6</source>
           <target>1.6</target>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-release-plugin</artifactId>
-        <version>2.4</version>
-        <inherited>false</inherited>
-        <configuration>
-          <autoVersionSubmodules>true</autoVersionSubmodules>
-          <pushChanges>true</pushChanges>
-          <localCheckout>true</localCheckout>
-          <tagNameFormat>@{project.version}</tagNameFormat>
         </configuration>
       </plugin>
       <plugin>
@@ -64,6 +52,23 @@
       <type>jar</type>
     </dependency>
     <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>jstl</artifactId>
+      <version>1.2</version>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>javax.mail</groupId>
+      <artifactId>mail</artifactId>
+      <version>1.4.5</version>
+    </dependency>
+    <dependency>
+      <groupId>javax.validation</groupId>
+      <artifactId>validation-api</artifactId>
+      <version>1.1.0.Final</version>
+    </dependency>
+    <dependency>
       <groupId>org.hibernate</groupId>
       <artifactId>hibernate-validator</artifactId>
       <version>5.0.1.Final</version>
@@ -72,6 +77,11 @@
       <groupId>org.json</groupId>
       <artifactId>json</artifactId>
       <version>20140107</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.code.gson</groupId>
+      <artifactId>gson</artifactId>
+      <version>2.2.4</version>
     </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
@@ -95,21 +105,10 @@
       <scope>compile</scope>
     </dependency>
     <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-aop</artifactId>
-      <version>${spring.version}</version>
-      <type>jar</type>
-    </dependency>
-    <dependency>
       <groupId>org.springframework.integration</groupId>
       <artifactId>spring-integration-mail</artifactId>
       <version>2.2.6.RELEASE</version>
       <type>jar</type>
-    </dependency>
-    <dependency>
-      <groupId>javax.mail</groupId>
-      <artifactId>mail</artifactId>
-      <version>1.4.5</version>
     </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
@@ -130,11 +129,6 @@
     </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
-      <artifactId>spring-jdbc</artifactId>
-      <version>${spring.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework</groupId>
       <artifactId>spring-test</artifactId>
       <version>${spring.version}</version>
       <type>jar</type>
@@ -150,27 +144,9 @@
       <version>1.6.11</version>
     </dependency>
     <dependency>
-      <groupId>com.google.code.gson</groupId>
-      <artifactId>gson</artifactId>
-      <version>2.2.4</version>
-    </dependency>
-    <dependency>
       <groupId>javassist</groupId>
       <artifactId>javassist</artifactId>
       <version>3.12.1.GA</version>
-    </dependency>
-    <dependency>
-      <groupId>cglib</groupId>
-      <artifactId>cglib</artifactId>
-      <version>2.2</version>
-    </dependency>
-
-    <dependency>
-      <groupId>mysql</groupId>
-      <artifactId>mysql-connector-java</artifactId>
-      <version>5.1.18</version>
-      <type>jar</type>
-      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>commons-pool</groupId>
@@ -190,9 +166,24 @@
       <version>2.4</version>
     </dependency>
     <dependency>
-      <groupId>commons-dbcp</groupId>
-      <artifactId>commons-dbcp</artifactId>
-      <version>1.4</version>
+      <groupId>commons-lang</groupId>
+      <artifactId>commons-lang</artifactId>
+      <version>20030203.000129</version>
+    </dependency>
+    <dependency>
+      <groupId>commons-logging</groupId>
+      <artifactId>commons-logging</artifactId>
+      <version>1.1.1</version>
+    </dependency>
+    <dependency>
+      <groupId>commons-beanutils</groupId>
+      <artifactId>commons-beanutils</artifactId>
+      <version>1.8.3</version>
+    </dependency>
+    <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+      <version>1.2.12</version>
       <type>jar</type>
       <scope>compile</scope>
     </dependency>
@@ -204,48 +195,10 @@
       <scope>compile</scope>
     </dependency>
     <dependency>
-      <groupId>org.mybatis</groupId>
-      <artifactId>mybatis-spring</artifactId>
-      <version>1.2.1</version>
-    </dependency>
-    <dependency>
-      <groupId>org.mybatis</groupId>
-      <artifactId>mybatis</artifactId>
-      <version>3.2.3</version>
-    </dependency>
-    <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>jstl</artifactId>
-      <version>1.2</version>
-      <type>jar</type>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>commons-lang</groupId>
-      <artifactId>commons-lang</artifactId>
-      <version>20030203.000129</version>
-    </dependency>
-    <dependency>
-      <groupId>log4j</groupId>
-      <artifactId>log4j</artifactId>
-      <version>1.2.12</version>
-      <type>jar</type>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>commons-logging</groupId>
-      <artifactId>commons-logging</artifactId>
-      <version>1.1.1</version>
-    </dependency>
-    <dependency>
-      <groupId>javax.validation</groupId>
-      <artifactId>validation-api</artifactId>
-      <version>1.1.0.Final</version>
-    </dependency>
-    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>4.11</version>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.mockito</groupId>
@@ -265,30 +218,9 @@
       <version>1.0.4</version>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>commons-beanutils</groupId>
-      <artifactId>commons-beanutils</artifactId>
-      <version>1.8.3</version>
-    </dependency>
   </dependencies>
 
   <pluginRepositories>
-    <pluginRepository>
-      <id>auckland.plugin.release</id>
-      <url>http://code.ceres.auckland.ac.nz/nexus/content/groups/public/</url>
-      <layout>default</layout>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </pluginRepository>
-    <pluginRepository>
-      <id>auckland.public.snapshots</id>
-      <url>http://code.ceres.auckland.ac.nz/nexus/content/groups/public-snapshots/</url>
-      <layout>default</layout>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-    </pluginRepository>
     <pluginRepository>
       <id>codehaus-release-repo</id>
       <name>Codehaus Release Repo</name>
@@ -297,35 +229,6 @@
   </pluginRepositories>
 
   <repositories>
-    <repository>
-      <id>auckland.public.release</id>
-      <url>http://code.ceres.auckland.ac.nz/nexus/content/groups/public/</url>
-      <releases>
-        <enabled>true</enabled>
-        <updatePolicy>daily</updatePolicy>
-        <checksumPolicy>warn</checksumPolicy>
-      </releases>
-      <snapshots>
-        <enabled>false</enabled>
-        <updatePolicy>always</updatePolicy>
-        <checksumPolicy>fail</checksumPolicy>
-      </snapshots>
-    </repository>
-    <repository>
-      <id>auckland.public.snapshots</id>
-      <url>http://code.ceres.auckland.ac.nz/nexus/content/groups/public-snapshots/
-            </url>
-      <releases>
-        <enabled>false</enabled>
-        <updatePolicy>never</updatePolicy>
-        <checksumPolicy>warn</checksumPolicy>
-      </releases>
-      <snapshots>
-        <enabled>true</enabled>
-        <updatePolicy>always</updatePolicy>
-        <checksumPolicy>warn</checksumPolicy>
-      </snapshots>
-    </repository>
     <repository>
       <id>maven2-repository.dev.java.net</id>
       <name>Java.net Repository for Maven</name>
@@ -343,30 +246,5 @@
       <url>http://s3.amazonaws.com/maven.springframework.org/milestone</url>
     </repository>
   </repositories>
-
-  <distributionManagement>
-    <repository>
-      <name>Auckland Releases Repository</name>
-      <id>auckland.release</id>
-      <url>http://code.ceres.auckland.ac.nz/nexus/content/repositories/releases</url>
-    </repository>
-    <snapshotRepository>
-      <id>auckland.snapshot</id>
-      <name>BeSTGRID Snapshots Repository</name>
-      <url>http://code.ceres.auckland.ac.nz/nexus/content/repositories/snapshots</url>
-    </snapshotRepository>
-  </distributionManagement>
-
-  <scm>
-    <connection>scm:git:git@github.com:makkus/projectdb-webapp.git</connection>
-    <developerConnection>scm:git:git@github.com:makkus/projectdb-webapp.git</developerConnection>
-    <url>https://github.com/nesi/projectdb-webapp</url>
-    <tag>0.1</tag>
-  </scm>
-
-  <organization>
-    <name>NeSI</name>
-    <url>https://nesi.org.nz</url>
-  </organization>
 
 </project>
