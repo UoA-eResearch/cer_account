@@ -28,7 +28,7 @@
   
   <bean id="affiliationUtil" class="nz.ac.auckland.cer.project.util.AffiliationUtil" />
 
-  <bean id="restTemplate" class="org.springframework.web.client.RestTemplate">
+  <bean id="projectRestTemplate" class="org.springframework.web.client.RestTemplate">
     <property name="messageConverters">
       <list>
         <bean id="stringConverter" class="org.springframework.http.converter.StringHttpMessageConverter">
@@ -45,9 +45,27 @@
     </property>
   </bean>
 
-  <bean id="projectDatabaseDao" class="nz.ac.auckland.cer.project.dao.RestProjectDatabaseDao">
-    <property name="baseUrl" value="${project.rest.baseurl}" />
-    <property name="restTemplate" ref="restTemplate" />
+  <bean id="projectDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+    <property name="driverClassName" value="${project.jdbc.driver.className}"/>
+    <property name="url" value="${project.jdbc.url}"/>
+    <property name="username" value="${project.jdbc.username}"/>
+    <property name="password" value="${project.jdbc.password}"/>
+    <property name="testOnBorrow" value="true"/>
+    <property name="validationQuery" value="SELECT 1"/>
+    <property name="initialSize" value="3"/>
+    <property name="maxActive" value="3"/>
+    <property name="maxIdle" value="3"/>
+  </bean>
+
+  <bean id="projectSqlSessionFactoryBean" class="org.mybatis.spring.SqlSessionFactoryBean">
+    <property name="configLocation" value="classpath:mybatis_sql_map_config.xml"/>
+    <property name="dataSource" ref="projectDataSource"/>
+  </bean>    
+
+  <bean id="projectDatabaseDao" class="nz.ac.auckland.cer.project.dao.ProjectDatabaseDaoImpl">
+    <property name="restBaseUrl" value="${project.rest.baseurl}" />
+    <property name="restTemplate" ref="projectRestTemplate" />
+    <property name="sqlSessionFactory" ref="projectSqlSessionFactoryBean"/>
   </bean>
 
   <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
