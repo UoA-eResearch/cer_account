@@ -3,7 +3,7 @@
   xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
   id="WebApp_ID" version="2.5">
 
-  <display-name>Project and Sign-Up Management</display-name>
+  <display-name>CeR Account Management</display-name>
 
   <!-- Load root application context -->
   <listener>
@@ -14,13 +14,13 @@
   </listener>
   <context-param>
     <param-name>contextConfigLocation</param-name>
-    <param-value>/WEB-INF/root-context.xml, /WEB-INF/signup-servlet.xml</param-value>
+    <param-value>/WEB-INF/root-context.xml, /WEB-INF/account-servlet.xml</param-value>
   </context-param>
 
   <!-- Spring-enabled servlet filter -->
   <filter>
-    <filter-name>SignupTestFilter</filter-name>
-    <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+    <filter-name>TestFilter</filter-name>
+    <filter-class>nz.ac.auckland.cer.account.filter.TestFilter</filter-class>
   </filter>
   <filter>
     <filter-name>encoding-filter</filter-name>
@@ -36,25 +36,25 @@
   </filter>
 
   <filter-mapping>
-    <filter-name>SignupTestFilter</filter-name>
-    <servlet-name>signup</servlet-name>
+    <filter-name>TestFilter</filter-name>
+    <servlet-name>account</servlet-name>
   </filter-mapping>
   <filter-mapping>
     <filter-name>encoding-filter</filter-name>
-    <servlet-name>signup</servlet-name>
+    <servlet-name>account</servlet-name>
   </filter-mapping>
 
   <!-- Servlet definitions -->
   <servlet>
-    <servlet-name>signup</servlet-name>
+    <servlet-name>account</servlet-name>
     <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
     <load-on-startup>1</load-on-startup>
   </servlet>
 
   <!-- Servlet mappings -->
   <servlet-mapping>
-    <servlet-name>signup</servlet-name>
-    <url-pattern>/signup/html/*</url-pattern>
+    <servlet-name>account</servlet-name>
+    <url-pattern>/html/*</url-pattern>
   </servlet-mapping>
 
   <jsp-config>
@@ -66,7 +66,7 @@
 
   <error-page>
     <exception-type>java.lang.Exception</exception-type>
-    <location>/WEB-INF/jsp/selfservice/exception.jsp</location>
+    <location>/WEB-INF/jsp/exception.jsp</location>
   </error-page>
 
 </web-app>
