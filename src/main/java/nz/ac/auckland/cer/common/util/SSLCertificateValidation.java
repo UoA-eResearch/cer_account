@@ -10,6 +10,7 @@ import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 
 public class SSLCertificateValidation {
+	
 	public static void disable() {
 		try {
 			SSLContext sslc = SSLContext.getInstance("TLS");
