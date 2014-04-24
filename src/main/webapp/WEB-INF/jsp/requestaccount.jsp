@@ -99,7 +99,6 @@
                      If your institution/division/department is not listed, please choose "Other" and specify
                     </p>
                     <div id="other_inst" style="display: none;">
-                      <br>
                       Please specify:
                       <form:input id="other_institution" value="" path="otherInstitution" />
                     </div></td>
@@ -120,7 +119,6 @@
                       <form:options items="${institutionalRoles}" />
                     </form:select>
                     <div id="other_institutionalRole" style="display:none;">
-                      <br>
                       Please specify:
                       <form:input id="institutionalRole_other_value" value="" path="otherInstitutionalRole" />
                     </div>
