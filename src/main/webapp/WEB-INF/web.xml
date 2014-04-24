@@ -17,10 +17,14 @@
     <param-value>/WEB-INF/root-context.xml, /WEB-INF/account-servlet.xml</param-value>
   </context-param>
 
-  <!-- Spring-enabled servlet filter -->
+  <!-- Filter definitions and mappings -->
   <filter>
     <filter-name>TestFilter</filter-name>
     <filter-class>nz.ac.auckland.cer.account.filter.TestFilter</filter-class>
+  </filter>
+  <filter>
+    <filter-name>AdminFilter</filter-name>
+    <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
   </filter>
   <filter>
     <filter-name>encoding-filter</filter-name>
@@ -34,9 +38,12 @@
       <param-value>true</param-value>
     </init-param>
   </filter>
-
   <filter-mapping>
     <filter-name>TestFilter</filter-name>
+    <servlet-name>account</servlet-name>
+  </filter-mapping>
+  <filter-mapping>
+    <filter-name>AdminFilter</filter-name>
     <servlet-name>account</servlet-name>
   </filter-mapping>
   <filter-mapping>
@@ -44,14 +51,12 @@
     <servlet-name>account</servlet-name>
   </filter-mapping>
 
-  <!-- Servlet definitions -->
+  <!-- Servlet definitions and mappings-->
   <servlet>
     <servlet-name>account</servlet-name>
     <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
     <load-on-startup>1</load-on-startup>
   </servlet>
-
-  <!-- Servlet mappings -->
   <servlet-mapping>
     <servlet-name>account</servlet-name>
     <url-pattern>/html/*</url-pattern>
