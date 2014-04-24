@@ -1,5 +1,7 @@
 package nz.ac.auckland.cer.project.dao;
 
+import java.util.List;
+
 import nz.ac.auckland.cer.common.util.SSLCertificateValidation;
 import nz.ac.auckland.cer.project.pojo.Adviser;
 import nz.ac.auckland.cer.project.pojo.Affiliation;
@@ -90,11 +92,19 @@ public class ProjectDatabaseDaoImpl extends SqlSessionDaoSupport implements Proj
 		}
 	}
 	
-	public Adviser getAdviserByTuakiriSharedToken(String sharedToken) throws Exception {
-		return getSqlSession().selectOne("getAdviserByTuakiriSharedToken", sharedToken);
+	public Adviser getAdviserForTuakiriSharedToken(String sharedToken) throws Exception {
+		return getSqlSession().selectOne("getAdviserForTuakiriSharedToken", sharedToken);
 	}
-	public Researcher getResearcherByTuakiriSharedToken(String sharedToken) throws Exception {
-		return getSqlSession().selectOne("getResearcherByTuakiriSharedToken", sharedToken);
+	public Researcher getResearcherForTuakiriSharedToken(String sharedToken) throws Exception {
+		return getSqlSession().selectOne("getResearcherForTuakiriSharedToken", sharedToken);
+	}
+
+	public List<String> getAccountNamesForResearcherId(Integer researcherId) throws Exception {
+		return getSqlSession().selectList("getAccountNamesForResearcherId", researcherId);
+	}
+	
+	public List<String> getAccountNamesForAdviserId(Integer adviserId) throws Exception {
+		return getSqlSession().selectList("getAccountNamesForAdviserId", adviserId);
 	}
 
 	public void setRestTemplate(RestTemplate restTemplate) {
