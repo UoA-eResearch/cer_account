@@ -26,6 +26,10 @@
     </property>
   </bean>
 
+  <bean id="accountController" class="nz.ac.auckland.cer.account.controller.AccountController">
+    <property name="projectDatabaseDao" ref="projectDatabaseDao"/>
+  </bean>
+
   <bean id="requestAccountController" class="nz.ac.auckland.cer.account.controller.RequestAccountController">
     <property name="defaultPictureUrl" value="${project.researcher.default.picture}" />
     <property name="researcherStatusId" value="${project.researcher.initial.status.id}" />
@@ -42,6 +46,10 @@
     <property name="suffix" value=".jsp" />
   </bean>
 
+  <bean id="AdminFilter" class="nz.ac.auckland.cer.account.filter.AdminFilter">
+    <property name="projectDatabaseDao" ref="projectDatabaseDao"/>
+  </bean>
+  
   <bean id="slcs" class="nz.ac.auckland.cer.account.slcs.SLCS">
     <property name="slcsMapUrl" value="${slcs.mapping.url}" />    
   </bean>
