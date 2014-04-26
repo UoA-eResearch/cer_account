@@ -2,23 +2,29 @@ package nz.ac.auckland.cer.project.pojo;
 
 public class InstitutionalRole {
 
-	private Integer id;
-	private String name;
+    private Integer id;
+    private String name;
 
-	public Integer getId() {
-		return id;
-	}
+    public Integer getId() {
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+        return id;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public void setId(
+            Integer id) {
 
-	public void setName(String name) {
-		this.name = name;
-	}
+        this.id = id;
+    }
+
+    public String getName() {
+
+        return name;
+    }
+
+    public void setName(
+            String name) {
+
+        this.name = name;
+    }
 
 }

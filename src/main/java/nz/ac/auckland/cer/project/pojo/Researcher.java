@@ -2,149 +2,198 @@ package nz.ac.auckland.cer.project.pojo;
 
 public class Researcher {
 
-	private Integer id;
-	private String fullName;
-	private String preferredName;
-	private Integer statusId;
-	private String statusName;
-	private String email;
-	private String phone;
-	private String institution;
-	private String division;
-	private String department;
-	private Integer institutionalRoleId;
-	private String institutionalRoleName;
-	private String pictureUrl;
-	private String startDate;
-	private String endDate = ""; // empty string to avoid null in database which causes problems with other apps
-	private String notes;
+    private Integer id;
+    private String fullName;
+    private String preferredName;
+    private Integer statusId;
+    private String statusName;
+    private String email;
+    private String phone;
+    private String institution;
+    private String division;
+    private String department;
+    private Integer institutionalRoleId;
+    private String institutionalRoleName;
+    private String pictureUrl;
+    private String startDate;
+    private String endDate = ""; // empty string to avoid null in database which
+                                 // causes problems with other apps
+    private String notes;
 
-	public Integer getId() {
-		return id;
-	}
+    public Integer getId() {
 
-	public Integer getInstitutionalRoleId() {
-		return institutionalRoleId;
-	}
+        return id;
+    }
 
-	public void setInstitutionalRoleId(Integer institutionalRoleId) {
-		this.institutionalRoleId = institutionalRoleId;
-	}
+    public Integer getInstitutionalRoleId() {
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+        return institutionalRoleId;
+    }
 
-	public String getFullName() {
-		return fullName;
-	}
+    public void setInstitutionalRoleId(
+            Integer institutionalRoleId) {
 
-	public void setFullName(String fullName) {
-		this.fullName = fullName;
-	}
+        this.institutionalRoleId = institutionalRoleId;
+    }
 
-	public String getPreferredName() {
-		return preferredName;
-	}
+    public void setId(
+            Integer id) {
 
-	public void setPreferredName(String preferredName) {
-		this.preferredName = preferredName;
-	}
+        this.id = id;
+    }
 
-	public String getEmail() {
-		return email;
-	}
+    public String getFullName() {
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+        return fullName;
+    }
 
-	public String getPhone() {
-		return phone;
-	}
+    public void setFullName(
+            String fullName) {
 
-	public void setPhone(String phone) {
-		this.phone = phone;
-	}
+        this.fullName = fullName;
+    }
 
-	public String getInstitution() {
-		return institution;
-	}
+    public String getPreferredName() {
 
-	public void setInstitution(String institution) {
-		this.institution = institution;
-	}
+        return preferredName;
+    }
 
-	public String getDivision() {
-		return division;
-	}
+    public void setPreferredName(
+            String preferredName) {
 
-	public void setDivision(String division) {
-		this.division = division;
-	}
+        this.preferredName = preferredName;
+    }
 
-	public String getDepartment() {
-		return department;
-	}
+    public String getEmail() {
 
-	public void setDepartment(String department) {
-		this.department = department;
-	}
+        return email;
+    }
 
-	public String getPictureUrl() {
-		return pictureUrl;
-	}
+    public void setEmail(
+            String email) {
 
-	public void setPictureUrl(String pictureUrl) {
-		this.pictureUrl = pictureUrl;
-	}
+        this.email = email;
+    }
 
-	public String getStartDate() {
-		return startDate;
-	}
+    public String getPhone() {
 
-	public void setStartDate(String startDate) {
-		this.startDate = startDate;
-	}
+        return phone;
+    }
 
-	public String getEndDate() {
-		return endDate;
-	}
+    public void setPhone(
+            String phone) {
 
-	public void setEndDate(String endDate) {
-		this.endDate = endDate;
-	}
+        this.phone = phone;
+    }
 
-	public String getNotes() {
-		return notes;
-	}
+    public String getInstitution() {
 
-	public void setNotes(String notes) {
-		this.notes = notes;
-	}
+        return institution;
+    }
 
-	public String getInstitutionalRoleName() {
-		return institutionalRoleName;
-	}
+    public void setInstitution(
+            String institution) {
 
-	public void setInstitutionalRoleName(String institutionalRoleName) {
-		this.institutionalRoleName = institutionalRoleName;
-	}
+        this.institution = institution;
+    }
 
-	public Integer getStatusId() {
-		return statusId;
-	}
+    public String getDivision() {
 
-	public void setStatusId(Integer statusId) {
-		this.statusId = statusId;
-	}
+        return division;
+    }
 
-	public String getStatusName() {
-		return statusName;
-	}
+    public void setDivision(
+            String division) {
 
-	public void setStatusName(String string) {
-		this.statusName = string;
-	}
+        this.division = division;
+    }
+
+    public String getDepartment() {
+
+        return department;
+    }
+
+    public void setDepartment(
+            String department) {
+
+        this.department = department;
+    }
+
+    public String getPictureUrl() {
+
+        return pictureUrl;
+    }
+
+    public void setPictureUrl(
+            String pictureUrl) {
+
+        this.pictureUrl = pictureUrl;
+    }
+
+    public String getStartDate() {
+
+        return startDate;
+    }
+
+    public void setStartDate(
+            String startDate) {
+
+        this.startDate = startDate;
+    }
+
+    public String getEndDate() {
+
+        return endDate;
+    }
+
+    public void setEndDate(
+            String endDate) {
+
+        this.endDate = endDate;
+    }
+
+    public String getNotes() {
+
+        return notes;
+    }
+
+    public void setNotes(
+            String notes) {
+
+        this.notes = notes;
+    }
+
+    public String getInstitutionalRoleName() {
+
+        return institutionalRoleName;
+    }
+
+    public void setInstitutionalRoleName(
+            String institutionalRoleName) {
+
+        this.institutionalRoleName = institutionalRoleName;
+    }
+
+    public Integer getStatusId() {
+
+        return statusId;
+    }
+
+    public void setStatusId(
+            Integer statusId) {
+
+        this.statusId = statusId;
+    }
+
+    public String getStatusName() {
+
+        return statusName;
+    }
+
+    public void setStatusName(
+            String string) {
+
+        this.statusName = string;
+    }
 
 }

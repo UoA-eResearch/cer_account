@@ -21,43 +21,48 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 public class AccountController {
 
-	private Logger log = Logger.getLogger(AccountController.class.getName());
-	private ProjectDatabaseDao projectDatabaseDao;
+    private Logger log = Logger.getLogger(AccountController.class.getName());
+    private ProjectDatabaseDao projectDatabaseDao;
 
-	@RequestMapping(value = "view", method = RequestMethod.GET)
-	public String showAccount(HttpServletRequest request, ModelMap mm) throws Exception {
-		if (!(Boolean) request.getAttribute("hasUserRegistered")) {
-			return "redirect:info";
-		} else {
-			List<String> clusterAccounts = new LinkedList<String>();
-			if ((Boolean) request.getAttribute("isUserResearcher")) {
-				Researcher r = (Researcher) request.getAttribute("researcher");
-				clusterAccounts = this.projectDatabaseDao.getAccountNamesForResearcherId(r.getId());
-				mm.addAttribute("fullName", r.getFullName());
-				mm.addAttribute("institution", r.getInstitution());
-				mm.addAttribute("division", r.getDivision());
-				mm.addAttribute("department", r.getDepartment());
-				mm.addAttribute("phone", r.getPhone());
-				mm.addAttribute("email", r.getEmail());
-				mm.addAttribute("institutionalRole", r.getInstitutionalRoleName());
-			} else {
-				Adviser a = (Adviser) request.getAttribute("adviser");
-				clusterAccounts = this.projectDatabaseDao.getAccountNamesForAdviserId(a.getId());
-				mm.addAttribute("fullName", a.getFullName());
-				mm.addAttribute("institution", a.getInstitution());
-				mm.addAttribute("division", a.getDivision());
-				mm.addAttribute("department", a.getDepartment());
-				mm.addAttribute("phone", a.getPhone());
-				mm.addAttribute("email", a.getEmail());
-				mm.addAttribute("institutionalRole", a.getInstitutionalRoleName());
-			}
-			mm.addAttribute("clusterAccounts", clusterAccounts);
-			return "viewaccount";
-		}
-	}
+    @RequestMapping(value = "view", method = RequestMethod.GET)
+    public String showAccount(
+            HttpServletRequest request,
+            ModelMap mm) throws Exception {
 
-	public void setProjectDatabaseDao(ProjectDatabaseDao projectDatabaseDao) {
-		this.projectDatabaseDao = projectDatabaseDao;
-	}
+        if (!(Boolean) request.getAttribute("hasUserRegistered")) {
+            return "redirect:info";
+        } else {
+            List<String> clusterAccounts = new LinkedList<String>();
+            if ((Boolean) request.getAttribute("isUserResearcher")) {
+                Researcher r = (Researcher) request.getAttribute("researcher");
+                clusterAccounts = this.projectDatabaseDao.getAccountNamesForResearcherId(r.getId());
+                mm.addAttribute("fullName", r.getFullName());
+                mm.addAttribute("institution", r.getInstitution());
+                mm.addAttribute("division", r.getDivision());
+                mm.addAttribute("department", r.getDepartment());
+                mm.addAttribute("phone", r.getPhone());
+                mm.addAttribute("email", r.getEmail());
+                mm.addAttribute("institutionalRole", r.getInstitutionalRoleName());
+            } else {
+                Adviser a = (Adviser) request.getAttribute("adviser");
+                clusterAccounts = this.projectDatabaseDao.getAccountNamesForAdviserId(a.getId());
+                mm.addAttribute("fullName", a.getFullName());
+                mm.addAttribute("institution", a.getInstitution());
+                mm.addAttribute("division", a.getDivision());
+                mm.addAttribute("department", a.getDepartment());
+                mm.addAttribute("phone", a.getPhone());
+                mm.addAttribute("email", a.getEmail());
+                mm.addAttribute("institutionalRole", a.getInstitutionalRoleName());
+            }
+            mm.addAttribute("clusterAccounts", clusterAccounts);
+            return "viewaccount";
+        }
+    }
+
+    public void setProjectDatabaseDao(
+            ProjectDatabaseDao projectDatabaseDao) {
+
+        this.projectDatabaseDao = projectDatabaseDao;
+    }
 
 }

@@ -39,203 +39,239 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 public class RequestAccountController {
 
-	private Logger log = Logger.getLogger(RequestAccountController.class.getName());
+    private Logger log = Logger.getLogger(RequestAccountController.class.getName());
+    private Integer researcherStatusId;
+    private String defaultPictureUrl;
+    private String adminUser;
+    private String emailSubject;
+    private String emailFrom;
+    private String emailTo;
+    private String researcherBaseUrl;
+    private Resource emailBodyResource;
+    @Autowired private ProjectDatabaseDao projectDatabaseDao;
+    @Autowired private AffiliationUtil affiliationUtil;
+    @Autowired private TemplateEmail templateEmail;
+    @Autowired private SLCS slcs;
 
-	private Integer researcherStatusId;
-	private String defaultPictureUrl;
-	private String adminUser;
-	private String emailSubject;
-	private String emailFrom;
-	private String emailTo;
-	private String researcherBaseUrl;
-	private Resource emailBodyResource;
-	@Autowired private ProjectDatabaseDao projectDatabaseDao;
-	@Autowired private AffiliationUtil affiliationUtil;
-	@Autowired private TemplateEmail templateEmail;
-	@Autowired private SLCS slcs;
-	
-	@RequestMapping(value = "info", method = RequestMethod.GET)
-	public String showAccountRequestInfo(HttpServletRequest request) throws Exception {
-		return "info";
-	}
+    @RequestMapping(value = "info", method = RequestMethod.GET)
+    public String showAccountRequestInfo(
+            HttpServletRequest request) throws Exception {
+
+        return "info";
+    }
 
     /**
      * Render cluster account request form
      */
-	@RequestMapping(value = "requestaccount", method = RequestMethod.GET)
-	public String showAccountRequestForm(Model m, HttpServletRequest request)  throws Exception {
-		this.augmentModel(m);
-		AccountRequest ar = new AccountRequest();
-		ar.setFullName((String)request.getAttribute("cn"));
-		ar.setEmail((String)request.getAttribute("mail"));
-		m.addAttribute("requestaccount", ar);
-		return "requestaccount";
-	}
+    @RequestMapping(value = "requestaccount", method = RequestMethod.GET)
+    public String showAccountRequestForm(
+            Model m,
+            HttpServletRequest request) throws Exception {
 
-	/**
-	 * Process cluster account request form submission
-	 */
-	@RequestMapping(value = "requestaccount", method = RequestMethod.POST)
-	public String processAccountRequestForm(Model m, @Valid @ModelAttribute("requestaccount") AccountRequest requestAccount,
-			BindingResult bResult, HttpServletRequest request) throws Exception {
-		if (bResult.hasErrors()) {
-			this.augmentModel(m);
-			return "requestaccount";
-		}
-		try {
-			String tuakiriIdpUrl = (String) request.getAttribute("Shib-Identity-Provider");
-			String tuakiriSharedToken = (String) request.getAttribute("shared-token");
-			String userDN = this.slcs.createUserDn(tuakiriIdpUrl, requestAccount.getFullName(), tuakiriSharedToken);
-			Researcher r = this.createResearcherFromFormData(requestAccount);
-			Integer researcherDatabaseId = this.projectDatabaseDao.createResearcher(r, this.adminUser);
-			this.sendEmailNotification(r, researcherDatabaseId, userDN);
-			HttpSession s = request.getSession();
-		    s.setAttribute("institutionalRoleId", requestAccount.getInstitutionalRoleId());
-		    s.setAttribute("researcherName", requestAccount.getFullName());
-		    s.setAttribute("researcherDatabaseId", researcherDatabaseId);
-		    s.setAttribute("hostInstitution", r.getInstitution());
-		} catch (Exception e) {
-			log.error(e);
-			bResult.addError(new ObjectError(bResult.getObjectName(), "Internal Error: " + e.getMessage()));
-			this.augmentModel(m);
-			return "requestaccount";
-		}
-		return "accountrequestsuccess";
-	}
+        this.augmentModel(m);
+        AccountRequest ar = new AccountRequest();
+        ar.setFullName((String) request.getAttribute("cn"));
+        ar.setEmail((String) request.getAttribute("mail"));
+        m.addAttribute("requestaccount", ar);
+        return "requestaccount";
+    }
 
-	/**
-	 * Configure validator for cluster account request form
-	 */
+    /**
+     * Process cluster account request form submission
+     */
+    @RequestMapping(value = "requestaccount", method = RequestMethod.POST)
+    public String processAccountRequestForm(
+            Model m,
+            @Valid @ModelAttribute("requestaccount") AccountRequest requestAccount,
+            BindingResult bResult,
+            HttpServletRequest request) throws Exception {
+
+        if (bResult.hasErrors()) {
+            this.augmentModel(m);
+            return "requestaccount";
+        }
+        try {
+            String tuakiriIdpUrl = (String) request.getAttribute("Shib-Identity-Provider");
+            String tuakiriSharedToken = (String) request.getAttribute("shared-token");
+            String userDN = this.slcs.createUserDn(tuakiriIdpUrl, requestAccount.getFullName(), tuakiriSharedToken);
+            Researcher r = this.createResearcherFromFormData(requestAccount);
+            Integer researcherDatabaseId = this.projectDatabaseDao.createResearcher(r, this.adminUser);
+            this.sendEmailNotification(r, researcherDatabaseId, userDN);
+            HttpSession s = request.getSession();
+            s.setAttribute("institutionalRoleId", requestAccount.getInstitutionalRoleId());
+            s.setAttribute("researcherName", requestAccount.getFullName());
+            s.setAttribute("researcherDatabaseId", researcherDatabaseId);
+            s.setAttribute("hostInstitution", r.getInstitution());
+        } catch (Exception e) {
+            log.error(e);
+            bResult.addError(new ObjectError(bResult.getObjectName(), "Internal Error: " + e.getMessage()));
+            this.augmentModel(m);
+            return "requestaccount";
+        }
+        return "accountrequestsuccess";
+    }
+
+    /**
+     * Configure validator for cluster account request form
+     */
     @InitBinder
-    protected void initBinder(WebDataBinder binder) {
+    protected void initBinder(
+            WebDataBinder binder) {
+
         binder.setValidator(new RequestAccountValidator());
     }
 
-	/**
-	 * Fetch institutional roles and affiliations, and add them to the model.
-	 * If an error occurs, add error message to the model.
-	 */
-	private void augmentModel(Model m) throws Exception {
-		InstitutionalRole[] ir = null;
-		HashMap<Integer, String> institutionalRoles = new LinkedHashMap<Integer, String>();
-		Affiliation[] af = null;
-		String errorMessage = "";
-		
-		try {
-		  ir = this.projectDatabaseDao.getInstitutionalRoles();
-		  if (ir == null || ir.length == 0) {
-			  throw new Exception();
-		  }
-		  for (InstitutionalRole role : ir) {
-			  institutionalRoles.put(role.getId(), role.getName());
- 		  }
-		  m.addAttribute("institutionalRoles", institutionalRoles);
-		} catch (Exception e) {
-			errorMessage += "Internal Error: Failed to load institutional roles. ";
-		}
-		
-		try {
-		  af = this.projectDatabaseDao.getAffiliations();
-		  if (af == null || af.length == 0) {
-			  throw new Exception();
-		  }
-		  m.addAttribute("affiliations", this.affiliationUtil.getAffiliationStrings(af));
-		} catch (Exception e) {
-			errorMessage += "Internal Error: Failed to load affiliations. ";
-		}
-		
-		if (errorMessage.trim().length() > 0) {
-			m.addAttribute("unexpected_error", errorMessage);
-		}
-	}
+    /**
+     * Fetch institutional roles and affiliations, and add them to the model. If
+     * an error occurs, add error message to the model.
+     */
+    private void augmentModel(
+            Model m) throws Exception {
 
-	/**
-	 * Create researcher object from account request form data
-	 */
-	private Researcher createResearcherFromFormData(AccountRequest ra) {
-		Researcher r = new Researcher();
-		r.setFullName(ra.getFullName());
-		r.setPreferredName(ra.getPreferredName());
-		r.setStatusId(this.researcherStatusId);
-		r.setEmail(ra.getEmail());
-		r.setPhone(ra.getPhone());
-		r.setStartDate(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
-		r.setPictureUrl(this.defaultPictureUrl);
-		String notes = "";
-		String specifiedInst = ra.getInstitution();
-		if (specifiedInst != null && !specifiedInst.isEmpty() && !specifiedInst.equals("Other")) {
-			r.setInstitution(this.affiliationUtil.getInstitutionFromAffiliationString(specifiedInst));
-			r.setDivision(this.affiliationUtil.getDivisionFromAffiliationString(specifiedInst));
-			r.setDepartment(this.affiliationUtil.getDepartmentFromAffiliationString(specifiedInst));
-		} else {
-			notes += "Other Affiliation: " + ra.getOtherInstitution() + "<br/>";
-		}
-		Integer instRoleId = ra.getInstitutionalRoleId();
-		if (instRoleId != null) {
-			r.setInstitutionalRoleId(instRoleId);
-		} else {
-			notes += "Other Institutional Role: " + ra.getOtherInstitutionalRole() + "<br/>";
-		}
-		r.setNotes(notes);
-		return r;
-	}
+        InstitutionalRole[] ir = null;
+        HashMap<Integer, String> institutionalRoles = new LinkedHashMap<Integer, String>();
+        Affiliation[] af = null;
+        String errorMessage = "";
 
-	/**
-	 * Send e-mail to notify us about the new account request
-	 */
-	private void sendEmailNotification(Researcher r, Integer researcherDatabaseId, String dn) throws Exception {
-	    Map<String,String> templateParams = new HashMap<String,String>();
-	    templateParams.put("__DN__", dn);
-	    templateParams.put("__NAME__", r.getFullName());
-	    templateParams.put("__EMAIL__", r.getEmail());
-	    templateParams.put("__PHONE__", r.getPhone());
-	    if (r.getInstitution() == null || r.getInstitution().isEmpty()) {
-		    templateParams.put("__INSTITUTION__", "Other");	    	
-		    templateParams.put("__DIVISION__", "Other");
-		    templateParams.put("__DEPARTMENT__", "Other");
-	    } else {
-	    	templateParams.put("__INSTITUTION__", r.getInstitution());
-	    	templateParams.put("__DIVISION__", r.getDivision());
-	    	templateParams.put("__DEPARTMENT__", r.getDepartment());
-	    }
-	    templateParams.put("__LINK__", this.researcherBaseUrl + "?id=" + researcherDatabaseId);
-		this.templateEmail.sendFromResource(this.emailFrom, this.emailTo, null, null,
-			this.emailSubject, this.emailBodyResource, templateParams);
-	}
+        try {
+            ir = this.projectDatabaseDao.getInstitutionalRoles();
+            if (ir == null || ir.length == 0) {
+                throw new Exception();
+            }
+            for (InstitutionalRole role : ir) {
+                institutionalRoles.put(role.getId(), role.getName());
+            }
+            m.addAttribute("institutionalRoles", institutionalRoles);
+        } catch (Exception e) {
+            errorMessage += "Internal Error: Failed to load institutional roles. ";
+        }
 
-	public void setDefaultPictureUrl(String defaultPictureUrl) {
-		this.defaultPictureUrl = defaultPictureUrl;
-	}
+        try {
+            af = this.projectDatabaseDao.getAffiliations();
+            if (af == null || af.length == 0) {
+                throw new Exception();
+            }
+            m.addAttribute("affiliations", this.affiliationUtil.getAffiliationStrings(af));
+        } catch (Exception e) {
+            errorMessage += "Internal Error: Failed to load affiliations. ";
+        }
 
-	public void setAffiliationUtil(AffiliationUtil affiliationUtil) {
-		this.affiliationUtil = affiliationUtil;
-	}
+        if (errorMessage.trim().length() > 0) {
+            m.addAttribute("unexpected_error", errorMessage);
+        }
+    }
 
-	public void setEmailFrom(String emailFrom) {
-		this.emailFrom = emailFrom;
-	}
+    /**
+     * Create researcher object from account request form data
+     */
+    private Researcher createResearcherFromFormData(
+            AccountRequest ra) {
 
-	public void setEmailTo(String emailTo) {
-		this.emailTo = emailTo;
-	}
+        Researcher r = new Researcher();
+        r.setFullName(ra.getFullName());
+        r.setPreferredName(ra.getPreferredName());
+        r.setStatusId(this.researcherStatusId);
+        r.setEmail(ra.getEmail());
+        r.setPhone(ra.getPhone());
+        r.setStartDate(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
+        r.setPictureUrl(this.defaultPictureUrl);
+        String notes = "";
+        String specifiedInst = ra.getInstitution();
+        if (specifiedInst != null && !specifiedInst.isEmpty() && !specifiedInst.equals("Other")) {
+            r.setInstitution(this.affiliationUtil.getInstitutionFromAffiliationString(specifiedInst));
+            r.setDivision(this.affiliationUtil.getDivisionFromAffiliationString(specifiedInst));
+            r.setDepartment(this.affiliationUtil.getDepartmentFromAffiliationString(specifiedInst));
+        } else {
+            notes += "Other Affiliation: " + ra.getOtherInstitution() + "<br/>";
+        }
+        Integer instRoleId = ra.getInstitutionalRoleId();
+        if (instRoleId != null) {
+            r.setInstitutionalRoleId(instRoleId);
+        } else {
+            notes += "Other Institutional Role: " + ra.getOtherInstitutionalRole() + "<br/>";
+        }
+        r.setNotes(notes);
+        return r;
+    }
 
-	public void setEmailSubject(String emailSubject) {
-		this.emailSubject = emailSubject;
-	}
+    /**
+     * Send e-mail to notify us about the new account request
+     */
+    private void sendEmailNotification(
+            Researcher r,
+            Integer researcherDatabaseId,
+            String dn) throws Exception {
 
-	public void setEmailBodyResource(Resource emailBodyResource) {
-		this.emailBodyResource = emailBodyResource;
-	}
+        Map<String, String> templateParams = new HashMap<String, String>();
+        templateParams.put("__DN__", dn);
+        templateParams.put("__NAME__", r.getFullName());
+        templateParams.put("__EMAIL__", r.getEmail());
+        templateParams.put("__PHONE__", r.getPhone());
+        if (r.getInstitution() == null || r.getInstitution().isEmpty()) {
+            templateParams.put("__INSTITUTION__", "Other");
+            templateParams.put("__DIVISION__", "Other");
+            templateParams.put("__DEPARTMENT__", "Other");
+        } else {
+            templateParams.put("__INSTITUTION__", r.getInstitution());
+            templateParams.put("__DIVISION__", r.getDivision());
+            templateParams.put("__DEPARTMENT__", r.getDepartment());
+        }
+        templateParams.put("__LINK__", this.researcherBaseUrl + "?id=" + researcherDatabaseId);
+        this.templateEmail.sendFromResource(this.emailFrom, this.emailTo, null, null, this.emailSubject,
+                this.emailBodyResource, templateParams);
+    }
 
-	public void setResearcherStatusId(String researcherStatusId) {
-		this.researcherStatusId = Integer.valueOf(researcherStatusId);
-	}
+    public void setDefaultPictureUrl(
+            String defaultPictureUrl) {
 
-	public void setAdminUser(String adminUser) {
-		this.adminUser = adminUser;
-	}
+        this.defaultPictureUrl = defaultPictureUrl;
+    }
 
-	public void setResearcherBaseUrl(String researcherBaseUrl) {
-		this.researcherBaseUrl = researcherBaseUrl;
-	}
+    public void setAffiliationUtil(
+            AffiliationUtil affiliationUtil) {
+
+        this.affiliationUtil = affiliationUtil;
+    }
+
+    public void setEmailFrom(
+            String emailFrom) {
+
+        this.emailFrom = emailFrom;
+    }
+
+    public void setEmailTo(
+            String emailTo) {
+
+        this.emailTo = emailTo;
+    }
+
+    public void setEmailSubject(
+            String emailSubject) {
+
+        this.emailSubject = emailSubject;
+    }
+
+    public void setEmailBodyResource(
+            Resource emailBodyResource) {
+
+        this.emailBodyResource = emailBodyResource;
+    }
+
+    public void setResearcherStatusId(
+            String researcherStatusId) {
+
+        this.researcherStatusId = Integer.valueOf(researcherStatusId);
+    }
+
+    public void setAdminUser(
+            String adminUser) {
+
+        this.adminUser = adminUser;
+    }
+
+    public void setResearcherBaseUrl(
+            String researcherBaseUrl) {
+
+        this.researcherBaseUrl = researcherBaseUrl;
+    }
 }

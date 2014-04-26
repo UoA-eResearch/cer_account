@@ -2,32 +2,41 @@ package nz.ac.auckland.cer.project.pojo;
 
 public class Affiliation {
 
-	private String institution;
-	private String division;
-	private String department;
+    private String institution;
+    private String division;
+    private String department;
 
-	public String getInstitution() {
-		return institution;
-	}
+    public String getInstitution() {
 
-	public void setInstitution(String institution) {
-		this.institution = institution;
-	}
+        return institution;
+    }
 
-	public String getDivision() {
-		return division;
-	}
+    public void setInstitution(
+            String institution) {
 
-	public void setDivision(String division) {
-		this.division = division;
-	}
+        this.institution = institution;
+    }
 
-	public String getDepartment() {
-		return department;
-	}
+    public String getDivision() {
 
-	public void setDepartment(String department) {
-		this.department = department;
-	}
+        return division;
+    }
+
+    public void setDivision(
+            String division) {
+
+        this.division = division;
+    }
+
+    public String getDepartment() {
+
+        return department;
+    }
+
+    public void setDepartment(
+            String department) {
+
+        this.department = department;
+    }
 
 }

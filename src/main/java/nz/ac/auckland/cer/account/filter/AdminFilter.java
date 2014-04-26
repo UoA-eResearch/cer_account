@@ -18,39 +18,47 @@ import nz.ac.auckland.cer.project.pojo.Researcher;
 
 public class AdminFilter implements Filter {
 
-	private ProjectDatabaseDao projectDatabaseDao;
-	private Logger log = Logger.getLogger(AdminFilter.class.getName());
-	
-	public void doFilter(ServletRequest req, ServletResponse resp, FilterChain fc) 
-		throws IOException, ServletException {
-		try {
-			HttpServletRequest request = (HttpServletRequest) req;
-			String sharedToken = (String) request.getAttribute("shared-token");
-			Researcher r = this.projectDatabaseDao.getResearcherForTuakiriSharedToken(sharedToken);
-			Adviser a = this.projectDatabaseDao.getAdviserForTuakiriSharedToken(sharedToken);
-			boolean isUserAdviser = (a == null) ? false : true;
-			boolean isUserResearcher = (r == null) ? false : true;
-			boolean hasUserRegistered = (a == null && r == null) ? false : true;
-			request.setAttribute("hasUserRegistered", hasUserRegistered);
-			request.setAttribute("isUserAdviser", isUserAdviser);
-			request.setAttribute("isUserResearcher", isUserResearcher);
-			request.setAttribute("adviser", a);
-			request.setAttribute("researcher", r);
-		} catch (final Exception e) {
-			log.error(e);
-			return;
-		}
-		fc.doFilter(req, resp);
-	}
+    private ProjectDatabaseDao projectDatabaseDao;
+    private Logger log = Logger.getLogger(AdminFilter.class.getName());
 
-	public void init(FilterConfig fc) throws ServletException {
-	}
+    public void doFilter(
+            ServletRequest req,
+            ServletResponse resp,
+            FilterChain fc) throws IOException, ServletException {
 
-	public void destroy() {
-	}
+        try {
+            HttpServletRequest request = (HttpServletRequest) req;
+            String sharedToken = (String) request.getAttribute("shared-token");
+            Researcher r = this.projectDatabaseDao.getResearcherForTuakiriSharedToken(sharedToken);
+            Adviser a = this.projectDatabaseDao.getAdviserForTuakiriSharedToken(sharedToken);
+            boolean isUserAdviser = (a == null) ? false : true;
+            boolean isUserResearcher = (r == null) ? false : true;
+            boolean hasUserRegistered = (a == null && r == null) ? false : true;
+            request.setAttribute("hasUserRegistered", hasUserRegistered);
+            request.setAttribute("isUserAdviser", isUserAdviser);
+            request.setAttribute("isUserResearcher", isUserResearcher);
+            request.setAttribute("adviser", a);
+            request.setAttribute("researcher", r);
+        } catch (final Exception e) {
+            log.error(e);
+            return;
+        }
+        fc.doFilter(req, resp);
+    }
 
-	public void setProjectDatabaseDao(ProjectDatabaseDao projectDatabaseDao) {
-		this.projectDatabaseDao = projectDatabaseDao;
-	}
+    public void init(
+            FilterConfig fc) throws ServletException {
+
+    }
+
+    public void destroy() {
+
+    }
+
+    public void setProjectDatabaseDao(
+            ProjectDatabaseDao projectDatabaseDao) {
+
+        this.projectDatabaseDao = projectDatabaseDao;
+    }
 
 }

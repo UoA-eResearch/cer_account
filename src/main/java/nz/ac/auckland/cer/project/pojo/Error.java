@@ -2,22 +2,28 @@ package nz.ac.auckland.cer.project.pojo;
 
 public class Error {
 
-	private String message;
-	private String[] stackTrace;
+    private String message;
+    private String[] stackTrace;
 
-	public String getMessage() {
-		return message;
-	}
+    public String getMessage() {
 
-	public void setMessage(String message) {
-		this.message = message;
-	}
+        return message;
+    }
 
-	public String[] getStackTrace() {
-		return stackTrace;
-	}
+    public void setMessage(
+            String message) {
 
-	public void setStackTrace(String[] stackTrace) {
-		this.stackTrace = stackTrace;
-	}
+        this.message = message;
+    }
+
+    public String[] getStackTrace() {
+
+        return stackTrace;
+    }
+
+    public void setStackTrace(
+            String[] stackTrace) {
+
+        this.stackTrace = stackTrace;
+    }
 }

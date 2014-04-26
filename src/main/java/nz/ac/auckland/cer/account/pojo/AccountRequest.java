@@ -2,95 +2,125 @@ package nz.ac.auckland.cer.account.pojo;
 
 public class AccountRequest {
 
-	private String fullName;
-	private String preferredName;
-	private String institution;
-	private String otherInstitution;
-	private String division;
-	private String department;
-	private String phone;
-	private String email;
-	private Integer institutionalRoleId;
-	private String otherInstitutionalRole;
+    private String fullName;
+    private String preferredName;
+    private String institution;
+    private String otherInstitution;
+    private String division;
+    private String department;
+    private String phone;
+    private String email;
+    private Integer institutionalRoleId;
+    private String otherInstitutionalRole;
 
-	public String getPreferredName() {
-		return preferredName;
-	}
+    public String getPreferredName() {
 
-	public void setPreferredName(String preferredName) {
-		this.preferredName = preferredName;
-	}
+        return preferredName;
+    }
 
-	public String getFullName() {
-		return fullName;
-	}
+    public void setPreferredName(
+            String preferredName) {
 
-	public void setFullName(String fullName) {
-		this.fullName = fullName;
-	}
+        this.preferredName = preferredName;
+    }
 
-	public String getInstitution() {
-		return institution;
-	}
+    public String getFullName() {
 
-	public void setInstitution(String institution) {
-		this.institution = institution;
-	}
+        return fullName;
+    }
 
-	public String getDivision() {
-		return division;
-	}
+    public void setFullName(
+            String fullName) {
 
-	public void setDivision(String division) {
-		this.division = division;
-	}
+        this.fullName = fullName;
+    }
 
-	public String getDepartment() {
-		return department;
-	}
+    public String getInstitution() {
 
-	public void setDepartment(String department) {
-		this.department = department;
-	}
+        return institution;
+    }
 
-	public String getPhone() {
-		return phone;
-	}
+    public void setInstitution(
+            String institution) {
 
-	public void setPhone(String phone) {
-		this.phone = phone;
-	}
+        this.institution = institution;
+    }
 
-	public String getEmail() {
-		return email;
-	}
+    public String getDivision() {
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+        return division;
+    }
 
-	public Integer getInstitutionalRoleId() {
-		return institutionalRoleId;
-	}
+    public void setDivision(
+            String division) {
 
-	public void setInstitutionalRoleId(Integer institutionalRoleId) {
-		this.institutionalRoleId = institutionalRoleId;
-	}
+        this.division = division;
+    }
 
-	public String getOtherInstitution() {
-		return otherInstitution;
-	}
+    public String getDepartment() {
 
-	public void setOtherInstitution(String otherInstitution) {
-		this.otherInstitution = otherInstitution;
-	}
+        return department;
+    }
 
-	public String getOtherInstitutionalRole() {
-		return otherInstitutionalRole;
-	}
+    public void setDepartment(
+            String department) {
 
-	public void setOtherInstitutionalRole(String otherInstitutionalRole) {
-		this.otherInstitutionalRole = otherInstitutionalRole;
-	}
+        this.department = department;
+    }
+
+    public String getPhone() {
+
+        return phone;
+    }
+
+    public void setPhone(
+            String phone) {
+
+        this.phone = phone;
+    }
+
+    public String getEmail() {
+
+        return email;
+    }
+
+    public void setEmail(
+            String email) {
+
+        this.email = email;
+    }
+
+    public Integer getInstitutionalRoleId() {
+
+        return institutionalRoleId;
+    }
+
+    public void setInstitutionalRoleId(
+            Integer institutionalRoleId) {
+
+        this.institutionalRoleId = institutionalRoleId;
+    }
+
+    public String getOtherInstitution() {
+
+        return otherInstitution;
+    }
+
+    public void setOtherInstitution(
+            String otherInstitution) {
+
+        this.otherInstitution = otherInstitution;
+    }
+
+    public String getOtherInstitutionalRole() {
+
+        return otherInstitutionalRole;
+    }
+
+    public void setOtherInstitutionalRole(
+            String otherInstitutionalRole) {
+
+        this.otherInstitutionalRole = otherInstitutionalRole;
+    }
 
 }
