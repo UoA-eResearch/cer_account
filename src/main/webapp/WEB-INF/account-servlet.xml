@@ -18,28 +18,12 @@
     </property>
   </bean>
 
-  <bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
-    <property name="exceptionMappings">
-      <props>
-        <prop key="common.util.CustomException">customexception</prop>
-      </props>
-    </property>
-  </bean>
-
-  <bean id="accountController" class="nz.ac.auckland.cer.account.controller.AccountController">
-    <property name="projectDatabaseDao" ref="projectDatabaseDao"/>
-  </bean>
+  <bean id="accountController" class="nz.ac.auckland.cer.account.controller.AccountController"/>
 
   <bean id="requestAccountController" class="nz.ac.auckland.cer.account.controller.RequestAccountController">
     <property name="defaultPictureUrl" value="${project.researcher.default.picture}" />
     <property name="researcherStatusId" value="${project.researcher.initial.status.id}" />
     <property name="adminUser" value="${project.admin.remote.user}"/>
-    <property name="emailFrom" value="${accountrequest.email.from}"/>
-    <property name="emailTo" value="${accountrequest.email.to}"/>
-    <property name="emailSubject" value="${accountrequest.email.subject}"/>
-    <property name="emailBodyResource" value="${accountrequest.email.template.path}"/>
-    <property name="adviserBaseUrl" value="${project.html.adviser.baseurl}"/>
-    <property name="researcherBaseUrl" value="${project.html.researcher.baseurl}"/>
     <property name="projectRequestUrl" value="${project.request.url}"/>
   </bean>
 
@@ -47,16 +31,13 @@
     <property name="prefix" value="/WEB-INF/jsp/" />
     <property name="suffix" value=".jsp" />
   </bean>
-
-  <bean id="AdminFilter" class="nz.ac.auckland.cer.account.filter.AdminFilter">
-    <property name="projectDatabaseDao" ref="projectDatabaseDao"/>
-  </bean>
   
   <bean id="slcs" class="nz.ac.auckland.cer.account.slcs.SLCS">
     <property name="slcsMapUrl" value="${slcs.mapping.url}" />    
   </bean>
+
+  <bean id="AdminFilter" class="nz.ac.auckland.cer.account.filter.AdminFilter"/>
   
-  <bean id="SignupTestFilter" class="nz.ac.auckland.cer.account.filter.TestFilter">
-  </bean>
+  <bean id="TestFilter" class="nz.ac.auckland.cer.account.filter.TestFilter"/>
 
 </beans>
