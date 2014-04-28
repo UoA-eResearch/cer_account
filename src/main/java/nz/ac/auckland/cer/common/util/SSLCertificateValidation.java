@@ -25,6 +25,7 @@ public class SSLCertificateValidation {
     }
 
     private static class NullX509TrustManager implements X509TrustManager {
+
         public void checkClientTrusted(
                 X509Certificate[] chain,
                 String authType) throws CertificateException {
@@ -46,6 +47,7 @@ public class SSLCertificateValidation {
     }
 
     private static class NullHostnameVerifier implements HostnameVerifier {
+
         public boolean verify(
                 String hostname,
                 SSLSession session) {
