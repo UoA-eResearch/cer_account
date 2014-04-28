@@ -6,7 +6,8 @@ import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 
 /**
- * Send e-mail. Includes basic validation of e-mail addresses, subject and body
+ * Send text-based e-mail. Includes basic validation of e-mail addresses,
+ * subject and body
  */
 public class Email {
 
@@ -21,9 +22,15 @@ public class Email {
             String subject,
             String body) throws Exception {
 
-        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        if (subject == null) {
+            throw new Exception("Subject must not be null");
+        }
+        if (body == null) {
+            throw new Exception("Body must not be null");
+        }
         this.validateEmailAddress(from);
         this.validateEmailAddress(to);
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
         if (replyto != null) {
             this.validateEmailAddress(replyto);
             mailMessage.setReplyTo(replyto);
@@ -31,12 +38,6 @@ public class Email {
         if (cc != null) {
             this.validateEmailAddress(cc);
             mailMessage.setCc(cc);
-        }
-        if (subject == null) {
-            throw new Exception("Subject must not be null");
-        }
-        if (body == null) {
-            throw new Exception("Body must not be null");
         }
         mailMessage.setFrom(from);
         mailMessage.setTo(to);
