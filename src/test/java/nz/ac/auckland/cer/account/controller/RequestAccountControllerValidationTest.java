@@ -2,7 +2,7 @@ package nz.ac.auckland.cer.account.controller;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-//import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -15,6 +15,7 @@ import nz.ac.auckland.cer.project.pojo.InstitutionalRole;
 import nz.ac.auckland.cer.project.util.AffiliationUtil;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -51,23 +52,39 @@ public class RequestAccountControllerValidationTest {
 		  when(projectDatabaseDao.getInstitutionalRoles()).thenReturn(new LinkedList<InstitutionalRole>());
 		  when(affiliationUtilMock.getAffiliationStrings((List<Affiliation>) anyObject())).thenReturn(new LinkedList<String>());
 		  when(affiliationUtilMock.getInstitutionFromAffiliationString("Test Institution")).thenReturn("Test Institution");
-		  this.mockMvc.perform(post("/requestaccount").param("institution", "Test Institution")
-	        .param("institutionalRoleId", "42").param("email", "test@test.org").param("phone", "12345"))
+		  this.mockMvc.perform(post("/request_account").param("fullName", "Jane Doe")
+		    .param("institution", "Test Institution").param("institutionalRoleId", "42")
+		    .param("email", "test@test.org").param("phone", "12345"))
+            //.andDo(print())
 	        .andExpect(status().isOk())
-	        .andExpect(view().name("accountrequestsuccess"))
+	        .andExpect(view().name("request_account_success"))
 	        .andExpect(model().attributeHasNoErrors("requestaccount"));
-	        //.andDo(print())
 	  }
+
+      @Test
+      public void postAccountRequestMissingFullName() throws Exception {
+          when(projectDatabaseDao.getInstitutionalRoles()).thenReturn(new LinkedList<InstitutionalRole>());
+          when(affiliationUtilMock.getAffiliationStrings((List<Affiliation>) anyObject())).thenReturn(new LinkedList<String>());
+          when(affiliationUtilMock.getInstitutionFromAffiliationString("Test Institution")).thenReturn("Test Institution");
+          this.mockMvc.perform(post("/request_account").param("phone", "12345").param("email", "test@test.org")
+            .param("institution", "Test Institution").param("institutionalRoleId", "42"))
+            .andExpect(status().isOk())
+            .andExpect(view().name("request_account"))
+            //.andDo(print())
+            .andExpect(model().attributeErrorCount("requestaccount", 1))
+            .andExpect(model().attributeHasFieldErrors("requestaccount", "fullName"));
+      }
 
 	  @Test
 	  public void postAccountRequestMissingEmail() throws Exception {
 		  when(projectDatabaseDao.getInstitutionalRoles()).thenReturn(new LinkedList<InstitutionalRole>());
 		  when(affiliationUtilMock.getAffiliationStrings((List<Affiliation>) anyObject())).thenReturn(new LinkedList<String>());
           when(affiliationUtilMock.getInstitutionFromAffiliationString("Test Institution")).thenReturn("Test Institution");
-	      this.mockMvc.perform(post("/requestaccount").param("institution", "Test Institution")
-	        .param("institutionalRoleId", "42").param("phone", "12345"))
+	      this.mockMvc.perform(post("/request_account").param("fullName", "Jane Doe")
+	        .param("institution", "Test Institution").param("institutionalRoleId", "42").param("phone", "12345"))
 	        .andExpect(status().isOk())
-	        .andExpect(view().name("requestaccount"))
+	        .andExpect(view().name("request_account"))
+	        //.andDo(print())
 	        .andExpect(model().attributeErrorCount("requestaccount", 1))
 	        .andExpect(model().attributeHasFieldErrors("requestaccount", "email"));
 	  }
@@ -76,10 +93,10 @@ public class RequestAccountControllerValidationTest {
 	  public void postAccountRequestMissingInstitution() throws Exception {
 		  when(projectDatabaseDao.getInstitutionalRoles()).thenReturn(new LinkedList<InstitutionalRole>());
 		  when(affiliationUtilMock.getAffiliationStrings((List<Affiliation>) anyObject())).thenReturn(new LinkedList<String>());
-	      this.mockMvc.perform(post("/requestaccount")
+	      this.mockMvc.perform(post("/request_account").param("fullName", "Jane Doe")
 	        .param("institutionalRoleId", "42").param("email", "test@test.org").param("phone", "12345"))
 	        .andExpect(status().isOk())
-	        .andExpect(view().name("requestaccount"))
+	        .andExpect(view().name("request_account"))
 	        .andExpect(model().attributeErrorCount("requestaccount", 1))
 	        .andExpect(model().attributeHasFieldErrors("requestaccount", "institution"));
 	  }
@@ -88,10 +105,10 @@ public class RequestAccountControllerValidationTest {
 	  public void postAccountRequestMissingInstitutionalRoleId() throws Exception {
 		  when(projectDatabaseDao.getInstitutionalRoles()).thenReturn(new LinkedList<InstitutionalRole>());
 		  when(affiliationUtilMock.getAffiliationStrings((List<Affiliation>) anyObject())).thenReturn(new LinkedList<String>());
-	      this.mockMvc.perform(post("/requestaccount").param("institution", "Test Institution")
-	        .param("email", "test@test.org").param("phone", "12345"))
+	      this.mockMvc.perform(post("/request_account").param("fullName", "Jane Doe")
+	        .param("institution", "Test Institution").param("email", "test@test.org").param("phone", "12345"))
 	        .andExpect(status().isOk())
-	        .andExpect(view().name("requestaccount"))
+	        .andExpect(view().name("request_account"))
 	        .andExpect(model().attributeErrorCount("requestaccount", 1))
 	        .andExpect(model().attributeHasFieldErrors("requestaccount", "institutionalRoleId"));
 	  }
@@ -101,10 +118,11 @@ public class RequestAccountControllerValidationTest {
 		  when(projectDatabaseDao.getInstitutionalRoles()).thenReturn(new LinkedList<InstitutionalRole>());
 		  when(affiliationUtilMock.getAffiliationStrings((List<Affiliation>) anyObject())).thenReturn(new LinkedList<String>());
           when(affiliationUtilMock.getInstitutionFromAffiliationString("Test Institution")).thenReturn("Test Institution");
-	      this.mockMvc.perform(post("/requestaccount").param("institution", "Test Institution")
+	      this.mockMvc.perform(post("/request_account").param("fullName", "Jane Doe")
+	        .param("institution", "Test Institution")
 	        .param("institutionalRoleId", "42").param("email", "test").param("phone", "12345"))
 	        .andExpect(status().isOk())
-	        .andExpect(view().name("requestaccount"))
+	        .andExpect(view().name("request_account"))
 	        .andExpect(model().attributeErrorCount("requestaccount", 1))
 	        .andExpect(model().attributeHasFieldErrors("requestaccount", "email"));
 	  }
