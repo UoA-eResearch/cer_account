@@ -1,6 +1,8 @@
 package nz.ac.auckland.cer.project.dao;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import nz.ac.auckland.cer.common.util.SSLCertificateValidation;
 import nz.ac.auckland.cer.project.pojo.Adviser;
@@ -35,8 +37,10 @@ public class ProjectDatabaseDaoImpl extends SqlSessionDaoSupport implements Proj
     }
 
     @Override
-    public Affiliation[] getAffiliations() throws Exception {
+    public List<Affiliation> getAffiliations() throws Exception {
 
+        return getSqlSession().selectList("getAffiliations");
+        /*
         Affiliation[] affiliations = new Affiliation[0];
         String url = restBaseUrl + "advisers/affil";
         Gson gson = new Gson();
@@ -52,11 +56,13 @@ public class ProjectDatabaseDaoImpl extends SqlSessionDaoSupport implements Proj
             throw new Exception("An unexpected error occured.", e);
         }
         return affiliations;
+        */
     }
 
     @Override
-    public InstitutionalRole[] getInstitutionalRoles() throws Exception {
-
+    public List<InstitutionalRole> getInstitutionalRoles() throws Exception {
+        return getSqlSession().selectList("getInstitutionalRoles");
+        /*
         InstitutionalRole[] iRoles = new InstitutionalRole[0];
         String url = restBaseUrl + "researchers/iroles";
         Gson gson = new Gson();
@@ -72,13 +78,45 @@ public class ProjectDatabaseDaoImpl extends SqlSessionDaoSupport implements Proj
             throw new Exception("An unexpected error occured.", e);
         }
         return iRoles;
+        */
+    }
+
+    @Override
+    public Integer createAdviser(
+            Adviser a,
+            String adminUser) throws Exception {
+
+        getSqlSession().insert("createAdviser", a);
+        return a.getId();
+        /*
+        String url = restBaseUrl + "advisers/";
+        Gson gson = new Gson();
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            headers.set("RemoteUser", adminUser);
+            HttpEntity<String> request = new HttpEntity<String>(gson.toJson(a), headers);
+            HttpEntity<String> he = restTemplate.postForEntity(url, request, String.class);
+            return new Integer((String) he.getBody());
+        } catch (HttpStatusCodeException hsce) {
+            String tmp = hsce.getResponseBodyAsString();
+            JSONObject json = new JSONObject(tmp);
+            throw new Exception(json.getString("message"));
+        } catch (Exception e) {
+            log.error(e);
+            throw new Exception("An unexpected error occured.", e);
+        }
+        */
     }
 
     @Override
     public Integer createResearcher(
             Researcher r,
             String adminUser) throws Exception {
-
+        
+        getSqlSession().insert("createResearcher", r);
+        return r.getId();
+        /*
         String url = restBaseUrl + "researchers/";
         Gson gson = new Gson();
         try {
@@ -96,6 +134,7 @@ public class ProjectDatabaseDaoImpl extends SqlSessionDaoSupport implements Proj
             log.error(e);
             throw new Exception("An unexpected error occured.", e);
         }
+        */
     }
 
     public Adviser getAdviserForTuakiriSharedToken(
@@ -120,6 +159,38 @@ public class ProjectDatabaseDaoImpl extends SqlSessionDaoSupport implements Proj
             Integer adviserId) throws Exception {
 
         return getSqlSession().selectList("getAccountNamesForAdviserId", adviserId);
+    }
+
+    public void createTuakiriSharedTokenPropertyForResearcher(
+            Integer researcherId, 
+            String tuakiriSharedToken) throws Exception {
+        
+        Map<String,Object> m = new HashMap<String,Object>();
+        m.put("researcherId", researcherId);
+        m.put("tuakiriSharedToken", tuakiriSharedToken);
+        getSqlSession().insert("createTuakiriSharedTokenPropertyForResearcher", m);
+    }
+
+    public void createTuakiriSharedTokenPropertyForAdviser(
+            Integer adviserId, 
+            String tuakiriSharedToken) throws Exception {
+        
+        Map<String,Object> m = new HashMap<String,Object>();
+        m.put("adviserId", adviserId);
+        m.put("tuakiriSharedToken", tuakiriSharedToken);
+        getSqlSession().insert("createTuakiriSharedTokenPropertyForAdviser", m);
+    }
+
+    public String getInstitutionalRoleName(
+            Integer roleId) throws Exception {
+        
+        return getSqlSession().selectOne("getInstitutionalRoleName", roleId);
+    }
+
+    public String getResearcherStatusName(
+            Integer statusId) throws Exception {
+        
+        return getSqlSession().selectOne("getResearcherStatusName", statusId);
     }
 
     public void setRestTemplate(
