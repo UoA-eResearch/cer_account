@@ -11,14 +11,20 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import nz.ac.auckland.cer.project.dao.ProjectDatabaseDao;
 import nz.ac.auckland.cer.project.pojo.Adviser;
 import nz.ac.auckland.cer.project.pojo.Researcher;
 
+/*
+ * TODO: Log error if expected request attributes are not there
+ * TODO: Send e-mail if expected request attributes are not there
+ * TODO: Log each request to tomcat-central logfile (file appender): path, method, cn, shared-token
+ */
 public class AdminFilter implements Filter {
 
-    private ProjectDatabaseDao projectDatabaseDao;
+    @Autowired private ProjectDatabaseDao pdDao;
     private Logger log = Logger.getLogger(AdminFilter.class.getName());
 
     public void doFilter(
@@ -29,8 +35,8 @@ public class AdminFilter implements Filter {
         try {
             HttpServletRequest request = (HttpServletRequest) req;
             String sharedToken = (String) request.getAttribute("shared-token");
-            Researcher r = this.projectDatabaseDao.getResearcherForTuakiriSharedToken(sharedToken);
-            Adviser a = this.projectDatabaseDao.getAdviserForTuakiriSharedToken(sharedToken);
+            Researcher r = this.pdDao.getResearcherForTuakiriSharedToken(sharedToken);
+            Adviser a = this.pdDao.getAdviserForTuakiriSharedToken(sharedToken);
             boolean isUserAdviser = (a == null) ? false : true;
             boolean isUserResearcher = (r == null) ? false : true;
             boolean hasUserRegistered = (a == null && r == null) ? false : true;
@@ -40,7 +46,7 @@ public class AdminFilter implements Filter {
             request.setAttribute("adviser", a);
             request.setAttribute("researcher", r);
         } catch (final Exception e) {
-            log.error(e);
+            log.error("Unexpected error in AdminFilter", e);
             return;
         }
         fc.doFilter(req, resp);
@@ -53,12 +59,6 @@ public class AdminFilter implements Filter {
 
     public void destroy() {
 
-    }
-
-    public void setProjectDatabaseDao(
-            ProjectDatabaseDao projectDatabaseDao) {
-
-        this.projectDatabaseDao = projectDatabaseDao;
     }
 
 }
