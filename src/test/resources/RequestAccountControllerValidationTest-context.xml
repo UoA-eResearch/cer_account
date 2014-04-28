@@ -22,10 +22,6 @@
 
   <bean id="requestAccountController" class="nz.ac.auckland.cer.account.controller.RequestAccountController">
     <property name="defaultPictureUrl" value="http://some/picture.png" />
-    <property name="emailFrom" value="from@test.org"/>
-    <property name="emailTo" value="to@test.org"/>
-    <property name="emailSubject" value="test account request"/>
-    <property name="emailBodyResource" value="classpath:template_email.tpl"/>
   </bean>
   
   <mockito:mock id="slcs" class="nz.ac.auckland.cer.account.slcs.SLCS" />
