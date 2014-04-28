@@ -5,15 +5,14 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import nz.ac.auckland.cer.account.pojo.AccountRequest;
 import nz.ac.auckland.cer.account.slcs.SLCS;
+import nz.ac.auckland.cer.account.util.EmailUtil;
 import nz.ac.auckland.cer.account.validation.RequestAccountValidator;
-import nz.ac.auckland.cer.common.util.TemplateEmail;
 import nz.ac.auckland.cer.project.dao.ProjectDatabaseDao;
 import nz.ac.auckland.cer.project.pojo.Adviser;
 import nz.ac.auckland.cer.project.pojo.Affiliation;
@@ -23,7 +22,6 @@ import nz.ac.auckland.cer.project.util.AffiliationUtil;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -35,7 +33,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
- * Controller for cluster account request form *
+ * Controller for cluster account requests
  */
 @Controller
 public class RequestAccountController {
@@ -44,95 +42,84 @@ public class RequestAccountController {
     private Integer researcherStatusId;
     private String defaultPictureUrl;
     private String adminUser;
-    private String emailSubject;
-    private String emailFrom;
-    private String emailTo;
-    private String adviserBaseUrl;
-    private String researcherBaseUrl;
     private String projectRequestUrl;
-    private Resource emailBodyResource;
-    @Autowired private ProjectDatabaseDao projectDatabaseDao;
-    @Autowired private AffiliationUtil affiliationUtil;
-    @Autowired private TemplateEmail templateEmail;
+    @Autowired private ProjectDatabaseDao pdDao;
+    @Autowired private AffiliationUtil affUtil;
+    @Autowired private EmailUtil emailUtil;
     @Autowired private SLCS slcs;
 
-    @RequestMapping(value = "info", method = RequestMethod.GET)
+    @RequestMapping(value = "request_account_info", method = RequestMethod.GET)
     public String showAccountRequestInfo(
             HttpServletRequest request) throws Exception {
 
-        if ((Boolean) request.getAttribute("hasUserRegistered")) {
-            return "redirect:view";
+        try {
+            if ((Boolean) request.getAttribute("hasUserRegistered")) {
+                return "redirect:view_account";
+            }
+        } catch (Exception e) {
+            log.error("An unexpected error happened", e);
         }
-        return "info";
+        return "request_account_info";
     }
 
     /**
      * Render cluster account request form
      */
-    @RequestMapping(value = "requestaccount", method = RequestMethod.GET)
+    @RequestMapping(value = "request_account", method = RequestMethod.GET)
     public String showAccountRequestForm(
             Model m,
             HttpServletRequest request) throws Exception {
 
-        this.augmentModel(m);
-        AccountRequest ar = new AccountRequest();
-        ar.setFullName((String) request.getAttribute("cn"));
-        ar.setEmail((String) request.getAttribute("mail"));
-        m.addAttribute("requestaccount", ar);
-        return "requestaccount";
+        try {
+            this.augmentModel(m);
+            AccountRequest ar = new AccountRequest();
+            ar.setFullName((String) request.getAttribute("cn"));
+            ar.setEmail((String) request.getAttribute("mail"));
+            m.addAttribute("requestaccount", ar);
+        } catch (Exception e) {
+            log.error("An unexpected error happened", e);
+        }
+        return "request_account";
     }
 
     /**
      * Process cluster account request form submission
      */
-    @RequestMapping(value = "requestaccount", method = RequestMethod.POST)
+    @RequestMapping(value = "request_account", method = RequestMethod.POST)
     public String processAccountRequestForm(
             Model m,
             @Valid @ModelAttribute("requestaccount") AccountRequest ar,
             BindingResult bResult,
             HttpServletRequest request) throws Exception {
 
-        if (bResult.hasErrors()) {
-            this.augmentModel(m);
-            return "requestaccount";
-        }
         try {
+            if (bResult.hasErrors()) {
+                this.augmentModel(m);
+                return "request_account";
+            }
             this.preprocessAccountRequest(ar);
             String tuakiriIdpUrl = (String) request.getAttribute("Shib-Identity-Provider");
             String tuakiriSharedToken = (String) request.getAttribute("shared-token");
             String userDN = this.slcs.createUserDn(tuakiriIdpUrl, ar.getFullName(), tuakiriSharedToken);
-            Integer databaseId = null;
+            Integer dbAccountId = null;
             if (ar.getIsNesiStaff()) {
                 Adviser a = this.createAdviserFromFormData(ar);
-                databaseId = this.projectDatabaseDao.createAdviser(a, this.adminUser);
-                this.projectDatabaseDao.createTuakiriSharedTokenPropertyForAdviser(databaseId,
-                        tuakiriSharedToken);
+                dbAccountId = this.pdDao.createAdviser(a, this.adminUser);
+                this.pdDao.createTuakiriSharedTokenPropertyForAdviser(dbAccountId, tuakiriSharedToken);
             } else {
                 Researcher r = this.createResearcherFromFormData(ar);
-                databaseId = this.projectDatabaseDao.createResearcher(r, this.adminUser);
-                this.projectDatabaseDao.createTuakiriSharedTokenPropertyForResearcher(databaseId,
-                        tuakiriSharedToken);
+                dbAccountId = this.pdDao.createResearcher(r, this.adminUser);
+                this.pdDao.createTuakiriSharedTokenPropertyForResearcher(dbAccountId, tuakiriSharedToken);
             }
-            this.sendEmailNotification(ar, databaseId, userDN);
+            this.emailUtil.sendAccountRequestEmail(ar, dbAccountId, userDN);
+            m.addAttribute("projectRequestUrl", this.projectRequestUrl);
         } catch (Exception e) {
             log.error("Failed to process account request", e);
             bResult.addError(new ObjectError(bResult.getObjectName(), "Internal Error: " + e.getMessage()));
             this.augmentModel(m);
-            return "requestaccount";
+            return "request_account";
         }
-        
-        m.addAttribute("projectRequestUrl", this.projectRequestUrl);
-        return "accountrequestsuccess";
-    }
-
-    /**
-     * Configure validator for cluster account request form
-     */
-    @InitBinder
-    protected void initBinder(
-            WebDataBinder binder) {
-
-        binder.setValidator(new RequestAccountValidator());
+        return "request_account_success";
     }
 
     /**
@@ -140,7 +127,7 @@ public class RequestAccountController {
      * an error occurs, add error message to the model.
      */
     private void augmentModel(
-            Model m) throws Exception {
+            Model m) {
 
         String errorMessage = "";
         List<InstitutionalRole> ir = null;
@@ -148,7 +135,7 @@ public class RequestAccountController {
         HashMap<Integer, String> institutionalRoles = new LinkedHashMap<Integer, String>();
 
         try {
-            ir = this.projectDatabaseDao.getInstitutionalRoles();
+            ir = this.pdDao.getInstitutionalRoles();
             if (ir == null || ir.size() == 0) {
                 throw new Exception();
             }
@@ -161,32 +148,34 @@ public class RequestAccountController {
         }
 
         try {
-            af = this.projectDatabaseDao.getAffiliations();
+            af = this.pdDao.getAffiliations();
             if (af == null || af.size() == 0) {
                 throw new Exception();
             }
-            m.addAttribute("affiliations", this.affiliationUtil.getAffiliationStrings(af));
+            m.addAttribute("affiliations", this.affUtil.getAffiliationStrings(af));
         } catch (Exception e) {
             errorMessage += "Internal Error: Failed to load affiliations. ";
         }
 
         if (errorMessage.trim().length() > 0) {
-            m.addAttribute("unexpected_error", errorMessage);
+            //m.addAttribute("unexpected_error", errorMessage);
         }
     }
 
     /**
      * Set division and department from the institution string
      */
-    private void preprocessAccountRequest(AccountRequest ar) {
+    private void preprocessAccountRequest(
+            AccountRequest ar) {
+
         String inst = ar.getInstitution();
         if (inst != null && !inst.isEmpty() && !inst.equals("Other")) {
-            ar.setInstitution(this.affiliationUtil.getInstitutionFromAffiliationString(inst));
-            ar.setDivision(this.affiliationUtil.getDivisionFromAffiliationString(inst));
-            ar.setDepartment(this.affiliationUtil.getDepartmentFromAffiliationString(inst));
+            ar.setInstitution(this.affUtil.getInstitutionFromAffiliationString(inst));
+            ar.setDivision(this.affUtil.getDivisionFromAffiliationString(inst));
+            ar.setDepartment(this.affUtil.getDepartmentFromAffiliationString(inst));
         }
     }
-    
+
     /**
      * Create researcher object from account request form data
      */
@@ -218,7 +207,7 @@ public class RequestAccountController {
         r.setNotes(notes);
         return r;
     }
-    
+
     /**
      * Create researcher object from account request form data
      */
@@ -244,34 +233,13 @@ public class RequestAccountController {
     }
 
     /**
-     * Send e-mail to notify us about the new account request
+     * Configure validator for cluster account request form
      */
-    private void sendEmailNotification(
-            AccountRequest ar,
-            Integer databaseId,
-            String dn) throws Exception {
+    @InitBinder
+    protected void initBinder(
+            WebDataBinder binder) {
 
-        Map<String, String> templateParams = new HashMap<String, String>();
-        templateParams.put("__DN__", dn);
-        templateParams.put("__NAME__", ar.getFullName());
-        templateParams.put("__EMAIL__", ar.getEmail());
-        templateParams.put("__PHONE__", ar.getPhone());
-        if (ar.getInstitution() == null || ar.getInstitution().isEmpty()) {
-            templateParams.put("__INSTITUTION__", "Other");
-            templateParams.put("__DIVISION__", "Other");
-            templateParams.put("__DEPARTMENT__", "Other");
-        } else {
-            templateParams.put("__INSTITUTION__", ar.getInstitution());
-            templateParams.put("__DIVISION__", ar.getDivision());
-            templateParams.put("__DEPARTMENT__", ar.getDepartment());
-        }
-        if (ar.getIsNesiStaff()) {
-            templateParams.put("__LINK__", this.adviserBaseUrl + "?id=" + databaseId);            
-        } else {
-            templateParams.put("__LINK__", this.researcherBaseUrl + "?id=" + databaseId);            
-        }
-        this.templateEmail.sendFromResource(this.emailFrom, this.emailTo, null, null, this.emailSubject,
-                this.emailBodyResource, templateParams);
+        binder.setValidator(new RequestAccountValidator());
     }
 
     public void setDefaultPictureUrl(
@@ -280,40 +248,10 @@ public class RequestAccountController {
         this.defaultPictureUrl = defaultPictureUrl;
     }
 
-    public void setAffiliationUtil(
-            AffiliationUtil affiliationUtil) {
-
-        this.affiliationUtil = affiliationUtil;
-    }
-
-    public void setEmailFrom(
-            String emailFrom) {
-
-        this.emailFrom = emailFrom;
-    }
-
-    public void setEmailTo(
-            String emailTo) {
-
-        this.emailTo = emailTo;
-    }
-
-    public void setEmailSubject(
-            String emailSubject) {
-
-        this.emailSubject = emailSubject;
-    }
-
     public void setProjectRequestUrl(
             String projectRequestUrl) {
 
         this.projectRequestUrl = projectRequestUrl;
-    }
-
-    public void setEmailBodyResource(
-            Resource emailBodyResource) {
-
-        this.emailBodyResource = emailBodyResource;
     }
 
     public void setResearcherStatusId(
@@ -328,15 +266,4 @@ public class RequestAccountController {
         this.adminUser = adminUser;
     }
 
-    public void setAdviserBaseUrl(
-            String adviserBaseUrl) {
-
-        this.adviserBaseUrl = adviserBaseUrl;
-    }
-
-    public void setResearcherBaseUrl(
-            String researcherBaseUrl) {
-
-        this.researcherBaseUrl = researcherBaseUrl;
-    }
 }
