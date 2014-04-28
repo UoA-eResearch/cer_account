@@ -21,6 +21,7 @@ public class RequestAccountValidator implements Validator {
             Object accountRequest,
             Errors errors) {
 
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "fullName", "account.fullname.required");
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "institution", "account.affiliation.required");
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "phone", "account.phone.required");
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "institutionalRoleId", "account.institutionalrole.required");
