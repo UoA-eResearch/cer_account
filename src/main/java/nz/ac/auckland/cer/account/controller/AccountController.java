@@ -37,12 +37,18 @@ public class AccountController {
                 Researcher r = (Researcher) request.getAttribute("researcher");
                 clusterAccounts = this.projectDatabaseDao.getAccountNamesForResearcherId(r.getId());
                 mm.addAttribute("fullName", r.getFullName());
+                mm.addAttribute("preferredName", r.getPreferredName());
                 mm.addAttribute("institution", r.getInstitution());
                 mm.addAttribute("division", r.getDivision());
                 mm.addAttribute("department", r.getDepartment());
                 mm.addAttribute("phone", r.getPhone());
                 mm.addAttribute("email", r.getEmail());
-                mm.addAttribute("institutionalRole", r.getInstitutionalRoleName());
+                mm.addAttribute("institutionalRoleName", 
+                        this.projectDatabaseDao.getInstitutionalRoleName(
+                                r.getInstitutionalRoleId()));
+                mm.addAttribute("accountStatus", 
+                        this.projectDatabaseDao.getResearcherStatusName(
+                                r.getStatusId()));
             } else {
                 Adviser a = (Adviser) request.getAttribute("adviser");
                 clusterAccounts = this.projectDatabaseDao.getAccountNamesForAdviserId(a.getId());
@@ -52,7 +58,6 @@ public class AccountController {
                 mm.addAttribute("department", a.getDepartment());
                 mm.addAttribute("phone", a.getPhone());
                 mm.addAttribute("email", a.getEmail());
-                mm.addAttribute("institutionalRole", a.getInstitutionalRoleName());
             }
             mm.addAttribute("clusterAccounts", clusterAccounts);
             return "viewaccount";
