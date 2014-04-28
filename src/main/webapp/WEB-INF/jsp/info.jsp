@@ -19,14 +19,18 @@
 
 <body>
 
-  <h2>Get started on the Auckland NeSI cluster (Pan) of the Centre for eResearch</h2>
-
-  <p>Getting started on the Auckland NeSI cluster involves the following steps:</p>
+  <p>
+   <div class="infoblock">
+     You don't yet have a cluster account.
+   </div>
+  </p>
+  <p>
+   Getting started on the Auckland NeSI cluster involves the following steps:
+  </p>
 
   <table cellpadding="15">
     <tbody>
       <tr>
-        <td valign="top"><img src="<%=request.getContextPath()%>/pics/create_account.png"/></td>
         <td valign="top">
           <b>1. Request an account</b>
           <p>
@@ -37,24 +41,20 @@
         </td>
       </tr>
       <tr>
-        <td valign="top"><img src="<%=request.getContextPath()%>/pics/create_project.png" /></td>
         <td valign="top">
           <b>2. Tell us what you want to do and how the cluster can help with that</b>
           <p>
             Provide information about the research project you want to use the cluster for.<br/>
-            You can
+            You have the options to
             <ul>
               <li>Join a project which is already registered with the Centre for eResearch.</li>
               <li>Request a new project to be created.</li>
             </ul>
-            A staff member of the Centre for eResearch will set up access to the
-            project directory on the cluster filesystem for you.
           </p>
         </td>
       </tr>
       <!--
       <tr>
-        <td valign="top"><img src="<%=request.getContextPath()%>/pics/survey.png" /></td>
         <td valign="top">
           <b>3. Tell us how the Auckland NeSI cluster can help with your research</b><br>
           Please tell us what is limiting you.<br> 
@@ -72,7 +72,7 @@
   </p>
 
   <p>
-    <b><a href="requestaccount">Get started</a></b>
+    <b><a href="requestaccount">Request an account</a></b>
   </p>
 
 </body>
