@@ -14,7 +14,7 @@ public class AffiliationUtil {
     private String SEPARATOR = " -- ";
 
     public List<String> getAffiliationStrings(
-            Affiliation[] affiliations) throws Exception {
+            List<Affiliation> affiliations) throws Exception {
 
         List<String> affiliationStrings = new LinkedList<String>();
         if (affiliations != null) {
