@@ -9,9 +9,13 @@ import nz.ac.auckland.cer.project.pojo.Researcher;
 
 public interface ProjectDatabaseDao {
 
-    public Affiliation[] getAffiliations() throws Exception;
+    public List<Affiliation> getAffiliations() throws Exception;
 
-    public InstitutionalRole[] getInstitutionalRoles() throws Exception;
+    public List<InstitutionalRole> getInstitutionalRoles() throws Exception;
+
+    public Integer createAdviser(
+            Adviser a,
+            String adminUser) throws Exception;
 
     public Integer createResearcher(
             Researcher r,
@@ -28,4 +32,20 @@ public interface ProjectDatabaseDao {
 
     public List<String> getAccountNamesForAdviserId(
             Integer adviserId) throws Exception;
+    
+    public void createTuakiriSharedTokenPropertyForResearcher(
+            Integer researcherId, 
+            String tuakiriSharedToken) throws Exception;
+
+    public void createTuakiriSharedTokenPropertyForAdviser(
+            Integer adviserId, 
+            String tuakiriSharedToken) throws Exception;
+
+    public String getInstitutionalRoleName(
+            Integer roleId) throws Exception;
+
+    public String getResearcherStatusName(
+            Integer statusId) throws Exception;
+
+
 }
