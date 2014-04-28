@@ -49,29 +49,15 @@
     });
   });
 </script>
-<style>
-.errorblock {
-	color: #000;
-	background-color: #ffEEEE;
-	border: 3px solid #ff0000;
-	padding: 8px;
-	margin: 16px;
-}
-</style>
 </head>
 
 <body>
-
+  <div id="centered">
   <form:form method="POST" commandName="requestaccount" action='requestaccount'>
-
-    <!-- Applicants information -->
-
-    <table cellpadding="10">
+    <h4>Request an account</h4>
+    <p/>
+    <table cellpadding="5">
       <tbody>
-        <tr>
-          <td><img src="<%=request.getContextPath()%>/pics/create_account.png" /></td>
-          <td><h2>Request an account on the Auckland NeSI cluster (Pan)</h2></td>
-        </tr>
         <tr>
           <td colspan="2">
             <c:if test="${not empty unexpected_error}">
@@ -81,11 +67,11 @@
             <table cellpadding="5">
               <tbody>
                 <tr>
-                  <td>Full name:</td>
-                  <td><form:input id="fullname" path="fullName" value="${requestaccount.fullName}" readonly="true"/></td>
+                  <td><nobr>Full name:</nobr></td>
+                  <td><form:input id="fullname" path="fullName" value="${requestaccount.fullName}" readonly="false"/></td>
                 </tr>
                 <tr>
-                  <td>Preferred name:</td>
+                  <td><nobr>Preferred name:</nobr></td>
                   <td><form:input id="preferredname" path="preferredName" /></td>
                 </tr>
                 <tr>
@@ -104,16 +90,15 @@
                     </div></td>
                 </tr>
                 <tr>
-                  <td>Contact phone number:</td>
+                  <td><nobr>Contact phone:</nobr></td>
                   <td><form:input id="phone" path="phone" /></td>
                 </tr>
                 <tr>
-                  <td>E-mail address:</td>
+                  <td><nobr>E-mail address:</nobr></td>
                   <td><form:input id="email" path="email" /></td>
                 </tr>
                 <tr>
-                  <td>Institutional role:
-                  </td>
+                  <td><nobr>Institutional role:</nobr></td>
                   <td valign="top"><form:select path="institutionalRoleId">
                       <form:option value="" label="Please Select" />
                       <form:options items="${institutionalRoles}" />
@@ -123,6 +108,12 @@
                       <form:input id="institutionalRole_other_value" value="" path="otherInstitutionalRole" />
                     </div>
                     (at institution specified above)
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="2">
+                    <form:checkbox id="isNesiStaff" path="isNesiStaff" />
+                    I'm a NeSI or Centre for eResearch staff member
                   </td>
                 </tr>
               </tbody>
@@ -135,5 +126,6 @@
     <input type="submit" value="Next">
 
   </form:form>
-
+  </div>
 </body>
+</html>
