@@ -38,7 +38,9 @@
     <property name="emailTo" value="${accountrequest.email.to}"/>
     <property name="emailSubject" value="${accountrequest.email.subject}"/>
     <property name="emailBodyResource" value="${accountrequest.email.template.path}"/>
+    <property name="adviserBaseUrl" value="${project.html.adviser.baseurl}"/>
     <property name="researcherBaseUrl" value="${project.html.researcher.baseurl}"/>
+    <property name="projectRequestUrl" value="${project.request.url}"/>
   </bean>
 
   <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
