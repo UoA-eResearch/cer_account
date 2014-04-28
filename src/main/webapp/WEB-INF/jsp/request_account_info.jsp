@@ -24,7 +24,7 @@
         <tr>
           <td valign="top">
             <b>1. Request an account</b>
-            <p>Provide basic information about yourself.</p><br>
+            <p>Provide basic information about yourself.</p>
           </td>
         </tr>
         <tr>
