@@ -31,8 +31,6 @@
     <property name="suffix" value=".jsp" />
   </bean>
 
-  <bean id="SignupTestFilter" class="nz.ac.auckland.cer.account.filter.TestFilter" />
-
   <bean id="RequestAccountValidator" class="nz.ac.auckland.cer.account.validation.RequestAccountValidator" />
 
 </beans>
