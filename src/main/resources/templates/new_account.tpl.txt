@@ -1,4 +1,4 @@
-An account request for the Pan cluster arrived.
+An account request for the Auckland NeSI cluster has arrived.
 
 Name       : __NAME__
 Institution: __INSTITUTION__
