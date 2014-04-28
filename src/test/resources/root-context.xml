@@ -14,6 +14,6 @@
 
   <mockito:mock id="projectDatabaseDao" class="nz.ac.auckland.cer.project.dao.ProjectDatabaseDao" />
   <mockito:mock id="affiliationUtil" class="nz.ac.auckland.cer.project.util.AffiliationUtil"/>
-  <mockito:mock id="templateEmail" class="nz.ac.auckland.cer.common.util.TemplateEmail" />
+  <mockito:mock id="emailUtil" class="nz.ac.auckland.cer.account.util.EmailUtil" />
 
 </beans>
