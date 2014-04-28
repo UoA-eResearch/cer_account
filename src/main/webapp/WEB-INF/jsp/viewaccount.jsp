@@ -20,7 +20,7 @@
 <body>
 
   <p>
-    <b>Details of your account with the Centre for eResearch</b>:
+    <b>Details of your account</b>:
   </p>
   <table cellpadding="5">
     <tbody>
@@ -28,10 +28,12 @@
         <td>Full name:</td>
         <td>${fullName}</td>
       </tr>
-      <tr>
-        <td>Preferred name:</td>
-        <td>${preferredName}</td>
-      </tr>
+      <c:if test="${not empty preferredName}">
+        <tr>
+          <td>Preferred name:</td>
+          <td>${preferredName}</td>
+        </tr>
+      </c:if>
       <tr>
         <td>Institution:</td>
         <td>${institution}</td>
@@ -44,10 +46,12 @@
         <td>Department:</td>
         <td>${department}</td>
       </tr>
-      <tr>
-        <td>Institutional Role:</td>
-        <td>${institutionalRoleName}</td>
-      </tr>
+      <c:if test="${not empty institutionalRoleName}">
+        <tr>
+          <td>Institutional Role:</td>
+          <td>${institutionalRoleName}</td>
+        </tr>
+      </c:if>
       <tr>
         <td>E-mail:</td>
         <td>${email}</td>
@@ -56,15 +60,29 @@
         <td>Phone:</td>
         <td>${phone}</td>
       </tr>
-      <tr>
-        <td valign="top">Cluster Account Names:</td>
-        <td>
-          <c:forEach items="${clusterAccounts}" var="clusterAccount">
-            ${clusterAccount}<br>
-          </c:forEach>      
-        </td>
-      </tr>
+      <c:if test="${not empty accountStatus}">
+        <tr>
+          <td>Account Status:</td>
+          <td>${accountStatus}</td>
+        </tr>
+      </c:if>
+      <c:if test="${not empty clusterAccounts}">
+        <tr>
+          <td valign="top">Cluster Account Names:</td>
+          <td>
+            <c:forEach items="${clusterAccounts}" var="clusterAccount">
+              ${clusterAccount}<br>
+            </c:forEach>      
+          </td>
+        </tr>
+      </c:if>
     </tbody>
   </table>
 
+  <br><br>
+  <p>
+    <a href="#">Edit Account Details</a><br>
+    <a href="#">Request Account Deletion</a>
+  </p>
+  
 </body>
