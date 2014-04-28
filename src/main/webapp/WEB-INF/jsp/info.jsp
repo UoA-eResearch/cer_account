@@ -34,15 +34,13 @@
         <td valign="top">
           <b>1. Request an account</b>
           <p>
-            Provide some basic information about yourself.<br>
-            A staff member of the Centre for eResearch will verify your request, and set
-            up an account for you.
+            Provide basic information about yourself.<br>
           </p>
         </td>
       </tr>
       <tr>
         <td valign="top">
-          <b>2. Tell us what you want to do and how the cluster can help with that</b>
+          <b>2. Tell us about your research project, and how the cluster can help</b>
           <p>
             Provide information about the research project you want to use the cluster for.<br/>
             You have the options to
