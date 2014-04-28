@@ -10,64 +10,57 @@ import nz.ac.auckland.cer.project.pojo.Adviser;
 import nz.ac.auckland.cer.project.pojo.Researcher;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
- * Controller for cluster account request form *
+ * Controller for cluster accounts
  */
 @Controller
 public class AccountController {
 
     private Logger log = Logger.getLogger(AccountController.class.getName());
-    private ProjectDatabaseDao projectDatabaseDao;
+    @Autowired private ProjectDatabaseDao pdDao;
 
-    @RequestMapping(value = "view", method = RequestMethod.GET)
+    @RequestMapping(value = "view_account", method = RequestMethod.GET)
     public String showAccount(
             HttpServletRequest request,
             ModelMap mm) throws Exception {
 
-        if (!(Boolean) request.getAttribute("hasUserRegistered")) {
-            return "redirect:info";
-        } else {
-            List<String> clusterAccounts = new LinkedList<String>();
-            if ((Boolean) request.getAttribute("isUserResearcher")) {
-                Researcher r = (Researcher) request.getAttribute("researcher");
-                clusterAccounts = this.projectDatabaseDao.getAccountNamesForResearcherId(r.getId());
-                mm.addAttribute("fullName", r.getFullName());
-                mm.addAttribute("preferredName", r.getPreferredName());
-                mm.addAttribute("institution", r.getInstitution());
-                mm.addAttribute("division", r.getDivision());
-                mm.addAttribute("department", r.getDepartment());
-                mm.addAttribute("phone", r.getPhone());
-                mm.addAttribute("email", r.getEmail());
-                mm.addAttribute("institutionalRoleName", 
-                        this.projectDatabaseDao.getInstitutionalRoleName(
-                                r.getInstitutionalRoleId()));
-                mm.addAttribute("accountStatus", 
-                        this.projectDatabaseDao.getResearcherStatusName(
-                                r.getStatusId()));
+        try {
+            if (!(Boolean) request.getAttribute("hasUserRegistered")) {
+                return "redirect:request_account_info";
             } else {
-                Adviser a = (Adviser) request.getAttribute("adviser");
-                clusterAccounts = this.projectDatabaseDao.getAccountNamesForAdviserId(a.getId());
-                mm.addAttribute("fullName", a.getFullName());
-                mm.addAttribute("institution", a.getInstitution());
-                mm.addAttribute("division", a.getDivision());
-                mm.addAttribute("department", a.getDepartment());
-                mm.addAttribute("phone", a.getPhone());
-                mm.addAttribute("email", a.getEmail());
+                List<String> clusterAccounts = new LinkedList<String>();
+                if ((Boolean) request.getAttribute("isUserResearcher")) {
+                    Researcher r = (Researcher) request.getAttribute("researcher");
+                    clusterAccounts = this.pdDao.getAccountNamesForResearcherId(r.getId());
+                    mm.addAttribute("fullName", r.getFullName())
+                            .addAttribute("preferredName", r.getPreferredName())
+                            .addAttribute("institution", r.getInstitution())
+                            .addAttribute("division", r.getDivision())
+                            .addAttribute("department", r.getDepartment())
+                            .addAttribute("phone", r.getPhone())
+                            .addAttribute("email", r.getEmail())
+                            .addAttribute("institutionalRoleName",
+                                    this.pdDao.getInstitutionalRoleName(r.getInstitutionalRoleId()))
+                            .addAttribute("accountStatus", this.pdDao.getResearcherStatusName(r.getStatusId()));
+                } else {
+                    Adviser a = (Adviser) request.getAttribute("adviser");
+                    clusterAccounts = this.pdDao.getAccountNamesForAdviserId(a.getId());
+                    mm.addAttribute("fullName", a.getFullName()).addAttribute("institution", a.getInstitution())
+                            .addAttribute("division", a.getDivision()).addAttribute("department", a.getDepartment())
+                            .addAttribute("phone", a.getPhone()).addAttribute("email", a.getEmail());
+                }
+                mm.addAttribute("clusterAccounts", clusterAccounts);
             }
-            mm.addAttribute("clusterAccounts", clusterAccounts);
-            return "viewaccount";
+        } catch (Exception e) {
+            log.error("An unexpected error happened", e);
         }
-    }
-
-    public void setProjectDatabaseDao(
-            ProjectDatabaseDao projectDatabaseDao) {
-
-        this.projectDatabaseDao = projectDatabaseDao;
+        return "view_account";
     }
 
 }
