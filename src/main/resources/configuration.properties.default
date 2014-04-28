@@ -1,5 +1,6 @@
 # project management rest service
 project.html.researcher.baseurl=
+project.html.adviser.baseurl=
 project.rest.baseurl=
 project.researcher.default.picture=
 project.researcher.initial.status.id=
@@ -9,6 +10,7 @@ project.jdbc.driver.className=
 project.jdbc.url=
 project.jdbc.username=
 project.jdbc.password=
+project.request.url=
 
 # email configuration
 email.smtp.server=
