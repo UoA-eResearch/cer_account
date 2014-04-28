@@ -26,7 +26,7 @@ h3 {
   background: none;
   font-weight: bold;
   text-align: left;
-  font-size: 16pt;
+  font-size: 14pt;
   margin-bottom: 5px;
 }
 
@@ -35,31 +35,27 @@ h4 {
   background: none;
   font-weight: bold;
   text-align: left;
-  font-size: 14pt;
+  font-size: 12pt;
   margin-bottom: 5px;
-}
-
-table#bordered {
-  font-family:arial;
-  background-color: #CDCDCD;
-  margin:10px 0pt 15px;
-  font-size: 8pt;
-  text-align: left;
-  border-spacing: 1px;
-}
-table#bordered td {
-  color: #3D3D3D;
-  padding: 4px;
-  background-color: #FFF;
-  vertical-align: top;
 }
 
 a {
   color: #336699;
   text-decoration: none;
 }
-a.white {
-  font-weight:bold; 
-  color: white;
-  text-decoration: none;
+
+.infoblock{
+  color: #000;
+  background-color: #e0ecf3;
+  border: 2px solid #336699;
+  padding: 8px;
+  margin: 2px;
+}
+
+.errorblock {
+  color: #000;
+  background-color: #ffEEEE;
+  border: 3px solid #ff0000;
+  padding: 8px;
+  margin: 2px;
 }

@@ -1,4 +1,4 @@
-A new researcher requested an account on the Pan cluster.
+An account request for the Pan cluster arrived.
 
 Name       : __NAME__
 Institution: __INSTITUTION__
@@ -8,7 +8,7 @@ E-Mail     : __EMAIL__
 Phone      : __PHONE__
 DN         : __DN__
 
-The researcher has been added to the project database in status "Pending".
+A profile has been added to the project database in status "Pending".
 
-Link to researcher profile in project database:
+Link to profile in project database:
 __LINK__
