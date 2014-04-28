@@ -19,6 +19,22 @@
 
 <body>
 
-  <p>Yipee, you have successfully requested an account</p>
+  <p>
+    Your cluster account request has been received.<br>
+    A staff member of the Centre for eResearch will process the request soon.
+  </p>
+  <p>
+    Once your cluster account has been created, you'll receive an e-mail notification with
+    details about how to use the cluster.
+  </p>
+  <p>
+    <div class="infoblock">
+      Note that you still have to <a href="${projectRequestUrl}">request
+      a new project or membership to an existing project</a> before you can submit
+      jobs to the cluster.<br>
+      To view the details of your account, click <a href="view">here</a>.
+    </div>
+  </p>
+
 
 </body>
