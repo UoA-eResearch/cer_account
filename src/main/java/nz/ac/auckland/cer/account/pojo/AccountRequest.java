@@ -10,8 +10,9 @@ public class AccountRequest {
     private String department;
     private String phone;
     private String email;
-    private Integer institutionalRoleId;
     private String otherInstitutionalRole;
+    private Integer institutionalRoleId;
+    private Boolean isNesiStaff = false;
 
     public String getPreferredName() {
 
@@ -121,6 +122,17 @@ public class AccountRequest {
             String otherInstitutionalRole) {
 
         this.otherInstitutionalRole = otherInstitutionalRole;
+    }
+
+    public Boolean getIsNesiStaff() {
+        
+        return isNesiStaff;
+    }
+
+    public void setIsNesiStaff(
+            Boolean isNesiStaff) {
+    
+        this.isNesiStaff = isNesiStaff;
     }
 
 }
