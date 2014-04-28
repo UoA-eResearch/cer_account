@@ -4,16 +4,12 @@ public class Adviser {
 
     private Integer id;
     private String fullName;
-    private String preferredName;
-    private Integer statusId;
     private String statusName;
     private String email;
     private String phone;
     private String institution;
     private String division;
     private String department;
-    private Integer institutionalRoleId;
-    private String institutionalRoleName;
     private String pictureUrl;
     private String startDate;
     private String endDate = ""; // empty string to avoid null in database which
@@ -23,17 +19,6 @@ public class Adviser {
     public Integer getId() {
 
         return id;
-    }
-
-    public Integer getInstitutionalRoleId() {
-
-        return institutionalRoleId;
-    }
-
-    public void setInstitutionalRoleId(
-            Integer institutionalRoleId) {
-
-        this.institutionalRoleId = institutionalRoleId;
     }
 
     public void setId(
@@ -51,17 +36,6 @@ public class Adviser {
             String fullName) {
 
         this.fullName = fullName;
-    }
-
-    public String getPreferredName() {
-
-        return preferredName;
-    }
-
-    public void setPreferredName(
-            String preferredName) {
-
-        this.preferredName = preferredName;
     }
 
     public String getEmail() {
@@ -161,28 +135,6 @@ public class Adviser {
             String notes) {
 
         this.notes = notes;
-    }
-
-    public String getInstitutionalRoleName() {
-
-        return institutionalRoleName;
-    }
-
-    public void setInstitutionalRoleName(
-            String institutionalRoleName) {
-
-        this.institutionalRoleName = institutionalRoleName;
-    }
-
-    public Integer getStatusId() {
-
-        return statusId;
-    }
-
-    public void setStatusId(
-            Integer statusId) {
-
-        this.statusId = statusId;
     }
 
     public String getStatusName() {
