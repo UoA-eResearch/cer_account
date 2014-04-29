@@ -13,19 +13,20 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import nz.ac.auckland.cer.account.util.AuditUtil;
 import nz.ac.auckland.cer.project.dao.ProjectDatabaseDao;
 import nz.ac.auckland.cer.project.pojo.Adviser;
 import nz.ac.auckland.cer.project.pojo.Researcher;
 
 /*
- * TODO: Log error if expected request attributes are not there
  * TODO: Send e-mail if expected request attributes are not there
- * TODO: Log each request to tomcat-central logfile (file appender): path, method, cn, shared-token
  */
 public class AdminFilter implements Filter {
 
     @Autowired private ProjectDatabaseDao pdDao;
+    @Autowired private AuditUtil auditUtil;
     private Logger log = Logger.getLogger(AdminFilter.class.getName());
+    private Logger flog = Logger.getLogger("file." + AdminFilter.class.getName());
 
     public void doFilter(
             ServletRequest req,
@@ -35,6 +36,11 @@ public class AdminFilter implements Filter {
         try {
             HttpServletRequest request = (HttpServletRequest) req;
             String sharedToken = (String) request.getAttribute("shared-token");
+            String cn = (String) request.getAttribute("cn");
+            flog.info(auditUtil.createAuditLogMessage(request, "cn=\"" + cn +"\" shared-token=" + sharedToken));
+            if (cn == null || sharedToken == null) {
+                log.error("At least one required Tuakiri attribute is null: cn='" + cn + "', shared-token=" + sharedToken);
+            }
             Researcher r = this.pdDao.getResearcherForTuakiriSharedToken(sharedToken);
             Adviser a = this.pdDao.getAdviserForTuakiriSharedToken(sharedToken);
             boolean isUserAdviser = (a == null) ? false : true;
