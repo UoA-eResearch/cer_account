@@ -164,12 +164,17 @@ public class RequestAccountController {
 
     /**
      * Set division and department from the institution string
+     * The validator has already verified that institution is not null.
      */
     private void preprocessAccountRequest(
             AccountRequest ar) {
 
         String inst = ar.getInstitution();
-        if (inst != null && !inst.isEmpty() && !inst.equals("Other")) {
+        if (inst.toLowerCase().equals("other")) {
+            ar.setInstitution(ar.getOtherInstitution());
+            ar.setDivision("");
+            ar.setDepartment("");
+        } else {
             ar.setInstitution(this.affUtil.getInstitutionFromAffiliationString(inst));
             ar.setDivision(this.affUtil.getDivisionFromAffiliationString(inst));
             ar.setDepartment(this.affUtil.getDepartmentFromAffiliationString(inst));
