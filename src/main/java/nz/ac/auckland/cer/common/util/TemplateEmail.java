@@ -2,7 +2,10 @@ package nz.ac.auckland.cer.common.util;
 
 import java.util.Map;
 
+import nz.ac.auckland.cer.account.controller.AccountController;
+
 import org.apache.commons.io.IOUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 
@@ -14,6 +17,7 @@ import org.springframework.core.io.Resource;
 public class TemplateEmail {
 
     @Autowired private Email email;
+    private Logger log = Logger.getLogger(TemplateEmail.class.getName());
 
     public void send(
             String from,
@@ -26,7 +30,12 @@ public class TemplateEmail {
 
         if (templateParams != null && body != null) {
             for (String key : templateParams.keySet()) {
-                body = body.replace(key, templateParams.get(key));
+                String value = templateParams.get(key);
+                if (value == null) {
+                    log.error("Parameter to be replaced in template email is null: " +  key);
+                    value = "NULL";
+                }
+                body = body.replace(key, value);
             }
         }
         this.email.send(from, to, cc, replyto, subject, body);
