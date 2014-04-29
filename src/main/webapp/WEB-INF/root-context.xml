@@ -76,6 +76,8 @@
   
   <bean id="templateEmail" class="nz.ac.auckland.cer.common.util.TemplateEmail" />
 
+  <bean id="auditUtil" class="nz.ac.auckland.cer.account.util.AuditUtil" />
+  
   <bean id="emailUtil" class="nz.ac.auckland.cer.account.util.EmailUtil">
     <property name="emailFrom" value="${accountrequest.email.from}"/>
     <property name="emailTo" value="${accountrequest.email.to}"/>
