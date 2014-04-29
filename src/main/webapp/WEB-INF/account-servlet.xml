@@ -38,6 +38,8 @@
 
   <bean id="AdminFilter" class="nz.ac.auckland.cer.account.filter.AdminFilter"/>
   
-  <bean id="TestFilter" class="nz.ac.auckland.cer.account.filter.TestFilter"/>
+  <bean id="IdentityInterceptor" class="nz.ac.auckland.cer.account.filter.IdentityInterceptor">
+    <property name="idResource" value="${test.identity.properties.path}"/>
+  </bean>
 
 </beans>
