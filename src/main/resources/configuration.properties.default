@@ -19,6 +19,8 @@ accountrequest.email.to=
 accountrequest.email.subject=
 accountrequest.email.template.path=
 
+test.identity.properties.path=
+
 # Proxy configuration
 proxy=
 proxyIp=
