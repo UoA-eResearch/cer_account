@@ -9,6 +9,7 @@ import nz.ac.auckland.cer.project.pojo.Adviser;
 import nz.ac.auckland.cer.project.pojo.Affiliation;
 import nz.ac.auckland.cer.project.pojo.InstitutionalRole;
 import nz.ac.auckland.cer.project.pojo.Researcher;
+import nz.ac.auckland.cer.project.util.Person;
 
 import org.apache.log4j.Logger;
 import org.json.JSONObject;
@@ -80,15 +81,13 @@ public class ProjectDatabaseDaoImpl extends SqlSessionDaoSupport implements Proj
         return iRoles;
         */
     }
-
+    
+    /*
     @Override
     public Integer createAdviser(
             Adviser a,
             String adminUser) throws Exception {
 
-        getSqlSession().insert("createAdviser", a);
-        return a.getId();
-        /*
         String url = restBaseUrl + "advisers/";
         Gson gson = new Gson();
         try {
@@ -106,17 +105,15 @@ public class ProjectDatabaseDaoImpl extends SqlSessionDaoSupport implements Proj
             log.error(e);
             throw new Exception("An unexpected error occured.", e);
         }
-        */
     }
+    */
 
+    /*
     @Override
     public Integer createResearcher(
             Researcher r,
             String adminUser) throws Exception {
-        
-        getSqlSession().insert("createResearcher", r);
-        return r.getId();
-        /*
+
         String url = restBaseUrl + "researchers/";
         Gson gson = new Gson();
         try {
@@ -134,25 +131,60 @@ public class ProjectDatabaseDaoImpl extends SqlSessionDaoSupport implements Proj
             log.error(e);
             throw new Exception("An unexpected error occured.", e);
         }
-        */
+    }
+    */
+
+    @Override
+    public Integer createPerson(
+            Person p,
+            String adminUser) throws Exception {
+
+        if (p.isResearcher()) {
+            getSqlSession().insert("createResearcher", p);            
+        } else {
+            getSqlSession().insert("createAdviser", p);            
+        }
+        return p.getId();
     }
 
     public Adviser getAdviserForTuakiriSharedToken(
             String sharedToken) throws Exception {
 
-        return getSqlSession().selectOne("getAdviserForTuakiriSharedToken", sharedToken);
+        List<Adviser> list =  getSqlSession().selectList("getAdviserForTuakiriSharedToken", sharedToken);
+        if (list != null) {
+            if (list.size() == 0) {
+                return null;
+            } else if (list.size() > 1) {
+                log.error("Internal error: More than one adviser in database with shared token " + sharedToken);
+            }
+            return list.get(0);
+        }
+        return null;
     }
 
     public Researcher getResearcherForTuakiriSharedToken(
             String sharedToken) throws Exception {
 
-        return getSqlSession().selectOne("getResearcherForTuakiriSharedToken", sharedToken);
+        List<Researcher> list = getSqlSession().selectList("getResearcherForTuakiriSharedToken", sharedToken);
+        if (list != null) {
+            if (list.size() == 0) {
+                return null;
+            } else if (list.size() > 1) {
+                log.error("Internal error: More than one researcher in database with shared token " + sharedToken);
+            }
+            return list.get(0);
+        }
+        return null;
     }
 
-    public List<String> getAccountNamesForResearcherId(
-            Integer researcherId) throws Exception {
+    public List<String> getAccountNamesForPerson(
+            Person p) throws Exception {
 
-        return getSqlSession().selectList("getAccountNamesForResearcherId", researcherId);
+        if (p.isResearcher()) {
+            return getSqlSession().selectList("getAccountNamesForResearcherId", p.getId());            
+        } else {
+            return getSqlSession().selectList("getAccountNamesForAdviserId", p.getId());            
+        }
     }
 
     public List<String> getAccountNamesForAdviserId(
@@ -161,24 +193,18 @@ public class ProjectDatabaseDaoImpl extends SqlSessionDaoSupport implements Proj
         return getSqlSession().selectList("getAccountNamesForAdviserId", adviserId);
     }
 
-    public void createTuakiriSharedTokenPropertyForResearcher(
-            Integer researcherId, 
+    public void createTuakiriSharedTokenPropertyForPerson(
+            Person p, 
             String tuakiriSharedToken) throws Exception {
         
         Map<String,Object> m = new HashMap<String,Object>();
-        m.put("researcherId", researcherId);
+        m.put("id", p.getId());
         m.put("tuakiriSharedToken", tuakiriSharedToken);
-        getSqlSession().insert("createTuakiriSharedTokenPropertyForResearcher", m);
-    }
-
-    public void createTuakiriSharedTokenPropertyForAdviser(
-            Integer adviserId, 
-            String tuakiriSharedToken) throws Exception {
-        
-        Map<String,Object> m = new HashMap<String,Object>();
-        m.put("adviserId", adviserId);
-        m.put("tuakiriSharedToken", tuakiriSharedToken);
-        getSqlSession().insert("createTuakiriSharedTokenPropertyForAdviser", m);
+        if (p.isResearcher()) {
+            getSqlSession().insert("createTuakiriSharedTokenPropertyForResearcher", m);            
+        } else {
+            getSqlSession().insert("createTuakiriSharedTokenPropertyForAdviser", m);            
+        }
     }
 
     public String getInstitutionalRoleName(

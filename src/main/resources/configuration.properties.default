@@ -14,10 +14,12 @@ project.request.url=
 
 # email configuration
 email.smtp.server=
-accountrequest.email.from=
-accountrequest.email.to=
-accountrequest.email.subject=
-accountrequest.email.template.path=
+account.request.email.from=
+account.request.email.to=
+account.request.email.subject=
+account.request.email.template.path=
+account.change.request.email.subject=
+account.change.request.email.template.path=
 
 test.identity.properties.path=
 

@@ -7,9 +7,14 @@ import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+import org.springframework.core.io.Resource;
+
 public class SLCS {
 
     private String slcsMapUrl;
+    private Resource fallbackSlcsMap;
+    private Logger log = Logger.getLogger(SLCS.class.getName());
 
     /**
      * Download the SLCS IdP DN map, generate a Map from it and return the
@@ -21,18 +26,30 @@ public class SLCS {
     public Map<String, String> getIdpDnMap() throws Exception {
 
         Map<String, String> m = new HashMap<String, String>();
-        URL url = new URL(this.slcsMapUrl);
-        URLConnection c = url.openConnection();
-        BufferedReader br = new BufferedReader(new InputStreamReader(c.getInputStream()));
-        if (br != null) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] tokens = line.split(",");
-                if (tokens.length != 2) {
-                    throw new Exception("Bad SLCS URL, or format error in SLCS Idp Map " + this.slcsMapUrl);
-                }
-                m.put(tokens[0].trim(), tokens[1].trim());
+        BufferedReader br = null;
+        try {
+            URL url = new URL(this.slcsMapUrl);
+            URLConnection c = url.openConnection();
+            br = new BufferedReader(new InputStreamReader(c.getInputStream()));
+        } catch (Exception e) {
+            log.warn("Failed to fetch identity provider map from " + this.slcsMapUrl, e);
+        }
+        if (br == null) {
+            // fetching the map from URL failed
+            try {
+                br = new BufferedReader(new InputStreamReader(fallbackSlcsMap.getInputStream()));                
+            } catch (Exception e) {
+                // can't even read the local fallback map
+                throw new Exception("No SLCS identity provider map available!");                
             }
+        }
+        String line;
+        while ((line = br.readLine()) != null) {
+            String[] tokens = line.split(",");
+            if (tokens.length != 2) {
+                throw new Exception("Format error in SLCS Idp Map " + this.slcsMapUrl);
+            }
+            m.put(tokens[0].trim(), tokens[1].trim());
         }
         return m;
     }
@@ -85,4 +102,11 @@ public class SLCS {
 
         this.slcsMapUrl = slcsMapUrl;
     }
+
+    public void setFallbackSlcsMap(
+            Resource fallbackSlcsMap) {
+    
+        this.fallbackSlcsMap = fallbackSlcsMap;
+    }
+    
 }

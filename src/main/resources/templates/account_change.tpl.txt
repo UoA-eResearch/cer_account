@@ -1,0 +1,23 @@
+__OLD_FULL_NAME__ requested changes to his/her cluster account details:
+
+Old account details:
+
+Full Name         : __OLD_FULL_NAME__
+Preferred Name    : __OLD_PREFERRED_NAME__
+Affiliation       : __OLD_AFFILIATION__
+E-Mail            : __OLD_EMAIL__
+Phone             : __OLD_PHONE__
+Institutional Role: __OLD_INSTITUTIONAL_ROLE__
+
+New account details:
+
+Full Name         : __NEW_FULL_NAME__
+Preferred Name    : __NEW_PREFERRED_NAME__
+Affiliation       : __NEW_AFFILIATION__
+E-Mail            : __NEW_EMAIL__
+Phone             : __NEW_PHONE__
+Institutional Role: __NEW_INSTITUTIONAL_ROLE__
+
+Link to profile in project database:
+__LINK__
+

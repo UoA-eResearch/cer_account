@@ -79,10 +79,12 @@
   <bean id="auditUtil" class="nz.ac.auckland.cer.account.util.AuditUtil" />
   
   <bean id="emailUtil" class="nz.ac.auckland.cer.account.util.EmailUtil">
-    <property name="emailFrom" value="${accountrequest.email.from}"/>
-    <property name="emailTo" value="${accountrequest.email.to}"/>
-    <property name="accountRequestEmailSubject" value="${accountrequest.email.subject}"/>
-    <property name="accountRequestEmailBodyResource" value="${accountrequest.email.template.path}"/>
+    <property name="emailFrom" value="${account.request.email.from}"/>
+    <property name="emailTo" value="${account.request.email.to}"/>
+    <property name="accountRequestEmailSubject" value="${account.request.email.subject}"/>
+    <property name="accountRequestEmailBodyResource" value="${account.request.email.template.path}"/>
+    <property name="accountChangeRequestEmailSubject" value="${account.change.request.email.subject}"/>
+    <property name="accountChangeRequestEmailBodyResource" value="${account.change.request.email.template.path}"/>
     <property name="adviserBaseUrl" value="${project.html.adviser.baseurl}"/>
     <property name="researcherBaseUrl" value="${project.html.researcher.baseurl}"/>
   </bean>

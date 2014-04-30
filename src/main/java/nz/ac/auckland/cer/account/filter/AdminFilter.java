@@ -17,6 +17,7 @@ import nz.ac.auckland.cer.account.util.AuditUtil;
 import nz.ac.auckland.cer.project.dao.ProjectDatabaseDao;
 import nz.ac.auckland.cer.project.pojo.Adviser;
 import nz.ac.auckland.cer.project.pojo.Researcher;
+import nz.ac.auckland.cer.project.util.Person;
 
 /*
  * TODO: Send e-mail if expected request attributes are not there
@@ -43,14 +44,12 @@ public class AdminFilter implements Filter {
             }
             Researcher r = this.pdDao.getResearcherForTuakiriSharedToken(sharedToken);
             Adviser a = this.pdDao.getAdviserForTuakiriSharedToken(sharedToken);
-            boolean isUserAdviser = (a == null) ? false : true;
-            boolean isUserResearcher = (r == null) ? false : true;
-            boolean hasUserRegistered = (a == null && r == null) ? false : true;
-            request.setAttribute("hasUserRegistered", hasUserRegistered);
-            request.setAttribute("isUserAdviser", isUserAdviser);
-            request.setAttribute("isUserResearcher", isUserResearcher);
-            request.setAttribute("adviser", a);
-            request.setAttribute("researcher", r);
+            boolean isResearcher = (r == null) ? false : true;
+            boolean hasPersonRegistered = (a == null && r == null) ? false : true;
+            request.setAttribute("hasPersonRegistered", hasPersonRegistered);
+            if (hasPersonRegistered) {
+                request.setAttribute("person", isResearcher ? new Person(r) : new Person(a));                
+            }
         } catch (final Exception e) {
             log.error("Unexpected error in AdminFilter", e);
             return;

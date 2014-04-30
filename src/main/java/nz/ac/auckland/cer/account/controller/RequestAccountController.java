@@ -14,11 +14,10 @@ import nz.ac.auckland.cer.account.slcs.SLCS;
 import nz.ac.auckland.cer.account.util.EmailUtil;
 import nz.ac.auckland.cer.account.validation.RequestAccountValidator;
 import nz.ac.auckland.cer.project.dao.ProjectDatabaseDao;
-import nz.ac.auckland.cer.project.pojo.Adviser;
 import nz.ac.auckland.cer.project.pojo.Affiliation;
 import nz.ac.auckland.cer.project.pojo.InstitutionalRole;
-import nz.ac.auckland.cer.project.pojo.Researcher;
 import nz.ac.auckland.cer.project.util.AffiliationUtil;
+import nz.ac.auckland.cer.project.util.Person;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +38,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class RequestAccountController {
 
     private Logger log = Logger.getLogger(RequestAccountController.class.getName());
-    private Integer researcherStatusId;
+    private Integer initialResearcherStatusId;
     private String defaultPictureUrl;
     private String adminUser;
     private String projectRequestUrl;
@@ -53,7 +52,7 @@ public class RequestAccountController {
             HttpServletRequest request) throws Exception {
 
         try {
-            if ((Boolean) request.getAttribute("hasUserRegistered")) {
+            if ((Boolean) request.getAttribute("hasPersonRegistered")) {
                 return "redirect:view_account";
             }
         } catch (Exception e) {
@@ -101,17 +100,10 @@ public class RequestAccountController {
             String tuakiriIdpUrl = (String) request.getAttribute("Shib-Identity-Provider");
             String tuakiriSharedToken = (String) request.getAttribute("shared-token");
             String userDN = this.slcs.createUserDn(tuakiriIdpUrl, ar.getFullName(), tuakiriSharedToken);
-            Integer dbAccountId = null;
-            if (ar.getIsNesiStaff()) {
-                Adviser a = this.createAdviserFromFormData(ar);
-                dbAccountId = this.pdDao.createAdviser(a, this.adminUser);
-                this.pdDao.createTuakiriSharedTokenPropertyForAdviser(dbAccountId, tuakiriSharedToken);
-            } else {
-                Researcher r = this.createResearcherFromFormData(ar);
-                dbAccountId = this.pdDao.createResearcher(r, this.adminUser);
-                this.pdDao.createTuakiriSharedTokenPropertyForResearcher(dbAccountId, tuakiriSharedToken);
-            }
-            this.emailUtil.sendAccountRequestEmail(ar, dbAccountId, userDN);
+            Person p = this.createPersonFromFormData(ar);
+            this.pdDao.createPerson(p, this.adminUser);
+            this.pdDao.createTuakiriSharedTokenPropertyForPerson(p, tuakiriSharedToken);
+            this.emailUtil.sendAccountRequestEmail(ar, p.getId(), userDN);
             m.addAttribute("projectRequestUrl", this.projectRequestUrl);
         } catch (Exception e) {
             log.error("Failed to process account request", e);
@@ -184,57 +176,35 @@ public class RequestAccountController {
     /**
      * Create researcher object from account request form data
      */
-    private Researcher createResearcherFromFormData(
+    private Person createPersonFromFormData(
             AccountRequest ar) {
 
-        Researcher r = new Researcher();
-        r.setFullName(ar.getFullName());
-        r.setPreferredName(ar.getPreferredName());
-        r.setInstitution(ar.getInstitution());
-        r.setDivision(ar.getDivision());
-        r.setDepartment(ar.getDepartment());
-        r.setStatusId(this.researcherStatusId);
-        r.setEmail(ar.getEmail());
-        r.setPhone(ar.getPhone());
-        r.setStartDate(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
-        r.setPictureUrl(this.defaultPictureUrl);
         String notes = "";
-        String specifiedInst = ar.getInstitution();
-        if (specifiedInst.equals("Other")) {
+        Person p = new Person();
+        p.setFullName(ar.getFullName());
+        p.setPreferredName(ar.getPreferredName());
+        p.setInstitution(ar.getInstitution());
+        p.setDivision(ar.getDivision());
+        p.setDepartment(ar.getDepartment());
+        p.setEmail(ar.getEmail());
+        p.setPhone(ar.getPhone());
+        p.setStartDate(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
+        p.setPictureUrl(this.defaultPictureUrl);
+        if (ar.getInstitution().equals("Other")) {
             notes += "Other Affiliation: " + ar.getOtherInstitution() + "<br/>";
         }
-        Integer instRoleId = ar.getInstitutionalRoleId();
-        if (instRoleId != null) {
-            r.setInstitutionalRoleId(instRoleId);
-        } else {
-            notes += "Other Institutional Role: " + ar.getOtherInstitutionalRole() + "<br/>";
+        p.setIsResearcher(!ar.getIsNesiStaff());
+        if (p.isResearcher()) {
+            p.setStatusId(this.initialResearcherStatusId);
+            Integer instRoleId = ar.getInstitutionalRoleId();
+            if (instRoleId != null) {
+                p.setInstitutionalRoleId(instRoleId);
+            } else {
+                notes += "Other Institutional Role: " + ar.getOtherInstitutionalRole() + "<br/>";
+            }            
         }
-        r.setNotes(notes);
-        return r;
-    }
-
-    /**
-     * Create researcher object from account request form data
-     */
-    private Adviser createAdviserFromFormData(
-            AccountRequest ar) {
-
-        Adviser a = new Adviser();
-        a.setFullName(ar.getFullName());
-        a.setEmail(ar.getEmail());
-        a.setPhone(ar.getPhone());
-        a.setInstitution(ar.getInstitution());
-        a.setDivision(ar.getDivision());
-        a.setDepartment(ar.getDepartment());
-        a.setStartDate(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
-        a.setPictureUrl(this.defaultPictureUrl);
-        String notes = "";
-        String specifiedInst = ar.getInstitution();
-        if (specifiedInst.equals("Other")) {
-            notes += "Other Affiliation: " + ar.getOtherInstitution() + "<br/>";
-        }
-        a.setNotes(notes);
-        return a;
+        p.setNotes(notes);
+        return p;
     }
 
     /**
@@ -259,10 +229,10 @@ public class RequestAccountController {
         this.projectRequestUrl = projectRequestUrl;
     }
 
-    public void setResearcherStatusId(
-            String researcherStatusId) {
+    public void setInitialResearcherStatusId(
+            String initialResearcherStatusId) {
 
-        this.researcherStatusId = Integer.valueOf(researcherStatusId);
+        this.initialResearcherStatusId = Integer.valueOf(initialResearcherStatusId);
     }
 
     public void setAdminUser(

@@ -14,30 +14,35 @@
   </head>
 
   <body>
-    <p><b>Details of your account</b>:</p>
+    <p>
+      <c:if test="${not empty message}">
+        <div class="infoblock">${message}</div>
+      </c:if>
+    </p>
+    <p><b>Current details of your account</b>:</p>
     <table cellpadding="5">
       <tbody>
         <tr>
           <td>Full name:</td>
-          <td>${fullName}</td>
+          <td>${person.fullName}</td>
         </tr>
-        <c:if test="${not empty preferredName}">
+        <c:if test="${not empty person.preferredName}">
           <tr>
             <td>Preferred name:</td>
-            <td>${preferredName}</td>
+            <td>${person.preferredName}</td>
           </tr>
         </c:if>
         <tr>
           <td>Institution:</td>
-          <td>${institution}</td>
+          <td>${person.institution}</td>
         </tr>
         <tr>
           <td>Division:</td>
-          <td>${division}</td>
+          <td>${person.division}</td>
         </tr>
         <tr>
           <td>Department:</td>
-          <td>${department}</td>
+          <td>${person.department}</td>
         </tr>
         <c:if test="${not empty institutionalRoleName}">
           <tr>
@@ -47,11 +52,11 @@
         </c:if>
         <tr>
           <td>E-mail:</td>
-          <td>${email}</td>
+          <td>${person.email}</td>
         </tr>
         <tr>
           <td>Phone:</td>
-          <td>${phone}</td>
+          <td>${person.phone}</td>
         </tr>
         <c:if test="${not empty accountStatus}">
           <tr>
@@ -74,7 +79,7 @@
 
     <br><br>
     <p>
-      <a href="#">Edit Account Details</a><br>
+      <a href="edit_account">Edit Account Details</a><br>
       <a href="#">Request Account Deletion</a>
     </p>
  

@@ -22,7 +22,7 @@
 
   <bean id="requestAccountController" class="nz.ac.auckland.cer.account.controller.RequestAccountController">
     <property name="defaultPictureUrl" value="${project.researcher.default.picture}" />
-    <property name="researcherStatusId" value="${project.researcher.initial.status.id}" />
+    <property name="initialResearcherStatusId" value="${project.researcher.initial.status.id}" />
     <property name="adminUser" value="${project.admin.remote.user}"/>
     <property name="projectRequestUrl" value="${project.request.url}"/>
   </bean>
@@ -33,7 +33,8 @@
   </bean>
   
   <bean id="slcs" class="nz.ac.auckland.cer.account.slcs.SLCS">
-    <property name="slcsMapUrl" value="${slcs.mapping.url}" />    
+    <property name="slcsMapUrl" value="${slcs.mapping.url}" />
+    <property name="fallbackSlcsMap" value="classpath:idp-acl.txt"/>
   </bean>
 
   <bean id="AdminFilter" class="nz.ac.auckland.cer.account.filter.AdminFilter"/>

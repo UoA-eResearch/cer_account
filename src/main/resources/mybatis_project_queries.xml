@@ -139,7 +139,7 @@
       propname,
       propvalue
     ) VALUES (
-      #{adviserId},
+      #{id},
       1,
       "tuakiriSharedToken",
       #{tuakiriSharedToken}
@@ -153,7 +153,7 @@
       propname,
       propvalue
     ) VALUES (
-      #{researcherId},
+      #{id},
       1,
       "tuakiriSharedToken",
       #{tuakiriSharedToken}
