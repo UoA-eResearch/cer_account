@@ -11,7 +11,6 @@ public class Person {
     // fields common for adviser and researcher
     private Integer id;
     private String fullName;
-    private Integer statusId;
     private String email;
     private String phone;
     private String institution;
@@ -25,12 +24,13 @@ public class Person {
 
     // fields that only researchers have
     private String preferredName;
+    private Integer statusId;
     private Integer institutionalRoleId;
     private String institutionalRoleName;
    
     // fields that only advisers have
     
-    // organizational stuff
+    // organisational stuff
     private String statusName;
     private String otherInstitution;
     private Boolean isResearcher;
