@@ -116,8 +116,7 @@
                   </tr>
                   <tr>
                     <td colspan="2">
-                      <form:checkbox id="isNesiStaff" path="isNesiStaff" />
-                      I'm a NeSI or Centre for eResearch staff member
+                      <form:checkbox id="isNesiStaff" path="isNesiStaff" label="I'm a NeSI or Centre for eResearch staff member"/>
                     </td>
                   </tr>
                 </tbody>
