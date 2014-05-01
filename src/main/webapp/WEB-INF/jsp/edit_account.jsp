@@ -98,7 +98,10 @@
         </tbody>
       </table>
 
-      <br><input type="reset" value="Reset"> <input type="submit" value="Submit">
+      <br>
+      <input type="reset" value="Reset"/>
+      <input type="submit" value="Submit"/>
+      <a href="view_account"><input type="button" value="Cancel"/></a>
     </form:form>
   </body>
 

@@ -20,6 +20,8 @@ account.request.email.subject=
 account.request.email.template.path=
 account.change.request.email.subject=
 account.change.request.email.template.path=
+account.deletion.request.email.subject=
+account.deletion.request.email.template.path=
 
 test.identity.properties.path=
 

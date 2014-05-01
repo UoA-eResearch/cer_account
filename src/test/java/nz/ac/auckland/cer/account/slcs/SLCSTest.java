@@ -37,7 +37,7 @@ public class SLCSTest {
 	    assertNull(m.get("invalid_url"));
 	}
 
-	@Test(expected = UnknownHostException.class)
+	@Test(expected = Exception.class)
 	@DirtiesContext
 	public void testBadHost() throws Exception {
 		this.slcs.setSlcsMapUrl("http://some.bogus.host/idp");

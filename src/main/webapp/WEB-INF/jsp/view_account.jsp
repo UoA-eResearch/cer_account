@@ -80,7 +80,7 @@
     <br><br>
     <p>
       <a href="edit_account">Edit Account Details</a><br>
-      <a href="#">Request Account Deletion</a>
+      <a href="request_account_deletion">Request Account Deletion</a>
     </p>
  
   </body>

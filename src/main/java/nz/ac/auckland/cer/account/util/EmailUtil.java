@@ -7,7 +7,6 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 
-import nz.ac.auckland.cer.account.controller.RequestAccountController;
 import nz.ac.auckland.cer.account.pojo.AccountRequest;
 import nz.ac.auckland.cer.common.util.TemplateEmail;
 import nz.ac.auckland.cer.project.dao.ProjectDatabaseDao;
@@ -22,8 +21,10 @@ public class EmailUtil {
     @Autowired private ProjectDatabaseDao dbDao;
     private Resource accountRequestEmailBodyResource;
     private Resource accountChangeRequestEmailBodyResource;
+    private Resource accountDeletionRequestEmailBodyResource;
     private String accountRequestEmailSubject;
     private String accountChangeRequestEmailSubject;
+    private String accountDeletionRequestEmailSubject;
     private String emailFrom;
     private String emailTo;
     private String adviserBaseUrl;
@@ -96,9 +97,24 @@ public class EmailUtil {
             log.error("Failed to send account details change request email", e);
             throw new Exception("Failed to notify CeR staff about the account details change request");
         }
-
     }
 
+    public void sendAccountDeletionRequestEmail(
+            Person p) throws Exception {
+        Map<String, String> templateParams = new HashMap<String, String>();
+        templateParams.put("__FULL_NAME__", p.getFullName());
+        String link = p.isResearcher() ? (this.researcherBaseUrl + "?id=" + p.getId()) : 
+            (this.adviserBaseUrl + "?id=" + p.getId());
+        templateParams.put("__LINK__", link);
+        try {
+            this.templateEmail.sendFromResource(this.emailFrom, this.emailTo, null, null, this.accountDeletionRequestEmailSubject,
+                    this.accountDeletionRequestEmailBodyResource, templateParams);            
+        } catch (Exception e) {
+            log.error("Failed to send account deletion request email.", e);
+            throw new Exception("Failed to notify CeR staff about the account deletion request.");
+        }        
+    }
+    
     public void setAccountRequestEmailBodyResource(
             Resource accountRequestEmailBodyResource) {
 
@@ -145,6 +161,18 @@ public class EmailUtil {
             String accountChangeRequestEmailSubject) {
     
         this.accountChangeRequestEmailSubject = accountChangeRequestEmailSubject;
+    }
+
+    public void setAccountDeletionRequestEmailBodyResource(
+            Resource accountDeletionRequestEmailBodyResource) {
+    
+        this.accountDeletionRequestEmailBodyResource = accountDeletionRequestEmailBodyResource;
+    }
+
+    public void setAccountDeletionRequestEmailSubject(
+            String accountDeletionRequestEmailSubject) {
+    
+        this.accountDeletionRequestEmailSubject = accountDeletionRequestEmailSubject;
     }
 
 }

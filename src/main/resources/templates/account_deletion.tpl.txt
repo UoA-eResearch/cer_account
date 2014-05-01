@@ -1,0 +1,5 @@
+__FULL_NAME__ requested for his/her cluster account to be deleted.
+
+Link to profile in project database:
+__LINK__
+
