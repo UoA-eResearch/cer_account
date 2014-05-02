@@ -22,9 +22,9 @@
     </p>
     
     <p>
-      <b>The following actions will be taken soon after you clicked on the confirmation link below</b>:
+      <b>The following actions will be taken soon after you click on the confirmation link below</b>:
       <ul>
-        <li><p>Your home directory and all data in your home directory will be deleted.</p</li>
+        <li><p>Your home directory and all data in your home directory will be deleted.</p></li>
         <li>
           <p>
             The projects registered with the Centre for eResearch, that you were working on, will be updated
