@@ -1,5 +1,5 @@
 cer_account
 ===========
 
-Web-based interface to view and edit information of an existing account, and to request a new account on the Auckland NeSI cluster.
+Web-based interface for researchers to manage their accounts on the Auckland NeSI cluster.
 
