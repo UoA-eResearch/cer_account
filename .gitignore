@@ -22,4 +22,5 @@ target
 configuration.properties
 configuration.properties.local
 configuration.properties.prod
+configuration.properties.saga
 TestFilter.java
