@@ -37,20 +37,6 @@ public class SLCSTest {
 	    assertNull(m.get("invalid_url"));
 	}
 
-	@Test(expected = Exception.class)
-	@DirtiesContext
-	public void testBadHost() throws Exception {
-		this.slcs.setSlcsMapUrl("http://some.bogus.host/idp");
-		this.slcs.getIdpDnMap();
-	}
-
-	@Test(expected = Exception.class)
-	@DirtiesContext
-	public void testBadUrl() throws Exception {
-		this.slcs.setSlcsMapUrl("http://iam.auckland.ac.nz/does/not/exist");
-		this.slcs.getIdpDnMap();
-	}
-
 	@Test
 	public void testCreateUser() throws Exception {
 	    String idpUrl = "http://iam.auckland.ac.nz/idp";
