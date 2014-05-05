@@ -20,6 +20,7 @@
  
    <bean id="slcs" class="nz.ac.auckland.cer.account.slcs.SLCS">
        <property name="slcsMapUrl" value="https://slcs1.nesi.org.nz/idp-acl.txt"/>
+       <property name="fallbackSlcsMap" value="classpath:idp-acl.txt"/>
    </bean>
 
 </beans>
