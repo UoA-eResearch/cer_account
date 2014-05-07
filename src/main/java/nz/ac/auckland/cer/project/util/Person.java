@@ -73,6 +73,50 @@ public class Person {
         this.endDate = tmp.getEndDate();
     }
     
+    public Researcher getResearcher() throws Exception {
+        if (this.isResearcher) {
+            Researcher tmp = new Researcher();
+            tmp.setId(this.id);
+            tmp.setFullName(this.fullName);
+            tmp.setPreferredName(this.preferredName);
+            tmp.setStatusId(this.statusId);
+            tmp.setStatusName(this.statusName);
+            tmp.setEmail(this.email);
+            tmp.setPhone(this.phone);
+            tmp.setInstitution(this.institution);
+            tmp.setDivision(this.division);
+            tmp.setDepartment(this.department);
+            tmp.setInstitutionalRoleId(this.institutionalRoleId);
+            tmp.setInstitutionalRoleName(this.institutionalRoleName);
+            tmp.setPictureUrl(this.pictureUrl);
+            tmp.setStartDate(this.startDate);
+            tmp.setEndDate(this.endDate);
+            return tmp;
+        } else {
+            throw new Exception("Type is adviser, and not researcher");
+        }
+    }
+
+    public Adviser getAdviser() throws Exception {
+        if (!this.isResearcher) {
+            Adviser tmp = new Adviser();
+            tmp.setId(this.id);
+            tmp.setFullName(this.fullName);
+            tmp.setStatusName(this.statusName);
+            tmp.setEmail(this.email);
+            tmp.setPhone(this.phone);
+            tmp.setInstitution(this.institution);
+            tmp.setDivision(this.division);
+            tmp.setDepartment(this.department);
+            tmp.setPictureUrl(this.pictureUrl);
+            tmp.setStartDate(this.startDate);
+            tmp.setEndDate(this.endDate);
+            return tmp;
+        } else {
+            throw new Exception("Type is researcher, and not adviser");
+        }
+    }
+
     public Boolean isResearcher() {
         return this.isResearcher;
     }
