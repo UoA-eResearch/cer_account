@@ -14,9 +14,11 @@ public interface ProjectDatabaseDao {
 
     public List<InstitutionalRole> getInstitutionalRoles() throws Exception;
 
-    public Integer createPerson(
-            Person p,
-            String adminUser) throws Exception;
+    public Integer createResearcher(
+            Researcher r) throws Exception;
+    
+    public Integer createAdviser(
+            Adviser a) throws Exception;
     
     public Adviser getAdviserForTuakiriSharedToken(
             String sharedToken) throws Exception;
