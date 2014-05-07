@@ -109,9 +109,8 @@ public class AccountController {
             this.augmentModel(m);
             return "edit_account";
         }
-        String message = "An e-mail with the requested changes to your account details has been sent "
-                + "to the Centre for eResearch.<br>Your details will be updated shortly.";
-        m.addAttribute("message", message);
+        m.addAttribute("message", "An e-mail with the requested changes to your account details has been sent "
+                + "to the Centre for eResearch.<br>Your details will be updated shortly.");
         return "view_account";
     }
 
@@ -122,7 +121,7 @@ public class AccountController {
     public String requestDeleteAccount(
             HttpServletRequest request,
             ModelMap mm) throws Exception {
-        
+
         return "request_account_deletion";
     }
 
@@ -133,14 +132,13 @@ public class AccountController {
     public String confirmDeleteAccount(
             HttpServletRequest request,
             ModelMap mm) throws Exception {
-        
+
         Person p;
         try {
             p = (Person) request.getAttribute("person");
             this.emailUtil.sendAccountDeletionRequestEmail(p);
-            String message = "An e-mail with your account deletion request has been sent "
-                    + "to the Centre for eResearch.<br>Your account will be closed shortly.";
-            mm.addAttribute("message", message);
+            mm.addAttribute("message", "An e-mail with your account deletion request has been sent "
+                    + "to the Centre for eResearch.<br>Your account will be closed shortly.");
         } catch (Exception e) {
             mm.addAttribute("error", e.getMessage());
         }
