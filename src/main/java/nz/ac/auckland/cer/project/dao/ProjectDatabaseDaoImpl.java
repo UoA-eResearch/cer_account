@@ -17,7 +17,6 @@ import org.mybatis.spring.support.SqlSessionDaoSupport;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
@@ -27,6 +26,7 @@ public class ProjectDatabaseDaoImpl extends SqlSessionDaoSupport implements Proj
 
     private String restBaseUrl;
     private RestTemplate restTemplate;
+    private String restAdminUser;
     private Logger log = Logger.getLogger(ProjectDatabaseDaoImpl.class.getName());
 
     public ProjectDatabaseDaoImpl() {
@@ -82,18 +82,16 @@ public class ProjectDatabaseDaoImpl extends SqlSessionDaoSupport implements Proj
         */
     }
     
-    /*
     @Override
     public Integer createAdviser(
-            Adviser a,
-            String adminUser) throws Exception {
+            Adviser a) throws Exception {
 
         String url = restBaseUrl + "advisers/";
         Gson gson = new Gson();
         try {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
-            headers.set("RemoteUser", adminUser);
+            headers.set("RemoteUser", this.restAdminUser);
             HttpEntity<String> request = new HttpEntity<String>(gson.toJson(a), headers);
             HttpEntity<String> he = restTemplate.postForEntity(url, request, String.class);
             return new Integer((String) he.getBody());
@@ -106,20 +104,17 @@ public class ProjectDatabaseDaoImpl extends SqlSessionDaoSupport implements Proj
             throw new Exception("An unexpected error occured.", e);
         }
     }
-    */
 
-    /*
     @Override
     public Integer createResearcher(
-            Researcher r,
-            String adminUser) throws Exception {
+            Researcher r) throws Exception {
 
         String url = restBaseUrl + "researchers/";
         Gson gson = new Gson();
         try {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
-            headers.set("RemoteUser", adminUser);
+            headers.set("RemoteUser", this.restAdminUser);
             HttpEntity<String> request = new HttpEntity<String>(gson.toJson(r), headers);
             HttpEntity<String> he = restTemplate.postForEntity(url, request, String.class);
             return new Integer((String) he.getBody());
@@ -131,20 +126,6 @@ public class ProjectDatabaseDaoImpl extends SqlSessionDaoSupport implements Proj
             log.error(e);
             throw new Exception("An unexpected error occured.", e);
         }
-    }
-    */
-
-    @Override
-    public Integer createPerson(
-            Person p,
-            String adminUser) throws Exception {
-
-        if (p.isResearcher()) {
-            getSqlSession().insert("createResearcher", p);            
-        } else {
-            getSqlSession().insert("createAdviser", p);            
-        }
-        return p.getId();
     }
 
     public Adviser getAdviserForTuakiriSharedToken(
@@ -229,6 +210,12 @@ public class ProjectDatabaseDaoImpl extends SqlSessionDaoSupport implements Proj
             String restBaseUrl) {
 
         this.restBaseUrl = restBaseUrl;
+    }
+
+    public void setRestAdminUser(
+            String restAdminUser) {
+    
+        this.restAdminUser = restAdminUser;
     }
 
 }
