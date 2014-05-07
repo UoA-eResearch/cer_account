@@ -101,9 +101,9 @@ public class RequestAccountController {
             String userDN = this.slcs.createUserDn(tuakiriIdpUrl, ar.getFullName(), tuakiriSharedToken);
             Person p = this.createPersonFromFormData(ar);
             if (p.isResearcher()) {
-                this.pdDao.createResearcher(p.getResearcher());
+                p.setId(this.pdDao.createResearcher(p.getResearcher()));
             } else {
-                this.pdDao.createAdviser(p.getAdviser());
+                p.setId(this.pdDao.createAdviser(p.getAdviser()));
             }
             this.pdDao.createTuakiriSharedTokenPropertyForPerson(p, tuakiriSharedToken);
             this.emailUtil.sendAccountRequestEmail(ar, p.getId(), userDN);
