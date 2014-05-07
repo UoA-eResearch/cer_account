@@ -37,15 +37,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 public class RequestAccountController {
 
-    private Logger log = Logger.getLogger(RequestAccountController.class.getName());
-    private Integer initialResearcherStatusId;
-    private String defaultPictureUrl;
-    private String adminUser;
-    private String projectRequestUrl;
     @Autowired private ProjectDatabaseDao pdDao;
     @Autowired private AffiliationUtil affUtil;
     @Autowired private EmailUtil emailUtil;
     @Autowired private SLCS slcs;
+    private Logger log = Logger.getLogger(RequestAccountController.class.getName());
+    private String defaultPictureUrl;
+    private String projectRequestUrl;
+    private Integer initialResearcherStatusId;
 
     @RequestMapping(value = "request_account_info", method = RequestMethod.GET)
     public String showAccountRequestInfo(
@@ -101,7 +100,11 @@ public class RequestAccountController {
             String tuakiriSharedToken = (String) request.getAttribute("shared-token");
             String userDN = this.slcs.createUserDn(tuakiriIdpUrl, ar.getFullName(), tuakiriSharedToken);
             Person p = this.createPersonFromFormData(ar);
-            this.pdDao.createPerson(p, this.adminUser);
+            if (p.isResearcher()) {
+                this.pdDao.createResearcher(p.getResearcher());
+            } else {
+                this.pdDao.createAdviser(p.getAdviser());
+            }
             this.pdDao.createTuakiriSharedTokenPropertyForPerson(p, tuakiriSharedToken);
             this.emailUtil.sendAccountRequestEmail(ar, p.getId(), userDN);
             m.addAttribute("projectRequestUrl", this.projectRequestUrl);
@@ -233,12 +236,6 @@ public class RequestAccountController {
             String initialResearcherStatusId) {
 
         this.initialResearcherStatusId = Integer.valueOf(initialResearcherStatusId);
-    }
-
-    public void setAdminUser(
-            String adminUser) {
-
-        this.adminUser = adminUser;
     }
 
 }
