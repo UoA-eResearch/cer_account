@@ -23,7 +23,6 @@
   <bean id="requestAccountController" class="nz.ac.auckland.cer.account.controller.RequestAccountController">
     <property name="defaultPictureUrl" value="${project.researcher.default.picture}" />
     <property name="initialResearcherStatusId" value="${project.researcher.initial.status.id}" />
-    <property name="adminUser" value="${project.admin.remote.user}"/>
     <property name="projectRequestUrl" value="${project.request.url}"/>
   </bean>
 
