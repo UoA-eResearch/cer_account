@@ -20,7 +20,7 @@
         <configuration>
           <scanIntervalSeconds>10</scanIntervalSeconds>
           <webAppConfig>
-            <contextPath>/account</contextPath>
+            <contextPath>/ceraccount</contextPath>
           </webAppConfig>
         </configuration>
       </plugin>
