@@ -13,14 +13,7 @@
     <link rel="stylesheet" href="<%=request.getContextPath()%>/style/jquery-ui.css" type="text/css" />
     <script type="text/javascript">
       $(document).ready(function() {
-        var institutionalRole = $("#institutionalRoleId option:selected").val();
         var institution = $("#institution").val();
-
-        if (institutionalRole == 4) {
-          $("#other_institutionalRole").css("display", "inline");
-        } else {
-          $("#other_institutionalRole").css("display", "none");
-        }
 
         if (institution == "Other") {
           $("#other_inst").css("display", "inline");
@@ -36,22 +29,12 @@
             $("#other_inst").css("display", "none");
           }
         });
-
-        // make fields visible/invisible dependent on applicants institutionalRole 
-        $("#institutionalRoleId").change(function() {
-          var institutionalRole = $("#institutionalRoleId option:selected").val();
-          if (institutionalRole == 4) {
-            $("#other_institutionalRole").css("display", "inline");
-          } else {
-            $("#other_institutionalRole").css("display", "none");
-          }
-        });
       });
     </script>
   </head>
 
   <body>
-    <form:form method="POST" commandName="requestaccount" action='request_account'>
+    <form:form method="POST" commandName="formData" action='request_account'>
       <h4>Request an account</h4>
       <p/>
       <table cellpadding="5">
@@ -67,7 +50,7 @@
                   <tr>
                     <td><nobr>Full name:</nobr></td>
                     <td>
-                      <form:input id="fullname" path="fullName" value="${requestaccount.fullName}"
+                      <form:input id="fullname" path="fullName" value="${formData.fullName}"
                                   readonly="false"/>
                     </td>
                   </tr>
@@ -84,11 +67,24 @@
                       </form:select>
                       <p>
                         If your institution/division/department is not listed, please choose
-                        "Other" and specify
+                        "Other". You will be asked to provide this information as text.
                       </p>
                       <div id="other_inst" style="display: none;">
-                        Please specify:
-                        <form:input id="other_institution" value="" path="otherInstitution" />
+                         (Division/Faculty and/or Department may remain empty if they don't apply)
+                         <table cellpadding="5">
+                          <tr>
+                            <td>Institution:</td>
+                            <td><form:input id="other_institution" path="otherInstitution"/></td>
+                          </tr>
+                          <tr>
+                            <td>Division or Faculty:</td>
+                            <td><form:input id="other_division" path="otherDivision" /></td>
+                          </tr>
+                          <tr>
+                            <td>Department:</td>
+                            <td><form:input id="other_department" path="otherDepartment" /></td>
+                          </tr>
+                        </table>
                       </div>
                     </td>
                   </tr>
@@ -107,16 +103,7 @@
                         <form:option value="" label="Please Select" />
                         <form:options items="${institutionalRoles}" />
                       </form:select>
-                      <div id="other_institutionalRole" style="display:none;">
-                        Please specify:
-                        <form:input id="institutionalRole_other_value" value="" path="otherInstitutionalRole" />
-                      </div>
                       (at institution specified above)
-                    </td>
-                  </tr>
-                  <tr>
-                    <td colspan="2">
-                      <form:checkbox id="isNesiStaff" path="isNesiStaff" label="I'm a NeSI or Centre for eResearch staff member"/>
                     </td>
                   </tr>
                 </tbody>

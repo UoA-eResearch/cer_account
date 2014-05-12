@@ -32,8 +32,8 @@ public class TemplateEmail {
             for (String key : templateParams.keySet()) {
                 String value = templateParams.get(key);
                 if (value == null) {
-                    log.error("Parameter to be replaced in template email is null: " +  key);
-                    value = "NULL";
+                    log.warn("Parameter to be replaced in template email is null: " +  key);
+                    value = "N/A";
                 }
                 body = body.replace(key, value);
             }

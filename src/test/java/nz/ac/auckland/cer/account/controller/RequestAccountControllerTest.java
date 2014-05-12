@@ -36,9 +36,9 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "/RequestAccountControllerValidationTest-context.xml", "/root-context.xml" })
+@ContextConfiguration(locations = { "classpath:RequestAccountControllerTest-context.xml", "classpath:root-context.xml" })
 @WebAppConfiguration
-public class RequestAccountControllerValidationTest {
+public class RequestAccountControllerTest {
 
     @Autowired private WebApplicationContext wac;
     @Autowired private ProjectDatabaseDao projectDatabaseDao;
@@ -63,35 +63,37 @@ public class RequestAccountControllerValidationTest {
         when(affiliationUtilMock.getInstitutionFromAffiliationString("Test Institution"))
                 .thenReturn("Test Institution");
         RequestBuilder rb = post("/request_account").param("fullName", "Jane Doe")
-                .param("institution", "Test Institution").param("institutionalRoleId", "42")
+                .param("institution", "Test Inst").param("institutionalRoleId", "42")
                 .param("email", "test@test.org").param("phone", "12345");
         ResultActions ra = this.mockMvc.perform(rb);
         ra.andExpect(status().isOk()).andExpect(view().name("request_account_success"))
-                .andExpect(model().attributeHasNoErrors("requestaccount"));
+                .andExpect(model().attributeHasNoErrors("formData"));
         // .andDo(print())
         verify(this.projectDao, times(0)).createAdviser((Adviser) any());
         verify(this.projectDao, times(1)).createResearcher((Researcher) any());
+        verify(this.emailUtil, times(0)).sendOtherAffiliationEmail("Test Inst", null, null);
         verify(this.emailUtil, times(1)).sendAccountRequestEmail((AccountRequest) any(), anyInt(), anyString());
     }
 
     @DirtiesContext
     @Test
-    public void postAccountRequestAdviserSuccess() throws Exception {
+    public void postAccountRequestResearcherOtherInstitutionSuccess() throws Exception {
 
         when(projectDatabaseDao.getInstitutionalRoles()).thenReturn(new LinkedList<InstitutionalRole>());
         when(affiliationUtilMock.getAffiliationStrings((List<Affiliation>) anyObject())).thenReturn(
                 new LinkedList<String>());
         when(affiliationUtilMock.getInstitutionFromAffiliationString("Test Institution"))
                 .thenReturn("Test Institution");
-        RequestBuilder rb = post("/request_account").param("fullName", "Jane Doe")
-                .param("institution", "Test Institution").param("institutionalRoleId", "42")
-                .param("email", "test@test.org").param("phone", "12345").param("isNesiStaff", "true");
+        RequestBuilder rb = post("/request_account").param("fullName", "Jane Doe").param("institution", "other")
+                .param("otherInstitution", "Test Inst").param("institutionalRoleId", "42")
+                .param("email", "test@test.org").param("phone", "12345");
         ResultActions ra = this.mockMvc.perform(rb);
         ra.andExpect(status().isOk()).andExpect(view().name("request_account_success"))
-                .andExpect(model().attributeHasNoErrors("requestaccount"));
+                .andExpect(model().attributeHasNoErrors("formData"));
         // .andDo(print())
-        verify(this.projectDao, times(0)).createResearcher((Researcher) any());
-        verify(this.projectDao, times(1)).createAdviser((Adviser) any());
+        verify(this.projectDao, times(0)).createAdviser((Adviser) any());
+        verify(this.projectDao, times(1)).createResearcher((Researcher) any());
+        verify(this.emailUtil, times(1)).sendOtherAffiliationEmail("Test Inst", null, null);
         verify(this.emailUtil, times(1)).sendAccountRequestEmail((AccountRequest) any(), anyInt(), anyString());
     }
 
@@ -104,11 +106,15 @@ public class RequestAccountControllerValidationTest {
         when(affiliationUtilMock.getInstitutionFromAffiliationString("Test Institution"))
                 .thenReturn("Test Institution");
         RequestBuilder rb = post("/request_account").param("phone", "12345").param("email", "test@test.org")
-                .param("institution", "Test Institution").param("institutionalRoleId", "42");
+                .param("institution", "Test Inst").param("institutionalRoleId", "42");
         ResultActions ra = this.mockMvc.perform(rb);
         ra.andExpect(status().isOk()).andExpect(view().name("request_account"))
-                .andExpect(model().attributeErrorCount("requestaccount", 1))
-                .andExpect(model().attributeHasFieldErrors("requestaccount", "fullName"));
+                .andExpect(model().attributeErrorCount("formData", 1))
+                .andExpect(model().attributeHasFieldErrors("formData", "fullName"));
+        verify(this.projectDao, times(0)).createResearcher((Researcher) any());
+        verify(this.projectDao, times(0)).createAdviser((Adviser) any());
+        verify(this.emailUtil, times(0)).sendOtherAffiliationEmail(anyString(), anyString(), anyString());
+        verify(this.emailUtil, times(0)).sendAccountRequestEmail((AccountRequest) any(), anyInt(), anyString());
     }
 
     @Test
@@ -120,13 +126,14 @@ public class RequestAccountControllerValidationTest {
         when(affiliationUtilMock.getInstitutionFromAffiliationString("Test Institution"))
                 .thenReturn("Test Institution");
         RequestBuilder rb = post("/request_account").param("fullName", "Jane Doe")
-                .param("institution", "Test Institution").param("institutionalRoleId", "42").param("phone", "12345");
+                .param("institution", "Test Inst").param("institutionalRoleId", "42").param("phone", "12345");
         ResultActions ra = this.mockMvc.perform(rb);
         ra.andExpect(status().isOk()).andExpect(view().name("request_account"))
-                .andExpect(model().attributeErrorCount("requestaccount", 1))
-                .andExpect(model().attributeHasFieldErrors("requestaccount", "email"));
+                .andExpect(model().attributeErrorCount("formData", 1))
+                .andExpect(model().attributeHasFieldErrors("formData", "email"));
         verify(this.projectDao, times(0)).createResearcher((Researcher) any());
         verify(this.projectDao, times(0)).createAdviser((Adviser) any());
+        verify(this.emailUtil, times(0)).sendOtherAffiliationEmail(anyString(), anyString(), anyString());
         verify(this.emailUtil, times(0)).sendAccountRequestEmail((AccountRequest) any(), anyInt(), anyString());
     }
 
@@ -140,10 +147,29 @@ public class RequestAccountControllerValidationTest {
                 .param("email", "test@test.org").param("phone", "12345");
         ResultActions ra = this.mockMvc.perform(rb);
         ra.andExpect(status().isOk()).andExpect(view().name("request_account"))
-                .andExpect(model().attributeErrorCount("requestaccount", 1))
-                .andExpect(model().attributeHasFieldErrors("requestaccount", "institution"));
+                .andExpect(model().attributeErrorCount("formData", 1))
+                .andExpect(model().attributeHasFieldErrors("formData", "institution"));
         verify(this.projectDao, times(0)).createResearcher((Researcher) any());
         verify(this.projectDao, times(0)).createAdviser((Adviser) any());
+        verify(this.emailUtil, times(0)).sendOtherAffiliationEmail(anyString(), anyString(), anyString());
+        verify(this.emailUtil, times(0)).sendAccountRequestEmail((AccountRequest) any(), anyInt(), anyString());
+    }
+
+    @Test
+    public void postAccountRequestMissingOtherInstitution() throws Exception {
+
+        when(projectDatabaseDao.getInstitutionalRoles()).thenReturn(new LinkedList<InstitutionalRole>());
+        when(affiliationUtilMock.getAffiliationStrings((List<Affiliation>) anyObject())).thenReturn(
+                new LinkedList<String>());
+        RequestBuilder rb = post("/request_account").param("fullName", "Jane Doe").param("institution", "Other")
+                .param("institutionalRoleId", "42").param("email", "test@test.org").param("phone", "12345");
+        ResultActions ra = this.mockMvc.perform(rb);
+        ra.andExpect(status().isOk()).andExpect(view().name("request_account"))
+                .andExpect(model().attributeErrorCount("formData", 1))
+                .andExpect(model().attributeHasFieldErrors("formData", "otherInstitution"));
+        verify(this.projectDao, times(0)).createResearcher((Researcher) any());
+        verify(this.projectDao, times(0)).createAdviser((Adviser) any());
+        verify(this.emailUtil, times(0)).sendOtherAffiliationEmail(anyString(), anyString(), anyString());
         verify(this.emailUtil, times(0)).sendAccountRequestEmail((AccountRequest) any(), anyInt(), anyString());
     }
 
@@ -157,10 +183,11 @@ public class RequestAccountControllerValidationTest {
                 .param("institution", "Test Institution").param("email", "test@test.org").param("phone", "12345");
         ResultActions ra = this.mockMvc.perform(rb);
         ra.andExpect(status().isOk()).andExpect(view().name("request_account"))
-                .andExpect(model().attributeErrorCount("requestaccount", 1))
-                .andExpect(model().attributeHasFieldErrors("requestaccount", "institutionalRoleId"));
+                .andExpect(model().attributeErrorCount("formData", 1))
+                .andExpect(model().attributeHasFieldErrors("formData", "institutionalRoleId"));
         verify(this.projectDao, times(0)).createResearcher((Researcher) any());
         verify(this.projectDao, times(0)).createAdviser((Adviser) any());
+        verify(this.emailUtil, times(0)).sendOtherAffiliationEmail(anyString(), anyString(), anyString());
         verify(this.emailUtil, times(0)).sendAccountRequestEmail((AccountRequest) any(), anyInt(), anyString());
     }
 
@@ -177,10 +204,11 @@ public class RequestAccountControllerValidationTest {
                 .param("phone", "12345");
         ResultActions ra = this.mockMvc.perform(rb);
         ra.andExpect(status().isOk()).andExpect(view().name("request_account"))
-                .andExpect(model().attributeErrorCount("requestaccount", 1))
-                .andExpect(model().attributeHasFieldErrors("requestaccount", "email"));
+                .andExpect(model().attributeErrorCount("formData", 1))
+                .andExpect(model().attributeHasFieldErrors("formData", "email"));
         verify(this.projectDao, times(0)).createResearcher((Researcher) any());
         verify(this.projectDao, times(0)).createAdviser((Adviser) any());
+        verify(this.emailUtil, times(0)).sendOtherAffiliationEmail(anyString(), anyString(), anyString());
         verify(this.emailUtil, times(0)).sendAccountRequestEmail((AccountRequest) any(), anyInt(), anyString());
     }
 

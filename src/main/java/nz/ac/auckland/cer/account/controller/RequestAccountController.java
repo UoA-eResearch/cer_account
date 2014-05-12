@@ -16,6 +16,7 @@ import nz.ac.auckland.cer.account.validation.RequestAccountValidator;
 import nz.ac.auckland.cer.project.dao.ProjectDatabaseDao;
 import nz.ac.auckland.cer.project.pojo.Affiliation;
 import nz.ac.auckland.cer.project.pojo.InstitutionalRole;
+import nz.ac.auckland.cer.project.pojo.Researcher;
 import nz.ac.auckland.cer.project.util.AffiliationUtil;
 import nz.ac.auckland.cer.project.util.Person;
 
@@ -73,7 +74,7 @@ public class RequestAccountController {
             AccountRequest ar = new AccountRequest();
             ar.setFullName((String) request.getAttribute("cn"));
             ar.setEmail((String) request.getAttribute("mail"));
-            m.addAttribute("requestaccount", ar);
+            m.addAttribute("formData", ar);
         } catch (Exception e) {
             log.error("An unexpected error happened", e);
         }
@@ -86,7 +87,7 @@ public class RequestAccountController {
     @RequestMapping(value = "request_account", method = RequestMethod.POST)
     public String processAccountRequestForm(
             Model m,
-            @Valid @ModelAttribute("requestaccount") AccountRequest ar,
+            @Valid @ModelAttribute("formData") AccountRequest ar,
             BindingResult bResult,
             HttpServletRequest request) throws Exception {
 
@@ -99,14 +100,10 @@ public class RequestAccountController {
             String tuakiriIdpUrl = (String) request.getAttribute("Shib-Identity-Provider");
             String tuakiriSharedToken = (String) request.getAttribute("shared-token");
             String userDN = this.slcs.createUserDn(tuakiriIdpUrl, ar.getFullName(), tuakiriSharedToken);
-            Person p = this.createPersonFromFormData(ar);
-            if (p.isResearcher()) {
-                p.setId(this.pdDao.createResearcher(p.getResearcher()));
-            } else {
-                p.setId(this.pdDao.createAdviser(p.getAdviser()));
-            }
-            this.pdDao.createTuakiriSharedTokenPropertyForPerson(p, tuakiriSharedToken);
-            this.emailUtil.sendAccountRequestEmail(ar, p.getId(), userDN);
+            Researcher r = this.createResearcherFromFormData(ar);
+            r.setId(this.pdDao.createResearcher(r));
+            this.pdDao.createTuakiriSharedTokenPropertyForResearcher(r, tuakiriSharedToken);
+            this.emailUtil.sendAccountRequestEmail(ar, r.getId(), userDN);
             m.addAttribute("projectRequestUrl", this.projectRequestUrl);
         } catch (Exception e) {
             log.error("Failed to process account request", e);
@@ -153,22 +150,23 @@ public class RequestAccountController {
         }
 
         if (errorMessage.trim().length() > 0) {
-            //m.addAttribute("unexpected_error", errorMessage);
+            // m.addAttribute("unexpected_error", errorMessage);
         }
     }
 
     /**
-     * Set division and department from the institution string
-     * The validator has already verified that institution is not null.
+     * Set division and department from the institution string The validator has
+     * already verified that institution is not null.
      */
     private void preprocessAccountRequest(
-            AccountRequest ar) {
+            AccountRequest ar) throws Exception {
 
         String inst = ar.getInstitution();
         if (inst.toLowerCase().equals("other")) {
             ar.setInstitution(ar.getOtherInstitution());
-            ar.setDivision("");
-            ar.setDepartment("");
+            ar.setDivision(ar.getOtherDivision());
+            ar.setDepartment(ar.getOtherDepartment());
+            this.emailUtil.sendOtherAffiliationEmail(ar.getInstitution(), ar.getDivision(), ar.getDepartment());
         } else {
             ar.setInstitution(this.affUtil.getInstitutionFromAffiliationString(inst));
             ar.setDivision(this.affUtil.getDivisionFromAffiliationString(inst));
@@ -179,35 +177,23 @@ public class RequestAccountController {
     /**
      * Create researcher object from account request form data
      */
-    private Person createPersonFromFormData(
-            AccountRequest ar) {
+    private Researcher createResearcherFromFormData(
+            AccountRequest ar) throws Exception {
 
-        String notes = "";
-        Person p = new Person();
-        p.setFullName(ar.getFullName());
-        p.setPreferredName(ar.getPreferredName());
-        p.setInstitution(ar.getInstitution());
-        p.setDivision(ar.getDivision());
-        p.setDepartment(ar.getDepartment());
-        p.setEmail(ar.getEmail());
-        p.setPhone(ar.getPhone());
-        p.setStartDate(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
-        p.setPictureUrl(this.defaultPictureUrl);
-        if (ar.getInstitution().equals("Other")) {
-            notes += "Other Affiliation: " + ar.getOtherInstitution() + "<br/>";
-        }
-        p.setIsResearcher(!ar.getIsNesiStaff());
-        if (p.isResearcher()) {
-            p.setStatusId(this.initialResearcherStatusId);
-            Integer instRoleId = ar.getInstitutionalRoleId();
-            if (instRoleId != null) {
-                p.setInstitutionalRoleId(instRoleId);
-            } else {
-                notes += "Other Institutional Role: " + ar.getOtherInstitutionalRole() + "<br/>";
-            }            
-        }
-        p.setNotes(notes);
-        return p;
+        Researcher tmp = new Researcher();
+        tmp.setFullName(ar.getFullName());
+        tmp.setPreferredName(ar.getPreferredName());
+        tmp.setEmail(ar.getEmail());
+        tmp.setPhone(ar.getPhone());
+        tmp.setStartDate(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
+        tmp.setPictureUrl(this.defaultPictureUrl);
+        tmp.setInstitution(ar.getInstitution());
+        tmp.setDivision(ar.getDivision());
+        tmp.setDepartment(ar.getDepartment());
+        tmp.setStatusId(this.initialResearcherStatusId);
+        Integer instRoleId = ar.getInstitutionalRoleId();
+        tmp.setInstitutionalRoleId(instRoleId);
+        return tmp;
     }
 
     /**

@@ -5,14 +5,14 @@ public class AccountRequest {
     private String fullName;
     private String preferredName;
     private String institution;
-    private String otherInstitution;
     private String division;
     private String department;
+    private String otherInstitution;
+    private String otherDivision;
+    private String otherDepartment;
     private String phone;
     private String email;
-    private String otherInstitutionalRole;
     private Integer institutionalRoleId;
-    private Boolean isNesiStaff = false;
 
     public String getPreferredName() {
 
@@ -113,26 +113,26 @@ public class AccountRequest {
         this.otherInstitution = otherInstitution;
     }
 
-    public String getOtherInstitutionalRole() {
-
-        return otherInstitutionalRole;
-    }
-
-    public void setOtherInstitutionalRole(
-            String otherInstitutionalRole) {
-
-        this.otherInstitutionalRole = otherInstitutionalRole;
-    }
-
-    public Boolean getIsNesiStaff() {
-        
-        return isNesiStaff;
-    }
-
-    public void setIsNesiStaff(
-            Boolean isNesiStaff) {
+    public String getOtherDivision() {
     
-        this.isNesiStaff = isNesiStaff;
+        return otherDivision;
+    }
+
+    public void setOtherDivision(
+            String otherDivision) {
+    
+        this.otherDivision = otherDivision;
+    }
+
+    public String getOtherDepartment() {
+    
+        return otherDepartment;
+    }
+
+    public void setOtherDepartment(
+            String otherDepartment) {
+    
+        this.otherDepartment = otherDepartment;
     }
 
 }

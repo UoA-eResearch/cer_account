@@ -22,9 +22,11 @@ public class EmailUtil {
     private Resource accountRequestEmailBodyResource;
     private Resource accountChangeRequestEmailBodyResource;
     private Resource accountDeletionRequestEmailBodyResource;
+    private Resource otherAffiliationEmailBodyResource;
     private String accountRequestEmailSubject;
     private String accountChangeRequestEmailSubject;
     private String accountDeletionRequestEmailSubject;
+    private String otherAffiliationEmailSubject;
     private String emailFrom;
     private String emailTo;
     private String adviserBaseUrl;
@@ -52,14 +54,10 @@ public class EmailUtil {
             templateParams.put("__DIVISION__", ar.getDivision());
             templateParams.put("__DEPARTMENT__", ar.getDepartment());
         }
-        if (ar.getIsNesiStaff()) {
-            templateParams.put("__LINK__", this.adviserBaseUrl + "?id=" + dbAccountId);
-        } else {
-            templateParams.put("__LINK__", this.researcherBaseUrl + "?id=" + dbAccountId);
-        }
+        templateParams.put("__LINK__", this.researcherBaseUrl + "?id=" + dbAccountId);
         try {
-            this.templateEmail.sendFromResource(this.emailFrom, this.emailTo, null, null, this.accountRequestEmailSubject,
-                    this.accountRequestEmailBodyResource, templateParams);            
+            this.templateEmail.sendFromResource(this.emailFrom, this.emailTo, null, null,
+                    this.accountRequestEmailSubject, this.accountRequestEmailBodyResource, templateParams);
         } catch (Exception e) {
             log.error("Failed to send account request email", e);
             throw new Exception("Failed to notify CeR staff about the new account request");
@@ -67,32 +65,35 @@ public class EmailUtil {
     }
 
     public void sendAccountDetailsChangeRequestRequestEmail(
-            Person p,
-            AccountRequest ar) throws Exception {
+            Person op,
+            Person np) throws Exception {
 
         Map<String, String> templateParams = new HashMap<String, String>();
-        templateParams.put("__OLD_AFFILIATION__", 
-                affUtil.createAffiliationString(p.getInstitution(), p.getDivision(), p.getDepartment()));
-        templateParams.put("__OLD_INSTITUTIONAL_ROLE__", 
-                dbDao.getInstitutionalRoleName(p.isResearcher() ? p.getInstitutionalRoleId() : -1));
-        templateParams.put("__OLD_FULL_NAME__", p.getFullName());
-        templateParams.put("__OLD_PREFERRED_NAME__", p.getPreferredName());
-        templateParams.put("__OLD_EMAIL__", p.getEmail());
-        templateParams.put("__OLD_PHONE__", p.getPhone());
-        templateParams.put("__NEW_FULL_NAME__", ar.getFullName());
-        templateParams.put("__NEW_PREFERRED_NAME__", ar.getPreferredName());
-        templateParams.put("__NEW_EMAIL__", ar.getEmail());
-        templateParams.put("__NEW_PHONE__", ar.getPhone());
-        templateParams.put("__NEW_AFFILIATION__", ar.getInstitution());
-        templateParams.put("__NEW_INSTITUTIONAL_ROLE__", dbDao.getInstitutionalRoleName(ar.getInstitutionalRoleId()));
+        templateParams.put("__OLD_INSTITUTION__", op.getInstitution());
+        templateParams.put("__OLD_DIVISION__", op.getDivision());
+        templateParams.put("__OLD_DEPARTMENT__", op.getDepartment());
+        templateParams.put("__OLD_INSTITUTIONAL_ROLE__",
+                dbDao.getInstitutionalRoleName(op.isResearcher() ? op.getInstitutionalRoleId() : -1));
+        templateParams.put("__OLD_FULL_NAME__", op.getFullName());
+        templateParams.put("__OLD_PREFERRED_NAME__", op.getPreferredName());
+        templateParams.put("__OLD_EMAIL__", op.getEmail());
+        templateParams.put("__OLD_PHONE__", op.getPhone());
+        templateParams.put("__NEW_FULL_NAME__", np.getFullName());
+        templateParams.put("__NEW_PREFERRED_NAME__", np.getPreferredName());
+        templateParams.put("__NEW_EMAIL__", np.getEmail());
+        templateParams.put("__NEW_PHONE__", np.getPhone());
+        templateParams.put("__NEW_INSTITUTION__", np.getInstitution());
+        templateParams.put("__NEW_DIVISION__", np.getDivision());
+        templateParams.put("__NEW_DEPARTMENT__", np.getDepartment());
+        templateParams.put("__NEW_INSTITUTIONAL_ROLE__", dbDao.getInstitutionalRoleName(np.getInstitutionalRoleId()));
 
-        String link = p.isResearcher() ? (this.researcherBaseUrl + "?id=" + p.getId()) : 
-            (this.adviserBaseUrl + "?id=" + p.getId());
+        String link = np.isResearcher() ? (this.researcherBaseUrl + "?id=" + np.getId())
+                : (this.adviserBaseUrl + "?id=" + np.getId());
         templateParams.put("__LINK__", link);
-        
+
         try {
-            this.templateEmail.sendFromResource(this.emailFrom, this.emailTo, null, null, this.accountChangeRequestEmailSubject,
-                    this.accountChangeRequestEmailBodyResource, templateParams);            
+            this.templateEmail.sendFromResource(this.emailFrom, this.emailTo, null, null,
+                    this.accountChangeRequestEmailSubject, this.accountChangeRequestEmailBodyResource, templateParams);
         } catch (Exception e) {
             log.error("Failed to send account details change request email", e);
             throw new Exception("Failed to notify CeR staff about the account details change request");
@@ -101,20 +102,40 @@ public class EmailUtil {
 
     public void sendAccountDeletionRequestEmail(
             Person p) throws Exception {
+
         Map<String, String> templateParams = new HashMap<String, String>();
         templateParams.put("__FULL_NAME__", p.getFullName());
-        String link = p.isResearcher() ? (this.researcherBaseUrl + "?id=" + p.getId()) : 
-            (this.adviserBaseUrl + "?id=" + p.getId());
+        String link = p.isResearcher() ? (this.researcherBaseUrl + "?id=" + p.getId())
+                : (this.adviserBaseUrl + "?id=" + p.getId());
         templateParams.put("__LINK__", link);
         try {
-            this.templateEmail.sendFromResource(this.emailFrom, this.emailTo, null, null, this.accountDeletionRequestEmailSubject,
-                    this.accountDeletionRequestEmailBodyResource, templateParams);            
+            this.templateEmail.sendFromResource(this.emailFrom, this.emailTo, null, null,
+                    this.accountDeletionRequestEmailSubject, this.accountDeletionRequestEmailBodyResource,
+                    templateParams);
         } catch (Exception e) {
             log.error("Failed to send account deletion request email.", e);
             throw new Exception("Failed to notify CeR staff about the account deletion request.");
-        }        
+        }
     }
-    
+
+    public void sendOtherAffiliationEmail(
+            String institution,
+            String division,
+            String department) throws Exception {
+
+        Map<String, String> templateParams = new HashMap<String, String>();
+        templateParams.put("__INSTITUTION__", institution);
+        templateParams.put("__DIVISION__", division);
+        templateParams.put("__DEPARTMENT__", department);
+        try {
+            this.templateEmail.sendFromResource(this.emailFrom, this.emailTo, null, null,
+                    this.otherAffiliationEmailSubject, this.otherAffiliationEmailBodyResource, templateParams);
+        } catch (Exception e) {
+            log.error("Failed to send other institution email.", e);
+            throw new Exception("Failed to notify CeR staff about the other institution.");
+        }
+    }
+
     public void setAccountRequestEmailBodyResource(
             Resource accountRequestEmailBodyResource) {
 
@@ -153,26 +174,38 @@ public class EmailUtil {
 
     public void setAccountChangeRequestEmailBodyResource(
             Resource accountChangeRequestEmailBodyResource) {
-    
+
         this.accountChangeRequestEmailBodyResource = accountChangeRequestEmailBodyResource;
     }
 
     public void setAccountChangeRequestEmailSubject(
             String accountChangeRequestEmailSubject) {
-    
+
         this.accountChangeRequestEmailSubject = accountChangeRequestEmailSubject;
     }
 
     public void setAccountDeletionRequestEmailBodyResource(
             Resource accountDeletionRequestEmailBodyResource) {
-    
+
         this.accountDeletionRequestEmailBodyResource = accountDeletionRequestEmailBodyResource;
     }
 
     public void setAccountDeletionRequestEmailSubject(
             String accountDeletionRequestEmailSubject) {
-    
+
         this.accountDeletionRequestEmailSubject = accountDeletionRequestEmailSubject;
+    }
+
+    public void setOtherAffiliationEmailBodyResource(
+            Resource otherAffiliationEmailBodyResource) {
+
+        this.otherAffiliationEmailBodyResource = otherAffiliationEmailBodyResource;
+    }
+
+    public void setOtherAffiliationEmailSubject(
+            String otherAffiliationEmailSubject) {
+
+        this.otherAffiliationEmailSubject = otherAffiliationEmailSubject;
     }
 
 }

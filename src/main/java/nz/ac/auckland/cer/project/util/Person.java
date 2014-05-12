@@ -18,6 +18,7 @@ public class Person {
     private String department;
     private String pictureUrl;
     private String startDate;
+    private String lastModified;
     private String endDate = ""; // empty string to avoid null in database which
                                  // causes problems with other apps
     private String notes;
@@ -32,13 +33,33 @@ public class Person {
     
     // organisational stuff
     private String statusName;
-    private String otherInstitution;
     private Boolean isResearcher;
 
     public Person () {
         
     }
-    
+
+    public Person (Person p) {
+        this.isResearcher = p.getIsResearcher();
+        this.id = p.getId();
+        this.fullName = p.getFullName();
+        this.preferredName = p.getPreferredName();
+        this.statusId = p.getStatusId();
+        this.statusName = p.getStatusName();
+        this.email = p.getEmail();
+        this.phone = p.getPhone();
+        this.institution = p.getInstitution();
+        this.division = p.getDivision();
+        this.department = p.getDepartment();
+        this.institutionalRoleId = p.getInstitutionalRoleId();
+        this.institutionalRoleName = p.getInstitutionalRoleName();
+        this.pictureUrl = p.getPictureUrl();
+        this.startDate = p.getStartDate();
+        this.endDate = p.getEndDate();
+        this.lastModified = p.getLastModified();
+        this.notes = p.getNotes();
+    }
+
     public Person (Researcher tmp) {
         this.isResearcher = true;
         this.id = tmp.getId();
@@ -56,6 +77,7 @@ public class Person {
         this.pictureUrl = tmp.getPictureUrl();
         this.startDate = tmp.getStartDate();
         this.endDate = tmp.getEndDate();
+        this.lastModified = tmp.getLastModified();
     }
     
     public Person (Adviser tmp) {
@@ -71,6 +93,7 @@ public class Person {
         this.pictureUrl = tmp.getPictureUrl();
         this.startDate = tmp.getStartDate();
         this.endDate = tmp.getEndDate();
+        this.lastModified = tmp.getLastModified();
     }
     
     public Researcher getResearcher() throws Exception {
@@ -91,6 +114,7 @@ public class Person {
             tmp.setPictureUrl(this.pictureUrl);
             tmp.setStartDate(this.startDate);
             tmp.setEndDate(this.endDate);
+            tmp.setLastModified(this.lastModified);
             return tmp;
         } else {
             throw new Exception("Type is adviser, and not researcher");
@@ -111,6 +135,7 @@ public class Person {
             tmp.setPictureUrl(this.pictureUrl);
             tmp.setStartDate(this.startDate);
             tmp.setEndDate(this.endDate);
+            tmp.setLastModified(this.lastModified);
             return tmp;
         } else {
             throw new Exception("Type is researcher, and not adviser");
@@ -308,15 +333,15 @@ public class Person {
         this.isResearcher = isResearcher;
     }
 
-    public String getOtherInstitution() {
+    public String getLastModified() {
     
-        return otherInstitution;
+        return lastModified;
     }
 
-    public void setOtherInstitution(
-            String otherInstitution) {
+    public void setLastModified(
+            String lastModified) {
     
-        this.otherInstitution = otherInstitution;
+        this.lastModified = lastModified;
     }
 
 }

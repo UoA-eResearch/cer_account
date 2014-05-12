@@ -12,6 +12,7 @@ public class Adviser {
     private String department;
     private String pictureUrl;
     private String startDate;
+    private String lastModified;
     private String endDate = ""; // empty string to avoid null in database which
                                  // causes problems with other apps
     private String notes;
@@ -146,6 +147,17 @@ public class Adviser {
             String string) {
 
         this.statusName = string;
+    }
+
+    public String getLastModified() {
+    
+        return lastModified;
+    }
+
+    public void setLastModified(
+            String lastModified) {
+    
+        this.lastModified = lastModified;
     }
 
 }

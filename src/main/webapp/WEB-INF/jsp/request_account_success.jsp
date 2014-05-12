@@ -15,12 +15,12 @@
 
   <body>
     <p>
-      Your cluster account request has been received.<br>
-      A staff member of the Centre for eResearch will process the request soon.
+      Your cluster account request has been received and will be processed shortly.<br>
+      If we need more information, a member of our team will be in touch with you.
     </p>
     <p>
       Once your cluster account has been created, you'll receive an e-mail notification with
-      details about how to use the cluster.
+      instructions about how to use the cluster.
     </p>
     <p>
       <div class="infoblock">
@@ -29,7 +29,6 @@
         To view the details of your account, click <a href="view_account">here</a>.
       </div>
     </p>
-    
-  </body>
-  
+  </body>  
+
 </html>

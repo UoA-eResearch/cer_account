@@ -1,0 +1,12 @@
+An affiliation, that has not yet been stored in the database, has been
+put into the cluster account signup form or the cluster account edit form.
+
+Markus, Nick, Eva, Martin:
+Please check the following three fields for typos and add them to the database:
+
+Institution: __INSTITUTION__
+Division   : __DIVISION__
+Department : __DEPARTMENT__
+
+If there are typos, please also correct the values in the profile of the
+researcher who used this new affiliation.

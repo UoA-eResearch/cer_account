@@ -39,7 +39,7 @@
   </head>
 
   <body>
-    <form:form method="POST" commandName="person" action='edit_account'>
+    <form:form method="POST" commandName="formData" action='edit_account'>
       <h4>Edit account details</h4>
       <p/>
       <table cellpadding="5">
@@ -68,11 +68,24 @@
                       <form:select id="institution" path="institution" items="${affiliations}" />
                       <p>
                         If your institution/division/department is not listed, please choose
-                        "Other" and specify
+                        "Other". You will be asked to provide this information as text.
                       </p>
                       <div id="other_inst" style="display: none;">
-                        Please specify:
-                        <form:input id="other_institution" value="" path="otherInstitution" />
+                         (Division/Faculty and/or Department may remain empty if they don't apply)
+                         <table cellpadding="5">
+                          <tr>
+                            <td>Institution:</td>
+                            <td><form:input id="other_institution" path="otherInstitution"/></td>
+                          </tr>
+                          <tr>
+                            <td>Division or Faculty:</td>
+                            <td><form:input id="other_division" path="otherDivision" /></td>
+                          </tr>
+                          <tr>
+                            <td>Department:</td>
+                            <td><form:input id="other_department" path="otherDepartment" /></td>
+                          </tr>
+                        </table>
                       </div>
                     </td>
                   </tr>

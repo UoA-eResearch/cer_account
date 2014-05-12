@@ -88,6 +88,8 @@
     <property name="accountChangeRequestEmailBodyResource" value="${account.change.request.email.template.path}"/>
     <property name="accountDeletionRequestEmailSubject" value="${account.deletion.request.email.subject}"/>
     <property name="accountDeletionRequestEmailBodyResource" value="${account.deletion.request.email.template.path}"/>
+    <property name="otherAffiliationEmailSubject" value="${other.affiliation.email.subject}"/>
+    <property name="otherAffiliationEmailBodyResource" value="${other.affiliation.email.template.path}"/>
     <property name="adviserBaseUrl" value="${project.html.adviser.baseurl}"/>
     <property name="researcherBaseUrl" value="${project.html.researcher.baseurl}"/>
   </bean>

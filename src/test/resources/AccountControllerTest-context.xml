@@ -14,8 +14,6 @@
     original location of mockito.xsd: http://www.mockito.org/spring/mockito https://bitbucket.org/kubek2k/springockito/raw/tip/springockito/src/main/resources/spring/mockito.xsd  
     use local version, otherwise tests won't run without internet connection  
   -->
-
-  <context:component-scan base-package="nz.ac.auckland.cer.account.controller" />
   
   <bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
     <property name="exceptionMappings">
@@ -25,11 +23,7 @@
     </property>
   </bean>
 
-  <bean id="requestAccountController" class="nz.ac.auckland.cer.account.controller.RequestAccountController">
-    <property name="defaultPictureUrl" value="http://some/picture.png" />
-  </bean>
-  
-  <mockito:mock id="slcs" class="nz.ac.auckland.cer.account.slcs.SLCS" />
+  <bean id="accountController" class="nz.ac.auckland.cer.account.controller.AccountController"/>
   
   <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
     <property name="prefix" value="/WEB-INF/jsp/signup/" />

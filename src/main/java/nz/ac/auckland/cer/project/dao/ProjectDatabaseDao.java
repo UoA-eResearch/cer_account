@@ -19,7 +19,13 @@ public interface ProjectDatabaseDao {
     
     public Integer createAdviser(
             Adviser a) throws Exception;
+
+    public void updateResearcher(
+            Researcher r) throws Exception;
     
+    public void updateAdviser(
+            Adviser a) throws Exception;
+
     public Adviser getAdviserForTuakiriSharedToken(
             String sharedToken) throws Exception;
 
@@ -29,8 +35,8 @@ public interface ProjectDatabaseDao {
     public List<String> getAccountNamesForPerson(
             Person person) throws Exception;
 
-    public void createTuakiriSharedTokenPropertyForPerson(
-            Person p,
+    public void createTuakiriSharedTokenPropertyForResearcher(
+            Researcher r,
             String tuakiriSharedToken) throws Exception;
 
     public String getInstitutionalRoleName(
