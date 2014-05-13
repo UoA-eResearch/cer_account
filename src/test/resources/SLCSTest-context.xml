@@ -15,7 +15,6 @@
       http://www.springframework.org/schema/jdbc/spring-jdbc-3.0.xsd">
  
    <context:annotation-config />
-   <context:component-scan base-package="signup.slcs" />
    <mvc:annotation-driven />
  
    <bean id="slcs" class="nz.ac.auckland.cer.account.slcs.SLCS">
