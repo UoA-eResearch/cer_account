@@ -77,12 +77,15 @@
       </tbody>
     </table>
 
-    <br><br>
     <p>
-      <a href="edit_account">Edit Account Details</a><br>
-      <a href="request_account_deletion">Request Account Deletion</a>
+      <form action="edit_account" style="display: inline;">
+        <input type="submit" value="Edit Account Details"/>
+      </form>
+      <form action="request_account_deletion" style="display: inline;">
+        <input type="submit" value="Request Account Deletion"/>
+      </form>
     </p>
- 
+
   </body>
   
 </html>

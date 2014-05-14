@@ -62,7 +62,11 @@
       </ul>
     </p>
         
-    <p><b><a href="confirm_account_deletion">Confirm account deletion request</a></b></p>
+    <p>
+      <form action="confirm_account_deletion" style="display: inline;">
+        <input type="submit" value="Confirm account deletion request"/>
+      </form>
+    </p>
 
   </body>
   
