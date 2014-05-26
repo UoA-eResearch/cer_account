@@ -49,11 +49,13 @@ public class RequestAccountController {
 
     @RequestMapping(value = "request_account_info", method = RequestMethod.GET)
     public String showAccountRequestInfo(
+            Model m,
             HttpServletRequest request) throws Exception {
 
         try {
             if ((Boolean) request.getAttribute("hasPersonRegistered")) {
-                return "redirect:view_account";
+                m.addAttribute("message", "You already have an account.");
+                return "view_account";
             }
         } catch (Exception e) {
             log.error("An unexpected error happened", e);
@@ -70,6 +72,10 @@ public class RequestAccountController {
             HttpServletRequest request) throws Exception {
 
         try {
+            if ((Boolean) request.getAttribute("hasPersonRegistered")) {
+                m.addAttribute("message", "You already have an account.");
+                return "view_account";
+            }
             this.augmentModel(m);
             AccountRequest ar = new AccountRequest();
             ar.setFullName((String) request.getAttribute("cn"));

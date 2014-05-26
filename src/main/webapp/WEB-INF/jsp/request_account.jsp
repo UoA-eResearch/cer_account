@@ -53,7 +53,7 @@
                     </td>
                   </tr>
                   <tr>
-                    <td><nobr>Preferred name:</nobr></td>
+                    <td><nobr>Preferred name (optional):</nobr></td>
                     <td><form:input id="preferredname" path="preferredName" /></td>
                   </tr>
                   <tr>
@@ -111,7 +111,7 @@
         </tbody>
       </table>
 
-      <br><input type="submit" value="Next">
+      <br><input type="submit" value="Submit">
     </form:form>
   </body>
 
