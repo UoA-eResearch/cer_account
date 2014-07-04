@@ -27,6 +27,7 @@ public class ProjectDatabaseDaoImpl extends SqlSessionDaoSupport implements Proj
     private String restBaseUrl;
     private RestTemplate restTemplate;
     private String restAdminUser;
+    private String restAuthzHeader;
     private Logger log = Logger.getLogger(ProjectDatabaseDaoImpl.class.getName());
 
     public ProjectDatabaseDaoImpl() {
@@ -89,10 +90,7 @@ public class ProjectDatabaseDaoImpl extends SqlSessionDaoSupport implements Proj
         String url = restBaseUrl + "advisers/";
         Gson gson = new Gson();
         try {
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
-            headers.set("RemoteUser", this.restAdminUser);
-            HttpEntity<String> request = new HttpEntity<String>(gson.toJson(a), headers);
+            HttpEntity<String> request = new HttpEntity<String>(gson.toJson(a), this.setupHeaders());
             HttpEntity<String> he = restTemplate.postForEntity(url, request, String.class);
             return new Integer((String) he.getBody());
         } catch (HttpStatusCodeException hsce) {
@@ -112,10 +110,7 @@ public class ProjectDatabaseDaoImpl extends SqlSessionDaoSupport implements Proj
         String url = restBaseUrl + "advisers/" + a.getId();
         Gson gson = new Gson();
         try {
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
-            headers.set("RemoteUser", this.restAdminUser);
-            HttpEntity<String> request = new HttpEntity<String>(gson.toJson(a), headers);
+            HttpEntity<String> request = new HttpEntity<String>(gson.toJson(a), this.setupHeaders());
             restTemplate.postForEntity(url, request, String.class);
         } catch (HttpStatusCodeException hsce) {
             String tmp = hsce.getResponseBodyAsString();
@@ -134,10 +129,7 @@ public class ProjectDatabaseDaoImpl extends SqlSessionDaoSupport implements Proj
         String url = restBaseUrl + "researchers/";
         Gson gson = new Gson();
         try {
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
-            headers.set("RemoteUser", this.restAdminUser);
-            HttpEntity<String> request = new HttpEntity<String>(gson.toJson(r), headers);
+            HttpEntity<String> request = new HttpEntity<String>(gson.toJson(r), this.setupHeaders());
             HttpEntity<String> he = restTemplate.postForEntity(url, request, String.class);
             return new Integer((String) he.getBody());
         } catch (HttpStatusCodeException hsce) {
@@ -157,10 +149,7 @@ public class ProjectDatabaseDaoImpl extends SqlSessionDaoSupport implements Proj
         String url = restBaseUrl + "researchers/" + r.getId();
         Gson gson = new Gson();
         try {
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
-            headers.set("RemoteUser", this.restAdminUser);
-            HttpEntity<String> request = new HttpEntity<String>(gson.toJson(r), headers);
+            HttpEntity<String> request = new HttpEntity<String>(gson.toJson(r), this.setupHeaders());
             restTemplate.postForEntity(url, request, String.class);
         } catch (HttpStatusCodeException hsce) {
             String tmp = hsce.getResponseBodyAsString();
@@ -258,5 +247,21 @@ public class ProjectDatabaseDaoImpl extends SqlSessionDaoSupport implements Proj
     
         this.restAdminUser = restAdminUser;
     }
+
+    public void setRestAuthzHeader(
+            String restAuthzHeader) {
+
+        this.restAuthzHeader = restAuthzHeader;
+    }
+
+    private HttpHeaders setupHeaders() {
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("X-Proxy-REMOTE-USER", this.restAdminUser);
+        headers.set("Authorization", this.restAuthzHeader);
+        return headers;
+    }
+
 
 }
