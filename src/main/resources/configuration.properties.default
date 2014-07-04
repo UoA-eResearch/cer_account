@@ -1,7 +1,8 @@
 # project management rest service
+project.rest.baseurl=
+project.rest.authzheader=
 project.html.researcher.baseurl=
 project.html.adviser.baseurl=
-project.rest.baseurl=
 project.researcher.default.picture=
 project.researcher.initial.status.id=
 project.researcher.initial.role.on.project.id=
@@ -26,10 +27,6 @@ other.affiliation.email.subject=
 other.affiliation.email.template.path=
 
 test.identity.properties.path=
-
-# Proxy configuration
-proxy=
-proxyIp=
 
 # SLCS
 slcs.mapping.url=
