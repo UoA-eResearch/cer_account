@@ -63,10 +63,11 @@
   </bean>    
 
   <bean id="projectDatabaseDao" class="nz.ac.auckland.cer.project.dao.ProjectDatabaseDaoImpl">
+    <property name="sqlSessionFactory" ref="projectSqlSessionFactoryBean"/>
     <property name="restBaseUrl" value="${project.rest.baseurl}" />
     <property name="restTemplate" ref="projectRestTemplate" />
     <property name="restAdminUser" value="${project.rest.admin.user}"/>
-    <property name="sqlSessionFactory" ref="projectSqlSessionFactoryBean"/>
+    <property name="restAuthzHeader" value="${project.rest.authzheader}"/>
   </bean>
 
   <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
