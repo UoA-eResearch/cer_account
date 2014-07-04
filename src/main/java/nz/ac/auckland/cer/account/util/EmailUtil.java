@@ -54,7 +54,7 @@ public class EmailUtil {
             templateParams.put("__DIVISION__", ar.getDivision());
             templateParams.put("__DEPARTMENT__", ar.getDepartment());
         }
-        templateParams.put("__LINK__", this.researcherBaseUrl + "?id=" + dbAccountId);
+        templateParams.put("__LINK__", this.researcherBaseUrl + dbAccountId);
         try {
             this.templateEmail.sendFromResource(this.emailFrom, this.emailTo, null, null,
                     this.accountRequestEmailSubject, this.accountRequestEmailBodyResource, templateParams);
@@ -87,8 +87,8 @@ public class EmailUtil {
         templateParams.put("__NEW_DEPARTMENT__", np.getDepartment());
         templateParams.put("__NEW_INSTITUTIONAL_ROLE__", dbDao.getInstitutionalRoleName(np.getInstitutionalRoleId()));
 
-        String link = np.isResearcher() ? (this.researcherBaseUrl + "?id=" + np.getId())
-                : (this.adviserBaseUrl + "?id=" + np.getId());
+        String link = np.isResearcher() ? (this.researcherBaseUrl + np.getId())
+                : (this.adviserBaseUrl + np.getId());
         templateParams.put("__LINK__", link);
 
         try {
@@ -105,8 +105,8 @@ public class EmailUtil {
 
         Map<String, String> templateParams = new HashMap<String, String>();
         templateParams.put("__FULL_NAME__", p.getFullName());
-        String link = p.isResearcher() ? (this.researcherBaseUrl + "?id=" + p.getId())
-                : (this.adviserBaseUrl + "?id=" + p.getId());
+        String link = p.isResearcher() ? (this.researcherBaseUrl + p.getId())
+                : (this.adviserBaseUrl + p.getId());
         templateParams.put("__LINK__", link);
         try {
             this.templateEmail.sendFromResource(this.emailFrom, this.emailTo, null, null,
