@@ -45,6 +45,7 @@ public class RequestAccountController {
     private Logger log = Logger.getLogger(RequestAccountController.class.getName());
     private String defaultPictureUrl;
     private String projectRequestUrl;
+    private String membershipRequestUrl;
     private Integer initialResearcherStatusId;
 
     @RequestMapping(value = "request_account_info", method = RequestMethod.GET)
@@ -111,6 +112,7 @@ public class RequestAccountController {
             this.pdDao.createTuakiriSharedTokenPropertyForResearcher(r, tuakiriSharedToken);
             this.emailUtil.sendAccountRequestEmail(ar, r.getId(), userDN);
             m.addAttribute("projectRequestUrl", this.projectRequestUrl);
+            m.addAttribute("membershipRequestUrl", this.membershipRequestUrl);
         } catch (Exception e) {
             log.error("Failed to process account request", e);
             bResult.addError(new ObjectError(bResult.getObjectName(), "Internal Error: " + e.getMessage()));
@@ -222,6 +224,12 @@ public class RequestAccountController {
             String projectRequestUrl) {
 
         this.projectRequestUrl = projectRequestUrl;
+    }
+
+    public void setMembershipRequestUrl(
+            String membershipRequestUrl) {
+
+        this.membershipRequestUrl = membershipRequestUrl;
     }
 
     public void setInitialResearcherStatusId(
