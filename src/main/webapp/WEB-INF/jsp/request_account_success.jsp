@@ -21,8 +21,9 @@
     </p>
     <p>
       <div class="infoblock">
-        Note that you still have to <a href="${projectRequestUrl}">request a new project
-        or membership to an existing project</a> before you can submit jobs to the cluster.<br>
+        Note that you still have to <a href="${projectRequestUrl}">request a new project</a>
+        or <a href="${membershipRequestUrl}">membership to an existing project</a>
+        before you can submit jobs to the cluster.<br>
         To view the details of your account, click <a href="view_account">here</a>.
       </div>
     </p>
