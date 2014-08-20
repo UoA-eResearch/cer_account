@@ -12,6 +12,7 @@ project.jdbc.url=
 project.jdbc.username=
 project.jdbc.password=
 project.request.url=
+membership.request.url=
 
 # email configuration
 email.smtp.server=
