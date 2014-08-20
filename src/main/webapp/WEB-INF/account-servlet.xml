@@ -24,6 +24,7 @@
     <property name="defaultPictureUrl" value="${project.researcher.default.picture}" />
     <property name="initialResearcherStatusId" value="${project.researcher.initial.status.id}" />
     <property name="projectRequestUrl" value="${project.request.url}"/>
+    <property name="membershipRequestUrl" value="${membership.request.url}"/>
   </bean>
 
   <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
