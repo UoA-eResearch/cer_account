@@ -90,7 +90,7 @@ public class ProjectDatabaseDaoImpl extends SqlSessionDaoSupport implements Proj
         String url = restBaseUrl + "advisers/";
         Gson gson = new Gson();
         try {
-            HttpEntity<String> request = new HttpEntity<String>(gson.toJson(a), this.setupHeaders());
+            HttpEntity<byte[]> request = new HttpEntity<byte[]>(gson.toJson(a).getBytes("UTF-8"), this.setupHeaders());
             HttpEntity<String> he = restTemplate.postForEntity(url, request, String.class);
             return new Integer((String) he.getBody());
         } catch (HttpStatusCodeException hsce) {
@@ -110,7 +110,7 @@ public class ProjectDatabaseDaoImpl extends SqlSessionDaoSupport implements Proj
         String url = restBaseUrl + "advisers/" + a.getId();
         Gson gson = new Gson();
         try {
-            HttpEntity<String> request = new HttpEntity<String>(gson.toJson(a), this.setupHeaders());
+            HttpEntity<byte[]> request = new HttpEntity<byte[]>(gson.toJson(a).getBytes("UTF-8"), this.setupHeaders());
             restTemplate.postForEntity(url, request, String.class);
         } catch (HttpStatusCodeException hsce) {
             String tmp = hsce.getResponseBodyAsString();
@@ -129,7 +129,7 @@ public class ProjectDatabaseDaoImpl extends SqlSessionDaoSupport implements Proj
         String url = restBaseUrl + "researchers/";
         Gson gson = new Gson();
         try {
-            HttpEntity<String> request = new HttpEntity<String>(gson.toJson(r), this.setupHeaders());
+            HttpEntity<byte[]> request = new HttpEntity<byte[]>(gson.toJson(r).getBytes("UTF-8"), this.setupHeaders());
             HttpEntity<String> he = restTemplate.postForEntity(url, request, String.class);
             return new Integer((String) he.getBody());
         } catch (HttpStatusCodeException hsce) {
@@ -149,7 +149,7 @@ public class ProjectDatabaseDaoImpl extends SqlSessionDaoSupport implements Proj
         String url = restBaseUrl + "researchers/" + r.getId();
         Gson gson = new Gson();
         try {
-            HttpEntity<String> request = new HttpEntity<String>(gson.toJson(r), this.setupHeaders());
+            HttpEntity<byte[]> request = new HttpEntity<byte[]>(gson.toJson(r).getBytes("UTF-8"), this.setupHeaders());
             restTemplate.postForEntity(url, request, String.class);
         } catch (HttpStatusCodeException hsce) {
             String tmp = hsce.getResponseBodyAsString();
