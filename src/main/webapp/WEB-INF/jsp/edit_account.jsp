@@ -112,7 +112,7 @@
       <br>
       <input type="reset" value="Reset"/>
       <input type="submit" value="Submit"/>
-      <a href="view_account"><input type="button" value="Cancel"/></a>
+      <input type="button" value="Cancel" onClick="location.href='view_account'"/>
     </form:form>
   </body>
 
