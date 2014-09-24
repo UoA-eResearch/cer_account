@@ -23,6 +23,8 @@
     </property>
   </bean>
 
+  <bean id="util" class="nz.ac.auckland.cer.account.util.Util" />
+
   <bean id="requestAccountController" class="nz.ac.auckland.cer.account.controller.RequestAccountController">
     <property name="defaultPictureUrl" value="http://some/picture.png" />
   </bean>
