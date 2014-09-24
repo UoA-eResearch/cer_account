@@ -57,4 +57,15 @@ public class TemplateEmailTest {
 		verify(emailMock).send(from, to, cc, replyto, subject, expectedBody);
 	}
 
+	@Test
+	/**
+	 * Verify the method of the underlying Email class was called correctly
+	 */
+	public void testSendFromTemplateResource_nullParameter() throws Exception {
+	    templateParams.put(paramKey, null);
+	    Email emailMock = mock(Email.class);
+	    this.templateEmail.setEmail(emailMock);
+	    this.templateEmail.sendFromResource(from, to, cc, replyto, subject, this.template, templateParams);
+	    verify(emailMock).send(from, to, cc, replyto, subject, "test N/A test");
+	}
 }
