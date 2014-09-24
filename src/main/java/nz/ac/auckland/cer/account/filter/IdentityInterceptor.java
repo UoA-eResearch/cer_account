@@ -11,7 +11,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
-import nz.ac.auckland.cer.account.util.AuditUtil;
+import nz.ac.auckland.cer.account.util.Util;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +20,7 @@ import org.springframework.core.io.Resource;
 public class IdentityInterceptor implements Filter {
 
     private Resource idResource;
-    @Autowired private AuditUtil auditUtil;
+    @Autowired private Util auditUtil;
     private Logger log = Logger.getLogger(IdentityInterceptor.class.getName());
     private Logger flog = Logger.getLogger("file." + IdentityInterceptor.class.getName());
 
