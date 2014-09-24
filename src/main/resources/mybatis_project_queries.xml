@@ -132,17 +132,17 @@
     </selectKey>
   </insert>
 
-  <insert id="createTuakiriSharedTokenPropertyForAdviser" parameterType="java.lang.String">
-    INSERT INTO adviser_properties (
-      adviserId,
+  <insert id="createDnPropertyForResearcher" parameterType="java.lang.String">
+    INSERT INTO researcher_properties (
+      researcherId,
       siteId,
       propname,
       propvalue
     ) VALUES (
       #{id},
       1,
-      "tuakiriSharedToken",
-      #{tuakiriSharedToken}
+      "DN",
+      #{dn}
     )
   </insert>
 
