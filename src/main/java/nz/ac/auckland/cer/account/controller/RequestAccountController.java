@@ -12,13 +12,13 @@ import javax.validation.Valid;
 import nz.ac.auckland.cer.account.pojo.AccountRequest;
 import nz.ac.auckland.cer.account.slcs.SLCS;
 import nz.ac.auckland.cer.account.util.EmailUtil;
+import nz.ac.auckland.cer.account.util.Util;
 import nz.ac.auckland.cer.account.validation.RequestAccountValidator;
 import nz.ac.auckland.cer.project.dao.ProjectDatabaseDao;
 import nz.ac.auckland.cer.project.pojo.Affiliation;
 import nz.ac.auckland.cer.project.pojo.InstitutionalRole;
 import nz.ac.auckland.cer.project.pojo.Researcher;
 import nz.ac.auckland.cer.project.util.AffiliationUtil;
-import nz.ac.auckland.cer.project.util.Person;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +41,7 @@ public class RequestAccountController {
     @Autowired private ProjectDatabaseDao pdDao;
     @Autowired private AffiliationUtil affUtil;
     @Autowired private EmailUtil emailUtil;
+    @Autowired private Util util;
     @Autowired private SLCS slcs;
     private Logger log = Logger.getLogger(RequestAccountController.class.getName());
     private String defaultPictureUrl;
@@ -106,11 +107,14 @@ public class RequestAccountController {
             this.preprocessAccountRequest(ar);
             String tuakiriIdpUrl = (String) request.getAttribute("Shib-Identity-Provider");
             String tuakiriSharedToken = (String) request.getAttribute("shared-token");
+            String eppn = (String) request.getAttribute("eppn");
             String userDN = this.slcs.createUserDn(tuakiriIdpUrl, ar.getFullName(), tuakiriSharedToken);
             Researcher r = this.createResearcherFromFormData(ar);
+            String accountName = util.createAccountName(eppn, r.getFullName());
             r.setId(this.pdDao.createResearcher(r));
             this.pdDao.createTuakiriSharedTokenPropertyForResearcher(r, tuakiriSharedToken);
-            this.emailUtil.sendAccountRequestEmail(ar, r.getId(), userDN);
+            this.pdDao.createDnPropertyForResearcher(r, userDN);
+            this.emailUtil.sendAccountRequestEmail(ar, r.getId(), accountName);
             m.addAttribute("projectRequestUrl", this.projectRequestUrl);
             m.addAttribute("membershipRequestUrl", this.membershipRequestUrl);
         } catch (Exception e) {
@@ -203,7 +207,7 @@ public class RequestAccountController {
         tmp.setInstitutionalRoleId(instRoleId);
         return tmp;
     }
-
+    
     /**
      * Configure validator for cluster account request form
      */
