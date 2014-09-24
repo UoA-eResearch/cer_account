@@ -5,7 +5,7 @@
   <artifactId>account</artifactId>
   <version>0.1-SNAPSHOT</version>
   <name>account web app</name>
-  <description>Web-based interface to view or request an account on the Auckland NeSI cluster.</description>
+  <description>Web-based interface to view or request an account on the NeSI Auckland cluster.</description>
   <packaging>war</packaging>
   <properties>
     <spring.version>3.2.8.RELEASE</spring.version>
