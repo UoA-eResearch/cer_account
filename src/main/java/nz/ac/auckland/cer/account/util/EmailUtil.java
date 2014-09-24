@@ -38,13 +38,13 @@ public class EmailUtil {
     public void sendAccountRequestEmail(
             AccountRequest ar,
             Integer dbAccountId,
-            String dn) throws Exception {
+            String accountName) throws Exception {
 
         Map<String, String> templateParams = new HashMap<String, String>();
-        templateParams.put("__DN__", dn);
         templateParams.put("__NAME__", ar.getFullName());
         templateParams.put("__EMAIL__", ar.getEmail());
         templateParams.put("__PHONE__", ar.getPhone());
+        templateParams.put("__ACCOUNT_NAME__", accountName);
         if (ar.getInstitution() == null || ar.getInstitution().isEmpty()) {
             templateParams.put("__INSTITUTION__", ar.getOtherInstitution() + "(not yet in database)");
             templateParams.put("__DIVISION__", "-");
@@ -54,6 +54,7 @@ public class EmailUtil {
             templateParams.put("__DIVISION__", ar.getDivision());
             templateParams.put("__DEPARTMENT__", ar.getDepartment());
         }
+        templateParams.put("__RESEARCHER_DB_ID__", String.valueOf(dbAccountId));
         templateParams.put("__LINK__", this.researcherBaseUrl + dbAccountId);
         try {
             this.templateEmail.sendFromResource(this.emailFrom, this.emailTo, null, null,
