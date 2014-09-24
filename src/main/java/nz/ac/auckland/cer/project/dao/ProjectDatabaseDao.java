@@ -39,6 +39,10 @@ public interface ProjectDatabaseDao {
             Researcher r,
             String tuakiriSharedToken) throws Exception;
 
+    public void createDnPropertyForResearcher(
+            Researcher r, 
+            String dn) throws Exception;
+    
     public String getInstitutionalRoleName(
             Integer roleId) throws Exception;
 
