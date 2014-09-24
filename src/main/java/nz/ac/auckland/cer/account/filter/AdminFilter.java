@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import nz.ac.auckland.cer.account.util.AuditUtil;
+import nz.ac.auckland.cer.account.util.Util;
 import nz.ac.auckland.cer.project.dao.ProjectDatabaseDao;
 import nz.ac.auckland.cer.project.pojo.Adviser;
 import nz.ac.auckland.cer.project.pojo.Researcher;
@@ -25,7 +25,7 @@ import nz.ac.auckland.cer.project.util.Person;
 public class AdminFilter implements Filter {
 
     @Autowired private ProjectDatabaseDao pdDao;
-    @Autowired private AuditUtil auditUtil;
+    @Autowired private Util auditUtil;
     private Logger log = Logger.getLogger(AdminFilter.class.getName());
     private Logger flog = Logger.getLogger("file." + AdminFilter.class.getName());
 
@@ -38,7 +38,8 @@ public class AdminFilter implements Filter {
             HttpServletRequest request = (HttpServletRequest) req;
             String sharedToken = (String) request.getAttribute("shared-token");
             String cn = (String) request.getAttribute("cn");
-            flog.info(auditUtil.createAuditLogMessage(request, "cn=\"" + cn +"\" shared-token=" + sharedToken));
+            String eppn = (String) request.getAttribute("eppn");
+            flog.info(auditUtil.createAuditLogMessage(request, "eppn=" + eppn + " cn=\"" + cn +"\" shared-token=" + sharedToken));
             if (cn == null || sharedToken == null) {
                 log.error("At least one required Tuakiri attribute is null: cn='" + cn + "', shared-token=" + sharedToken);
             }
