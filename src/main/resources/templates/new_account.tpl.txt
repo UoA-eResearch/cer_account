@@ -1,4 +1,4 @@
-An account request for the Auckland NeSI cluster has arrived.
+An account request for the NeSI Auckland cluster has arrived.
 
 Name       : __NAME__
 Institution: __INSTITUTION__
@@ -6,7 +6,9 @@ Division   : __DIVISION__
 Department : __DEPARTMENT__
 E-Mail     : __EMAIL__
 Phone      : __PHONE__
-DN         : __DN__
+
+ID of researcher in project database: __RESEARCHER_DB_ID__
+Proposed cluster account name: __ACCOUNT_NAME__
 
 A profile has been added to the project database in status "Pending".
 
