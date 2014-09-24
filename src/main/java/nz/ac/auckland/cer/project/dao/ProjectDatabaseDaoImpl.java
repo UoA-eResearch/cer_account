@@ -218,6 +218,16 @@ public class ProjectDatabaseDaoImpl extends SqlSessionDaoSupport implements Proj
         getSqlSession().insert("createTuakiriSharedTokenPropertyForResearcher", m);
     }
 
+    public void createDnPropertyForResearcher(
+            Researcher r, 
+            String dn) throws Exception {
+        
+        Map<String,Object> m = new HashMap<String,Object>();
+        m.put("id", r.getId());
+        m.put("dn", dn);
+        getSqlSession().insert("createDnPropertyForResearcher", m);
+    }
+
     public String getInstitutionalRoleName(
             Integer roleId) throws Exception {
         
