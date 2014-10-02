@@ -7,10 +7,10 @@ Department : __DEPARTMENT__
 E-Mail     : __EMAIL__
 Phone      : __PHONE__
 
-ID of researcher in project database: __RESEARCHER_DB_ID__
-Proposed cluster account name: __ACCOUNT_NAME__
-
 A profile has been added to the project database in status "Pending".
 
 Link to profile in project database:
 __LINK__
+
+Command to create the new account:
+grand_unified_user_creator -i __RESEARCHER_DB_ID__ -a __ACCOUNT_NAME__
