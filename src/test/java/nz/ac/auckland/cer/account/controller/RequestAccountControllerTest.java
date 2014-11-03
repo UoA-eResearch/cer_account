@@ -69,7 +69,6 @@ public class RequestAccountControllerTest {
         ra.andExpect(status().isOk()).andExpect(view().name("request_account_success"))
                 .andExpect(model().attributeHasNoErrors("formData"));
         // .andDo(print())
-        verify(this.projectDao, times(0)).createAdviser((Adviser) any());
         verify(this.projectDao, times(1)).createResearcher((Researcher) any());
         verify(this.emailUtil, times(0)).sendOtherAffiliationEmail("Test Inst", null, null);
         verify(this.emailUtil, times(1)).sendAccountRequestEmail((AccountRequest) any(), anyInt(), anyString());
@@ -91,7 +90,6 @@ public class RequestAccountControllerTest {
         ra.andExpect(status().isOk()).andExpect(view().name("request_account_success"))
                 .andExpect(model().attributeHasNoErrors("formData"));
         // .andDo(print())
-        verify(this.projectDao, times(0)).createAdviser((Adviser) any());
         verify(this.projectDao, times(1)).createResearcher((Researcher) any());
         verify(this.emailUtil, times(1)).sendOtherAffiliationEmail("Test Inst", null, null);
         verify(this.emailUtil, times(1)).sendAccountRequestEmail((AccountRequest) any(), anyInt(), anyString());
@@ -112,7 +110,6 @@ public class RequestAccountControllerTest {
                 .andExpect(model().attributeErrorCount("formData", 1))
                 .andExpect(model().attributeHasFieldErrors("formData", "fullName"));
         verify(this.projectDao, times(0)).createResearcher((Researcher) any());
-        verify(this.projectDao, times(0)).createAdviser((Adviser) any());
         verify(this.emailUtil, times(0)).sendOtherAffiliationEmail(anyString(), anyString(), anyString());
         verify(this.emailUtil, times(0)).sendAccountRequestEmail((AccountRequest) any(), anyInt(), anyString());
     }
@@ -132,7 +129,6 @@ public class RequestAccountControllerTest {
                 .andExpect(model().attributeErrorCount("formData", 1))
                 .andExpect(model().attributeHasFieldErrors("formData", "email"));
         verify(this.projectDao, times(0)).createResearcher((Researcher) any());
-        verify(this.projectDao, times(0)).createAdviser((Adviser) any());
         verify(this.emailUtil, times(0)).sendOtherAffiliationEmail(anyString(), anyString(), anyString());
         verify(this.emailUtil, times(0)).sendAccountRequestEmail((AccountRequest) any(), anyInt(), anyString());
     }
@@ -150,7 +146,6 @@ public class RequestAccountControllerTest {
                 .andExpect(model().attributeErrorCount("formData", 1))
                 .andExpect(model().attributeHasFieldErrors("formData", "institution"));
         verify(this.projectDao, times(0)).createResearcher((Researcher) any());
-        verify(this.projectDao, times(0)).createAdviser((Adviser) any());
         verify(this.emailUtil, times(0)).sendOtherAffiliationEmail(anyString(), anyString(), anyString());
         verify(this.emailUtil, times(0)).sendAccountRequestEmail((AccountRequest) any(), anyInt(), anyString());
     }
@@ -168,7 +163,6 @@ public class RequestAccountControllerTest {
                 .andExpect(model().attributeErrorCount("formData", 1))
                 .andExpect(model().attributeHasFieldErrors("formData", "otherInstitution"));
         verify(this.projectDao, times(0)).createResearcher((Researcher) any());
-        verify(this.projectDao, times(0)).createAdviser((Adviser) any());
         verify(this.emailUtil, times(0)).sendOtherAffiliationEmail(anyString(), anyString(), anyString());
         verify(this.emailUtil, times(0)).sendAccountRequestEmail((AccountRequest) any(), anyInt(), anyString());
     }
@@ -186,7 +180,6 @@ public class RequestAccountControllerTest {
                 .andExpect(model().attributeErrorCount("formData", 1))
                 .andExpect(model().attributeHasFieldErrors("formData", "institutionalRoleId"));
         verify(this.projectDao, times(0)).createResearcher((Researcher) any());
-        verify(this.projectDao, times(0)).createAdviser((Adviser) any());
         verify(this.emailUtil, times(0)).sendOtherAffiliationEmail(anyString(), anyString(), anyString());
         verify(this.emailUtil, times(0)).sendAccountRequestEmail((AccountRequest) any(), anyInt(), anyString());
     }
@@ -207,7 +200,6 @@ public class RequestAccountControllerTest {
                 .andExpect(model().attributeErrorCount("formData", 1))
                 .andExpect(model().attributeHasFieldErrors("formData", "email"));
         verify(this.projectDao, times(0)).createResearcher((Researcher) any());
-        verify(this.projectDao, times(0)).createAdviser((Adviser) any());
         verify(this.emailUtil, times(0)).sendOtherAffiliationEmail(anyString(), anyString(), anyString());
         verify(this.emailUtil, times(0)).sendAccountRequestEmail((AccountRequest) any(), anyInt(), anyString());
     }
