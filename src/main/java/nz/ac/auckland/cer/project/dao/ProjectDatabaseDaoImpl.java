@@ -1,14 +1,13 @@
 package nz.ac.auckland.cer.project.dao;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import nz.ac.auckland.cer.common.util.SSLCertificateValidation;
 import nz.ac.auckland.cer.project.pojo.Adviser;
 import nz.ac.auckland.cer.project.pojo.Affiliation;
 import nz.ac.auckland.cer.project.pojo.InstitutionalRole;
 import nz.ac.auckland.cer.project.pojo.Researcher;
+import nz.ac.auckland.cer.project.pojo.ResearcherProperty;
 import nz.ac.auckland.cer.project.util.Person;
 
 import org.apache.log4j.Logger;
@@ -26,8 +25,9 @@ public class ProjectDatabaseDaoImpl extends SqlSessionDaoSupport implements Proj
 
     private String restBaseUrl;
     private RestTemplate restTemplate;
-    private String restAdminUser;
-    private String restAuthzHeader;
+    private String restRemoteUserHeaderName;
+    private String restRemoteUserHeaderValue;
+    private String restAuthzHeaderValue;
     private Logger log = Logger.getLogger(ProjectDatabaseDaoImpl.class.getName());
 
     public ProjectDatabaseDaoImpl() {
@@ -83,26 +83,6 @@ public class ProjectDatabaseDaoImpl extends SqlSessionDaoSupport implements Proj
         */
     }
     
-    @Override
-    public Integer createAdviser(
-            Adviser a) throws Exception {
-
-        String url = restBaseUrl + "advisers/";
-        Gson gson = new Gson();
-        try {
-            HttpEntity<byte[]> request = new HttpEntity<byte[]>(gson.toJson(a).getBytes("UTF-8"), this.setupHeaders());
-            HttpEntity<String> he = restTemplate.postForEntity(url, request, String.class);
-            return new Integer((String) he.getBody());
-        } catch (HttpStatusCodeException hsce) {
-            String tmp = hsce.getResponseBodyAsString();
-            JSONObject json = new JSONObject(tmp);
-            throw new Exception(json.getString("message"));
-        } catch (Exception e) {
-            log.error(e);
-            throw new Exception("An unexpected error occured.", e);
-        }
-    }
-
     @Override
     public void updateAdviser(
             Adviser a) throws Exception {
@@ -208,24 +188,24 @@ public class ProjectDatabaseDaoImpl extends SqlSessionDaoSupport implements Proj
         return getSqlSession().selectList("getAccountNamesForAdviserId", adviserId);
     }
 
-    public void createTuakiriSharedTokenPropertyForResearcher(
-            Researcher r, 
-            String tuakiriSharedToken) throws Exception {
-        
-        Map<String,Object> m = new HashMap<String,Object>();
-        m.put("id", r.getId());
-        m.put("tuakiriSharedToken", tuakiriSharedToken);
-        getSqlSession().insert("createTuakiriSharedTokenPropertyForResearcher", m);
-    }
+    public void createPropertyForResearcher(
+            ResearcherProperty rp) throws Exception {
 
-    public void createDnPropertyForResearcher(
-            Researcher r, 
-            String dn) throws Exception {
-        
-        Map<String,Object> m = new HashMap<String,Object>();
-        m.put("id", r.getId());
-        m.put("dn", dn);
-        getSqlSession().insert("createDnPropertyForResearcher", m);
+        String url = restBaseUrl + "/researchers/" + rp.getResearcherId() + "/prop";
+        Gson gson = new Gson();
+        JSONObject json = new JSONObject();
+        try {
+            HttpEntity<byte[]> request = new HttpEntity<byte[]>(gson.toJson(rp).getBytes("UTF-8"), this.setupHeaders());
+            restTemplate.put(url, request);
+        } catch (HttpStatusCodeException hsce) {
+            log.error("Status Code Exception.", hsce);
+            String tmp = hsce.getResponseBodyAsString();
+            json = new JSONObject(tmp);
+            throw new Exception(json.getString("message"));
+        } catch (Exception e) {
+            log.error("An unexpected error occured.", e);
+            throw new Exception("An unexpected error occured.", e);
+        }
     }
 
     public String getInstitutionalRoleName(
@@ -252,24 +232,30 @@ public class ProjectDatabaseDaoImpl extends SqlSessionDaoSupport implements Proj
         this.restBaseUrl = restBaseUrl;
     }
 
-    public void setRestAdminUser(
-            String restAdminUser) {
-    
-        this.restAdminUser = restAdminUser;
+    public void setRestAuthzHeaderValue(
+            String restAuthzHeaderValue) {
+
+        this.restAuthzHeaderValue = restAuthzHeaderValue;
     }
 
-    public void setRestAuthzHeader(
-            String restAuthzHeader) {
+    public void setRestRemoteUserHeaderName(
+            String restRemoteUserHeaderName) {
 
-        this.restAuthzHeader = restAuthzHeader;
+        this.restRemoteUserHeaderName = restRemoteUserHeaderName;
+    }
+
+    public void setRestRemoteUserHeaderValue(
+            String restRemoteUserHeaderValue) {
+
+        this.restRemoteUserHeaderValue = restRemoteUserHeaderValue;
     }
 
     private HttpHeaders setupHeaders() {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set("X-Proxy-REMOTE-USER", this.restAdminUser);
-        headers.set("Authorization", this.restAuthzHeader);
+        headers.set(this.restRemoteUserHeaderName, this.restRemoteUserHeaderValue);
+        headers.set("Authorization", this.restAuthzHeaderValue);
         return headers;
     }
 
