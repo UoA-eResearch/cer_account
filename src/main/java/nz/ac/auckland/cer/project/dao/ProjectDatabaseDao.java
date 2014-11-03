@@ -6,6 +6,7 @@ import nz.ac.auckland.cer.project.pojo.Adviser;
 import nz.ac.auckland.cer.project.pojo.Affiliation;
 import nz.ac.auckland.cer.project.pojo.InstitutionalRole;
 import nz.ac.auckland.cer.project.pojo.Researcher;
+import nz.ac.auckland.cer.project.pojo.ResearcherProperty;
 import nz.ac.auckland.cer.project.util.Person;
 
 public interface ProjectDatabaseDao {
@@ -17,9 +18,6 @@ public interface ProjectDatabaseDao {
     public Integer createResearcher(
             Researcher r) throws Exception;
     
-    public Integer createAdviser(
-            Adviser a) throws Exception;
-
     public void updateResearcher(
             Researcher r) throws Exception;
     
@@ -35,14 +33,9 @@ public interface ProjectDatabaseDao {
     public List<String> getAccountNamesForPerson(
             Person person) throws Exception;
 
-    public void createTuakiriSharedTokenPropertyForResearcher(
-            Researcher r,
-            String tuakiriSharedToken) throws Exception;
+    public void createPropertyForResearcher(
+            ResearcherProperty rp) throws Exception;
 
-    public void createDnPropertyForResearcher(
-            Researcher r, 
-            String dn) throws Exception;
-    
     public String getInstitutionalRoleName(
             Integer roleId) throws Exception;
 
