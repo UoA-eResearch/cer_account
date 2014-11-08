@@ -1,11 +1,11 @@
 An account request for the NeSI Auckland cluster has arrived.
 
-Name       : __NAME__
+Name: __NAME__
 Institution: __INSTITUTION__
-Division   : __DIVISION__
-Department : __DEPARTMENT__
-E-Mail     : __EMAIL__
-Phone      : __PHONE__
+Division: __DIVISION__
+Department: __DEPARTMENT__
+E-Mail: __EMAIL__
+Phone: __PHONE__
 
 A profile has been added to the project database in status "Pending".
 
