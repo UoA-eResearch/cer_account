@@ -1,5 +1,6 @@
 package nz.ac.auckland.cer.account.controller;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
 
 /**
  * Controller for cluster accounts
@@ -153,20 +155,22 @@ public class AccountController {
      * Confirm closure of cluster account
      */
     @RequestMapping(value = "confirm_account_deletion", method = RequestMethod.GET)
-    public String confirmDeleteAccount(
-            HttpServletRequest request,
-            ModelMap mm) throws Exception {
+    public ModelAndView confirmDeleteAccount(
+            HttpServletRequest request) throws Exception {
 
         Person p;
+        ModelAndView mav = new ModelAndView("account_deletion_retrieved");
         try {
             p = (Person) request.getAttribute("person");
             this.emailUtil.sendAccountDeletionRequestEmail(p);
-            mm.addAttribute("message", "An e-mail with your account deletion request has been sent "
+            mav.addObject("message", "An e-mail with your account deletion request has been sent "
                     + "to the Centre for eResearch.<br>Your account will be closed shortly.");
         } catch (Exception e) {
-            mm.addAttribute("error", e.getMessage());
+        	e.printStackTrace();
+        	String message = e.getMessage() == null ? "An unexpected error occured" : e.getMessage();
+            mav.addObject("error_message", message);
         }
-        return "account_deletion_retrieved";
+        return mav;
     }
 
     /**

@@ -14,8 +14,8 @@
 
     <p>
       <c:choose>
-        <c:when test="${not empty error}">
-          <div class="errorblock">${error}</div>
+        <c:when test="${not empty error_message}">
+          <div class="errorblock">${error_message}</div>
         </c:when>
         <c:otherwise>
           ${message}
