@@ -76,10 +76,10 @@
 
     <p>
       <form action="edit_account" method="GET" style="display: inline;">
-        <input type="submit" value="Edit Account Details"/>
+        <input type="submit" id="edit_account" value="Edit Account Details"/>
       </form>
       <form action="request_account_deletion" method="GET" style="display: inline;">
-        <input type="submit" value="Request Account Deletion"/>
+        <input type="submit" id="delete_account" value="Request Account Deletion"/>
       </form>
     </p>
 
