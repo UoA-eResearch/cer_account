@@ -69,6 +69,7 @@
 
   <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
     <property name="host" value="${email.smtp.server}" />
+    <property name="port" value="${email.smtp.port}" />
   </bean>
 
   <bean id="email" class="nz.ac.auckland.cer.common.util.Email" />
