@@ -23,4 +23,5 @@ configuration.properties
 configuration.properties.local
 configuration.properties.prod
 configuration.properties.test
+configuration.properties.unittest
 TestFilter.java
