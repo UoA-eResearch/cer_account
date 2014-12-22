@@ -75,7 +75,7 @@
         
     <p>
       <form action="confirm_account_deletion" style="display: inline;">
-        <input type="submit" value="Confirm account deletion request"/>
+        <input type="submit" id="delete_account" value="Confirm account deletion request"/>
       </form>
     </p>
 
