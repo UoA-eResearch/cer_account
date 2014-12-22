@@ -1,28 +1,28 @@
-__OLD_FULL_NAME__ requested changed his/her cluster account details:
+__OLD_FULL_NAME__ requested a change in his/her cluster account details:
 
-If the e-mail changed, it has to be changed in LDAP, and on the researchers
-user profile manually by an adviser.
+If the e-mail changed, it has to be changed in LDAP, and on the
+researchers user profile manually by an adviser.
 
 Old account details:
 
-Full Name         : __OLD_FULL_NAME__
-Preferred Name    : __OLD_PREFERRED_NAME__
-Institution       : __OLD_INSTITUTION__
-Division          : __OLD_DIVISION__
-Department        : __OLD_DEPARTMENT__
-E-Mail            : __OLD_EMAIL__
-Phone             : __OLD_PHONE__
+Full Name: __OLD_FULL_NAME__
+Preferred Name: __OLD_PREFERRED_NAME__
+Institution: __OLD_INSTITUTION__
+Division: __OLD_DIVISION__
+Department: __OLD_DEPARTMENT__
+E-Mail: __OLD_EMAIL__
+Phone: __OLD_PHONE__
 Institutional Role: __OLD_INSTITUTIONAL_ROLE__
 
 New account details:
 
-Full Name         : __NEW_FULL_NAME__
-Preferred Name    : __NEW_PREFERRED_NAME__
-Institution       : __NEW_INSTITUTION__
-Division          : __NEW_DIVISION__
-Department        : __NEW_DEPARTMENT__
-E-Mail            : __NEW_EMAIL__
-Phone             : __NEW_PHONE__
+Full Name: __NEW_FULL_NAME__
+Preferred Name: __NEW_PREFERRED_NAME__
+Institution: __NEW_INSTITUTION__
+Division: __NEW_DIVISION__
+Department: __NEW_DEPARTMENT__
+E-Mail: __NEW_EMAIL__
+Phone: __NEW_PHONE__
 Institutional Role: __NEW_INSTITUTIONAL_ROLE__
 
 Link to profile in project database:
