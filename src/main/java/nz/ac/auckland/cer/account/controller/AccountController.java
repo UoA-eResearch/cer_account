@@ -1,6 +1,5 @@
 package nz.ac.auckland.cer.account.controller;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -117,6 +116,7 @@ public class AccountController {
             }
             Person newPerson = this.updatePerson(oldPerson, ar);
             this.updatePersonInDatabase(newPerson);
+            newPerson.setEmail(ar.getEmail());
             this.emailUtil.sendAccountDetailsChangeRequestRequestEmail(oldPerson, newPerson);
             List<String> clusterAccounts = this.pdDao.getAccountNamesForPerson(newPerson);
             m.addAttribute("person", newPerson);
@@ -125,11 +125,8 @@ public class AccountController {
                 m.addAttribute("accountStatus", this.pdDao.getResearcherStatusName(newPerson.getStatusId()));
                 m.addAttribute("institutionalRoleName", this.pdDao.getInstitutionalRoleName(newPerson.getInstitutionalRoleId()));
             }
-            if (!newPerson.getEmail().equals(oldPerson.getEmail())) {
-                m.addAttribute("message", "A Centre for eResearch staff member has to change "
-                        + "your registered e-mail address.<br>" + "An e-mail has been sent to the Centre "
-                        + "for eResearch. Your e-mail address will be updated shortly.");
-            }
+            m.addAttribute("message", "An e-mail has been sent to the Centre for eResearch staff.<br>" +
+                           "Your account change request will be processed shortly.");
         } catch (Exception e) {
             log.error("Failed to edit account", e);
             m.addAttribute("formData", ar);
