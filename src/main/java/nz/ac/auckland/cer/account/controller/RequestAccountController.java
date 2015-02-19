@@ -119,7 +119,7 @@ public class RequestAccountController {
             rp.setPropname("tuakiriSharedToken");
             rp.setPropvalue(tuakiriSharedToken);
             this.pdDao.createPropertyForResearcher(rp);
-            rp.setPropname("dn");
+            rp.setPropname("DN");
             rp.setPropvalue(userDN);
             this.pdDao.createPropertyForResearcher(rp);
             this.emailUtil.sendAccountRequestEmail(ar, r.getId(), accountName);
