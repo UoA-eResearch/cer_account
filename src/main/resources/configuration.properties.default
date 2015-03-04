@@ -18,6 +18,7 @@ membership.request.url=
 # email configuration
 email.smtp.server=
 email.smtp.port=
+account.dn.template=
 account.request.email.from=
 account.request.email.to=
 account.request.email.subject=
@@ -31,5 +32,3 @@ other.affiliation.email.template.path=
 
 test.identity.properties.path=
 
-# SLCS
-slcs.mapping.url=

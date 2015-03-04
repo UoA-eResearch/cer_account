@@ -5,15 +5,16 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import nz.ac.auckland.cer.account.pojo.AccountRequest;
-import nz.ac.auckland.cer.account.slcs.SLCS;
 import nz.ac.auckland.cer.account.util.EmailUtil;
 import nz.ac.auckland.cer.account.util.Util;
 import nz.ac.auckland.cer.account.validation.RequestAccountValidator;
+import nz.ac.auckland.cer.common.util.TemplateUtil;
 import nz.ac.auckland.cer.project.dao.ProjectDatabaseDao;
 import nz.ac.auckland.cer.project.pojo.Affiliation;
 import nz.ac.auckland.cer.project.pojo.InstitutionalRole;
@@ -43,8 +44,9 @@ public class RequestAccountController {
     @Autowired private AffiliationUtil affUtil;
     @Autowired private EmailUtil emailUtil;
     @Autowired private Util util;
-    @Autowired private SLCS slcs;
+    @Autowired private TemplateUtil templateUtil;
     private Logger log = Logger.getLogger(RequestAccountController.class.getName());
+    private String dnTemplate;
     private String defaultPictureUrl;
     private String projectRequestUrl;
     private String membershipRequestUrl;
@@ -106,10 +108,9 @@ public class RequestAccountController {
                 return "request_account";
             }
             this.preprocessAccountRequest(ar);
-            String tuakiriIdpUrl = (String) request.getAttribute("Shib-Identity-Provider");
             String tuakiriSharedToken = (String) request.getAttribute("shared-token");
             String eppn = (String) request.getAttribute("eppn");
-            String userDN = this.slcs.createUserDn(tuakiriIdpUrl, ar.getFullName(), tuakiriSharedToken);
+            String userDN = this.createUserDn(request);
             if (userDN == null) {
                 userDN = "N/A";
             }
@@ -220,6 +221,14 @@ public class RequestAccountController {
         return tmp;
     }
     
+    private String createUserDn(HttpServletRequest request) {
+    	Map<String,String> m = new HashMap<String,String>();
+    	m.put("{o}", (String)request.getAttribute("o"));
+    	m.put("{cn}", (String)request.getAttribute("cn"));
+    	m.put("{shared_token}", (String)request.getAttribute("shared-token"));
+    	return this.templateUtil.replace(this.dnTemplate, m);
+    }
+    
     /**
      * Configure validator for cluster account request form
      */
@@ -228,6 +237,12 @@ public class RequestAccountController {
             WebDataBinder binder) {
 
         binder.setValidator(new RequestAccountValidator());
+    }
+
+    public void setDnTemplate(
+            String dnTemplate) {
+
+        this.dnTemplate = dnTemplate;
     }
 
     public void setDefaultPictureUrl(

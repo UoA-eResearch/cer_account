@@ -31,6 +31,7 @@ public class TemplateEmailTest {
 
 	@Before
 	public void SetUp() {
+		templateEmail.setTemplateUtil(new TemplateUtil());
 		templateParams.put(paramKey, paramValue);
 		template = new ClassPathResource("template_email.tpl");
 	}

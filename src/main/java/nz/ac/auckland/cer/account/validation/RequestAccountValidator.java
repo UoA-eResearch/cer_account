@@ -9,14 +9,12 @@ import org.springframework.validation.Validator;
 
 public class RequestAccountValidator implements Validator {
 
-    @Override
     public boolean supports(
             Class<?> clazz) {
 
         return AccountRequest.class.isAssignableFrom(clazz);
     }
 
-    @Override
     public void validate(
             Object accountRequest,
             Errors errors) {

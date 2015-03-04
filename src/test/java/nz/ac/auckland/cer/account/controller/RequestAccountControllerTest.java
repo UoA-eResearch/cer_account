@@ -5,14 +5,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 
 import java.util.LinkedList;
-import java.util.List;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
-import nz.ac.auckland.cer.account.pojo.AccountRequest;
 import nz.ac.auckland.cer.account.util.EmailUtil;
 import nz.ac.auckland.cer.project.dao.ProjectDatabaseDao;
-import nz.ac.auckland.cer.project.pojo.Affiliation;
 import nz.ac.auckland.cer.project.pojo.InstitutionalRole;
 import nz.ac.auckland.cer.project.pojo.Researcher;
 import nz.ac.auckland.cer.project.util.AffiliationUtil;
@@ -74,8 +71,8 @@ public class RequestAccountControllerTest {
                 .andExpect(model().attributeHasNoErrors("formData"));
         // .andDo(print())
         verify(this.projectDao, times(1)).createResearcher((Researcher) any());
-        //verify(this.emailUtil, times(0)).sendOtherAffiliationEmail("Test Inst", null, null);
-        //verify(this.emailUtil, times(1)).sendAccountRequestEmail((AccountRequest) any(), anyInt(), anyString());
+        assert(smtpServer.getReceivedMessages().length == 1);
+        // TODO: verify e-mail
     }
 
     @DirtiesContext
@@ -91,8 +88,8 @@ public class RequestAccountControllerTest {
                 .andExpect(model().attributeHasNoErrors("formData"));
         // .andDo(print())
         verify(this.projectDao, times(1)).createResearcher((Researcher) any());
-        //verify(this.emailUtil, times(1)).sendOtherAffiliationEmail("Test Inst", null, null);
-        //verify(this.emailUtil, times(1)).sendAccountRequestEmail((AccountRequest) any(), anyInt(), anyString());
+        assert(smtpServer.getReceivedMessages().length == 2);
+        // TODO: verify e-mails
     }
 
     @Test

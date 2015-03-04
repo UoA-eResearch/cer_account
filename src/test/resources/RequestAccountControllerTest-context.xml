@@ -29,8 +29,6 @@
     <property name="defaultPictureUrl" value="http://some/picture.png" />
   </bean>
   
-  <mockito:mock id="slcs" class="nz.ac.auckland.cer.account.slcs.SLCS" />
-  
   <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
     <property name="prefix" value="/WEB-INF/jsp/signup/" />
     <property name="suffix" value=".jsp" />

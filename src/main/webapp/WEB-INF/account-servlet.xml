@@ -21,6 +21,7 @@
   <bean id="accountController" class="nz.ac.auckland.cer.account.controller.AccountController"/>
 
   <bean id="requestAccountController" class="nz.ac.auckland.cer.account.controller.RequestAccountController">
+    <property name="dnTemplate" value="${account.dn.template}" />
     <property name="defaultPictureUrl" value="${project.researcher.default.picture}" />
     <property name="initialResearcherStatusId" value="${project.researcher.initial.status.id}" />
     <property name="projectRequestUrl" value="${project.request.url}"/>
@@ -32,11 +33,6 @@
     <property name="suffix" value=".jsp" />
   </bean>
   
-  <bean id="slcs" class="nz.ac.auckland.cer.account.slcs.SLCS">
-    <property name="slcsMapUrl" value="${slcs.mapping.url}" />
-    <property name="fallbackSlcsMap" value="classpath:idp-acl.txt"/>
-  </bean>
-
   <bean id="AdminFilter" class="nz.ac.auckland.cer.account.filter.AdminFilter"/>
   
   <bean id="IdentityInterceptor" class="nz.ac.auckland.cer.account.filter.IdentityInterceptor">

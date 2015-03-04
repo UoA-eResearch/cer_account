@@ -39,9 +39,10 @@ public class AdminFilter implements Filter {
             String sharedToken = (String) request.getAttribute("shared-token");
             String cn = (String) request.getAttribute("cn");
             String eppn = (String) request.getAttribute("eppn");
+            String o = (String) request.getAttribute("o");
             flog.info(auditUtil.createAuditLogMessage(request, "eppn=" + eppn + " cn=\"" + cn +"\" shared-token=" + sharedToken));
-            if (cn == null || sharedToken == null) {
-                log.error("At least one required Tuakiri attribute is null: cn='" + cn + "', shared-token=" + sharedToken);
+            if (cn == null || sharedToken == null || o == null) {
+                log.error("At least one mandatory Tuakiri attribute is null: cn='" + cn + "', shared-token='" + sharedToken + "', o='" + o + "'");
             }
             Researcher r = this.pdDao.getResearcherForTuakiriSharedToken(sharedToken);
             Adviser a = this.pdDao.getAdviserForTuakiriSharedToken(sharedToken);

@@ -72,8 +72,10 @@
     <property name="port" value="${email.smtp.port}" />
   </bean>
 
-  <bean id="email" class="nz.ac.auckland.cer.common.util.Email" />
+  <bean id="templateUtil" class="nz.ac.auckland.cer.common.util.TemplateUtil" />
   
+  <bean id="email" class="nz.ac.auckland.cer.common.util.Email" />
+
   <bean id="templateEmail" class="nz.ac.auckland.cer.common.util.TemplateEmail" />
 
   <bean id="util" class="nz.ac.auckland.cer.account.util.Util" />
