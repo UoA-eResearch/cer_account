@@ -109,7 +109,11 @@ public class RequestAccountController {
             String tuakiriIdpUrl = (String) request.getAttribute("Shib-Identity-Provider");
             String tuakiriSharedToken = (String) request.getAttribute("shared-token");
             String eppn = (String) request.getAttribute("eppn");
-            String userDN = this.slcs.createUserDn(tuakiriIdpUrl, ar.getFullName(), tuakiriSharedToken).trim();
+            String userDN = this.slcs.createUserDn(tuakiriIdpUrl, ar.getFullName(), tuakiriSharedToken);
+            if (userDN == null) {
+                userDN = "N/A";
+            }
+            userDN = userDN.trim();
             Researcher r = this.createResearcherFromFormData(ar);
             String accountName = util.createAccountName(eppn, r.getFullName());
             r.setId(this.pdDao.createResearcher(r));
