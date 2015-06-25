@@ -19,7 +19,6 @@ import nz.ac.auckland.cer.project.dao.ProjectDatabaseDao;
 import nz.ac.auckland.cer.project.pojo.Affiliation;
 import nz.ac.auckland.cer.project.pojo.InstitutionalRole;
 import nz.ac.auckland.cer.project.pojo.Researcher;
-import nz.ac.auckland.cer.project.pojo.ResearcherProperty;
 import nz.ac.auckland.cer.project.util.AffiliationUtil;
 
 import org.apache.log4j.Logger;
@@ -118,15 +117,11 @@ public class RequestAccountController {
             Researcher r = this.createResearcherFromFormData(ar);
             String accountName = util.createAccountName(eppn, r.getFullName());
             r.setId(this.pdDao.createResearcher(r));
-            ResearcherProperty rp = new ResearcherProperty();
-            rp.setSiteId(1);
-            rp.setResearcherId(r.getId());
-            rp.setPropname("tuakiriSharedToken");
-            rp.setPropvalue(tuakiriSharedToken);
-            this.pdDao.createPropertyForResearcher(rp);
-            rp.setPropname("DN");
-            rp.setPropvalue(userDN);
-            this.pdDao.createPropertyForResearcher(rp);
+            this.pdDao.createPropertyForResearcher(1, r.getId(), "tuakiriSharedToken", tuakiriSharedToken);
+            this.pdDao.createPropertyForResearcher(1, r.getId(), "DN", userDN);
+            if (eppn != null && !eppn.isEmpty()) {
+            	this.pdDao.createPropertyForResearcher(1, r.getId(), "eppn", eppn);
+            }
             this.emailUtil.sendAccountRequestEmail(ar, r.getId(), accountName);
             m.addAttribute("projectRequestUrl", this.projectRequestUrl);
             m.addAttribute("membershipRequestUrl", this.membershipRequestUrl);

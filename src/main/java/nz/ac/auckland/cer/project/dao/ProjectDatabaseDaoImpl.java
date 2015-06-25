@@ -157,6 +157,21 @@ public class ProjectDatabaseDaoImpl extends SqlSessionDaoSupport implements Proj
         return null;
     }
 
+    public Adviser getAdviserForEppn(
+            String eppn) throws Exception {
+
+        List<Adviser> list =  getSqlSession().selectList("getAdviserForEppn", eppn);
+        if (list != null) {
+            if (list.size() == 0) {
+                return null;
+            } else if (list.size() > 1) {
+                log.error("Internal error: More than one adviser in database with eppn " + eppn);
+            }
+            return list.get(0);
+        }
+        return null;
+    }
+
     public Researcher getResearcherForTuakiriSharedToken(
             String sharedToken) throws Exception {
 
@@ -166,6 +181,21 @@ public class ProjectDatabaseDaoImpl extends SqlSessionDaoSupport implements Proj
                 return null;
             } else if (list.size() > 1) {
                 log.error("Internal error: More than one researcher in database with shared token " + sharedToken);
+            }
+            return list.get(0);
+        }
+        return null;
+    }
+
+    public Researcher getResearcherForEppn(
+            String eppn) throws Exception {
+
+        List<Researcher> list = getSqlSession().selectList("getResearcherForEppn", eppn);
+        if (list != null) {
+            if (list.size() == 0) {
+                return null;
+            } else if (list.size() > 1) {
+                log.error("Internal error: More than one researcher in database with eppn " + eppn);
             }
             return list.get(0);
         }
@@ -189,10 +219,15 @@ public class ProjectDatabaseDaoImpl extends SqlSessionDaoSupport implements Proj
     }
 
     public void createPropertyForResearcher(
-            ResearcherProperty rp) throws Exception {
+            Integer siteId, Integer researcherId, String propname, String propvalue) throws Exception {
 
-        String url = restBaseUrl + "/researchers/" + rp.getResearcherId() + "/prop";
+        String url = restBaseUrl + "/researchers/" + researcherId + "/prop";
         Gson gson = new Gson();
+        ResearcherProperty rp = new ResearcherProperty();
+        rp.setSiteId(siteId);
+        rp.setResearcherId(researcherId);
+        rp.setPropname(propname);
+        rp.setPropvalue(propvalue);
         JSONObject json = new JSONObject();
         try {
             HttpEntity<byte[]> request = new HttpEntity<byte[]>(gson.toJson(rp).getBytes("UTF-8"), this.setupHeaders());

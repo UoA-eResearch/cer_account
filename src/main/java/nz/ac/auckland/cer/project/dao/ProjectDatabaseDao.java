@@ -27,14 +27,20 @@ public interface ProjectDatabaseDao {
     public Adviser getAdviserForTuakiriSharedToken(
             String sharedToken) throws Exception;
 
+    public Adviser getAdviserForEppn(
+            String eppn) throws Exception;
+
     public Researcher getResearcherForTuakiriSharedToken(
             String sharedToken) throws Exception;
+
+    public Researcher getResearcherForEppn(
+            String eppn) throws Exception;
 
     public List<String> getAccountNamesForPerson(
             Person person) throws Exception;
 
     public void createPropertyForResearcher(
-            ResearcherProperty rp) throws Exception;
+    		Integer siteId, Integer researcherId, String propname, String propvalue) throws Exception;
 
     public String getInstitutionalRoleName(
             Integer roleId) throws Exception;
