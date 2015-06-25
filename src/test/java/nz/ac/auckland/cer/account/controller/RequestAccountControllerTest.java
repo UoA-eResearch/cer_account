@@ -12,12 +12,14 @@ import nz.ac.auckland.cer.account.util.EmailUtil;
 import nz.ac.auckland.cer.project.dao.ProjectDatabaseDao;
 import nz.ac.auckland.cer.project.pojo.InstitutionalRole;
 import nz.ac.auckland.cer.project.pojo.Researcher;
+import nz.ac.auckland.cer.project.pojo.ResearcherProperty;
 import nz.ac.auckland.cer.project.util.AffiliationUtil;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
@@ -60,17 +62,48 @@ public class RequestAccountControllerTest {
     
     @DirtiesContext
     @Test
-    public void postAccountRequestResearcherSuccess() throws Exception {
+    public void postAccountRequestResearcherSuccess_noEPPN() throws Exception {
 
         when(projectDatabaseDao.getInstitutionalRoles()).thenReturn(new LinkedList<InstitutionalRole>());
         RequestBuilder rb = post("/request_account").param("fullName", "Jane Doe")
                 .param("institution", "Test Institution").param("institutionalRoleId", "42")
-                .param("email", "test@test.org").param("phone", "12345");
+                .param("email", "test@test.org").param("phone", "12345")
+                .requestAttr("shared-token", "sometoken");
         ResultActions ra = this.mockMvc.perform(rb);
         ra.andExpect(status().isOk()).andExpect(view().name("request_account_success"))
                 .andExpect(model().attributeHasNoErrors("formData"));
         // .andDo(print())
         verify(this.projectDao, times(1)).createResearcher((Researcher) any());
+        verify(this.projectDao, times(2)).createPropertyForResearcher(anyInt(), anyInt(), anyString(), anyString());
+        InOrder inOrder = inOrder(this.projectDao);
+        inOrder.verify(this.projectDao, times(1)).createResearcher((Researcher) any());
+        inOrder.verify(this.projectDao, times(1)).createPropertyForResearcher(anyInt(), anyInt(), eq("tuakiriSharedToken"), eq("sometoken"));
+        inOrder.verify(this.projectDao, times(1)).createPropertyForResearcher(anyInt(), anyInt(), eq("DN"), anyString());
+        assert(smtpServer.getReceivedMessages().length == 1);
+        // TODO: verify e-mail
+    }
+
+    @DirtiesContext
+    @Test
+    public void postAccountRequestResearcherSuccess_withEPPN() throws Exception {
+
+        when(projectDatabaseDao.getInstitutionalRoles()).thenReturn(new LinkedList<InstitutionalRole>());
+        RequestBuilder rb = post("/request_account").param("fullName", "Jane Doe")
+                .param("institution", "Test Institution").param("institutionalRoleId", "42")
+                .param("email", "test@test.org").param("phone", "12345")
+                .requestAttr("shared-token", "sometoken")
+                .requestAttr("eppn", "someeppn");
+        ResultActions ra = this.mockMvc.perform(rb);
+        ra.andExpect(status().isOk()).andExpect(view().name("request_account_success"))
+                .andExpect(model().attributeHasNoErrors("formData"));
+        // .andDo(print())
+        verify(this.projectDao, times(1)).createResearcher((Researcher) any());
+        verify(this.projectDao, times(3)).createPropertyForResearcher(anyInt(), anyInt(), anyString(), anyString());
+        InOrder inOrder = inOrder(this.projectDao);
+        inOrder.verify(this.projectDao, times(1)).createResearcher((Researcher) any());
+        inOrder.verify(this.projectDao, times(1)).createPropertyForResearcher(anyInt(), anyInt(), eq("tuakiriSharedToken"), eq("sometoken"));
+        inOrder.verify(this.projectDao, times(1)).createPropertyForResearcher(anyInt(), anyInt(), eq("DN"), anyString());
+        inOrder.verify(this.projectDao, times(1)).createPropertyForResearcher(anyInt(), anyInt(), eq("eppn"), eq("someeppn"));
         assert(smtpServer.getReceivedMessages().length == 1);
         // TODO: verify e-mail
     }
@@ -88,6 +121,7 @@ public class RequestAccountControllerTest {
                 .andExpect(model().attributeHasNoErrors("formData"));
         // .andDo(print())
         verify(this.projectDao, times(1)).createResearcher((Researcher) any());
+        verify(this.projectDao, times(2)).createPropertyForResearcher(anyInt(), anyInt(), anyString(), anyString());
         assert(smtpServer.getReceivedMessages().length == 2);
         // TODO: verify e-mails
     }
@@ -103,6 +137,7 @@ public class RequestAccountControllerTest {
                 .andExpect(model().attributeErrorCount("formData", 1))
                 .andExpect(model().attributeHasFieldErrors("formData", "fullName"));
         verify(this.projectDao, times(0)).createResearcher((Researcher) any());
+        verify(this.projectDao, times(0)).createPropertyForResearcher(anyInt(), anyInt(), anyString(), anyString());
         assert(smtpServer.getReceivedMessages().length == 0);
     }
 
@@ -117,6 +152,7 @@ public class RequestAccountControllerTest {
                 .andExpect(model().attributeErrorCount("formData", 1))
                 .andExpect(model().attributeHasFieldErrors("formData", "email"));
         verify(this.projectDao, times(0)).createResearcher((Researcher) any());
+        verify(this.projectDao, times(0)).createPropertyForResearcher(anyInt(), anyInt(), anyString(), anyString());
         assert(smtpServer.getReceivedMessages().length == 0);
     }
 
@@ -131,6 +167,7 @@ public class RequestAccountControllerTest {
                 .andExpect(model().attributeErrorCount("formData", 1))
                 .andExpect(model().attributeHasFieldErrors("formData", "institution"));
         verify(this.projectDao, times(0)).createResearcher((Researcher) any());
+        verify(this.projectDao, times(0)).createPropertyForResearcher(anyInt(), anyInt(), anyString(), anyString());
         assert(smtpServer.getReceivedMessages().length == 0);
     }
 
@@ -145,6 +182,7 @@ public class RequestAccountControllerTest {
                 .andExpect(model().attributeErrorCount("formData", 1))
                 .andExpect(model().attributeHasFieldErrors("formData", "otherInstitution"));
         verify(this.projectDao, times(0)).createResearcher((Researcher) any());
+        verify(this.projectDao, times(0)).createPropertyForResearcher(anyInt(), anyInt(), anyString(), anyString());
         assert(smtpServer.getReceivedMessages().length == 0);
     }
 
@@ -159,6 +197,7 @@ public class RequestAccountControllerTest {
                 .andExpect(model().attributeErrorCount("formData", 1))
                 .andExpect(model().attributeHasFieldErrors("formData", "institutionalRoleId"));
         verify(this.projectDao, times(0)).createResearcher((Researcher) any());
+        verify(this.projectDao, times(0)).createPropertyForResearcher(anyInt(), anyInt(), anyString(), anyString());
         assert(smtpServer.getReceivedMessages().length == 0);
     }
 
@@ -174,6 +213,7 @@ public class RequestAccountControllerTest {
                 .andExpect(model().attributeErrorCount("formData", 1))
                 .andExpect(model().attributeHasFieldErrors("formData", "email"));
         verify(this.projectDao, times(0)).createResearcher((Researcher) any());
+        verify(this.projectDao, times(0)).createPropertyForResearcher(anyInt(), anyInt(), anyString(), anyString());
         assert(smtpServer.getReceivedMessages().length == 0);
     }
 
