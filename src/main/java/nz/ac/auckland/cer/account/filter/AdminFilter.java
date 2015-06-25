@@ -45,7 +45,13 @@ public class AdminFilter implements Filter {
                 log.error("At least one mandatory Tuakiri attribute is null: cn='" + cn + "', shared-token='" + sharedToken + "', o='" + o + "'");
             }
             Researcher r = this.pdDao.getResearcherForTuakiriSharedToken(sharedToken);
+            if (r == null && eppn != null) {
+            	r = this.pdDao.getResearcherForEppn(eppn);
+            }
             Adviser a = this.pdDao.getAdviserForTuakiriSharedToken(sharedToken);
+            if (a == null && eppn != null) {
+            	a = this.pdDao.getAdviserForEppn(eppn);
+            }
             boolean isResearcher = (r == null) ? false : true;
             boolean hasPersonRegistered = (a == null && r == null) ? false : true;
             request.setAttribute("hasPersonRegistered", hasPersonRegistered);
