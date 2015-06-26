@@ -1,7 +1,5 @@
 package nz.ac.auckland.cer.account.util;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.log4j.Logger;
 
 public class Util {
@@ -36,16 +34,4 @@ public class Util {
         return accountName;
     }
 
-    public String createAuditLogMessage(
-            HttpServletRequest req,
-            String message) {
-
-        StringBuffer msg = new StringBuffer();
-        msg.append("method=").append(req.getMethod()).append(" ").append("path=").append(req.getPathInfo());
-        if (req.getQueryString() != null) {
-            msg.append("?").append(req.getQueryString());
-        }
-        msg.append(" msg='").append(message).append("'");
-        return msg.toString();
-    }
 }

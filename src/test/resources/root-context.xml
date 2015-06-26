@@ -30,7 +30,7 @@
     <property name="port" value="${email.smtp.port}"/> <!--  greenmail host and port -->
   </bean>
   
-  <bean id="affiliationUtil" class="nz.ac.auckland.cer.project.util.AffiliationUtil" />
+  <bean id="affiliationUtil" class="nz.ac.auckland.cer.common.db.project.util.AffiliationUtil" />
   <bean id="templateUtil" class="nz.ac.auckland.cer.common.util.TemplateUtil" />
   <bean id="email" class="nz.ac.auckland.cer.common.util.Email" />
   <bean id="templateEmail" class="nz.ac.auckland.cer.common.util.TemplateEmail" />
@@ -49,6 +49,6 @@
     <property name="researcherBaseUrl" value="${project.html.researcher.baseurl}"/>
   </bean>
 
-  <mockito:mock id="projectDatabaseDao" class="nz.ac.auckland.cer.project.dao.ProjectDatabaseDao" />
+  <mockito:mock id="projectDbDao" class="nz.ac.auckland.cer.common.db.project.dao.ProjectDbDao" />
 
 </beans>

@@ -9,11 +9,10 @@ import java.util.LinkedList;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 import nz.ac.auckland.cer.account.util.EmailUtil;
-import nz.ac.auckland.cer.project.dao.ProjectDatabaseDao;
-import nz.ac.auckland.cer.project.pojo.InstitutionalRole;
-import nz.ac.auckland.cer.project.pojo.Researcher;
-import nz.ac.auckland.cer.project.pojo.ResearcherProperty;
-import nz.ac.auckland.cer.project.util.AffiliationUtil;
+import nz.ac.auckland.cer.common.db.project.dao.ProjectDbDao;
+import nz.ac.auckland.cer.common.db.project.pojo.InstitutionalRole;
+import nz.ac.auckland.cer.common.db.project.pojo.Researcher;
+import nz.ac.auckland.cer.common.db.project.util.AffiliationUtil;
 
 import org.junit.After;
 import org.junit.Before;
@@ -40,9 +39,9 @@ import com.icegreen.greenmail.util.ServerSetupTest;
 public class RequestAccountControllerTest {
 
     @Autowired private WebApplicationContext wac;
-    @Autowired private ProjectDatabaseDao projectDatabaseDao;
+    @Autowired private ProjectDbDao projectDbDao;
     @Autowired private AffiliationUtil affiliationUtilMock;
-    @Autowired private ProjectDatabaseDao projectDao;
+    @Autowired private ProjectDbDao projectDao;
     @Autowired private EmailUtil emailUtil;
     private GreenMail smtpServer;
     private MockMvc mockMvc;
@@ -64,7 +63,7 @@ public class RequestAccountControllerTest {
     @Test
     public void postAccountRequestResearcherSuccess_noEPPN() throws Exception {
 
-        when(projectDatabaseDao.getInstitutionalRoles()).thenReturn(new LinkedList<InstitutionalRole>());
+        when(projectDbDao.getInstitutionalRoles()).thenReturn(new LinkedList<InstitutionalRole>());
         RequestBuilder rb = post("/request_account").param("fullName", "Jane Doe")
                 .param("institution", "Test Institution").param("institutionalRoleId", "42")
                 .param("email", "test@test.org").param("phone", "12345")
@@ -87,7 +86,7 @@ public class RequestAccountControllerTest {
     @Test
     public void postAccountRequestResearcherSuccess_withEPPN() throws Exception {
 
-        when(projectDatabaseDao.getInstitutionalRoles()).thenReturn(new LinkedList<InstitutionalRole>());
+        when(projectDbDao.getInstitutionalRoles()).thenReturn(new LinkedList<InstitutionalRole>());
         RequestBuilder rb = post("/request_account").param("fullName", "Jane Doe")
                 .param("institution", "Test Institution").param("institutionalRoleId", "42")
                 .param("email", "test@test.org").param("phone", "12345")
@@ -112,7 +111,7 @@ public class RequestAccountControllerTest {
     @Test
     public void postAccountRequestResearcherOtherInstitutionSuccess() throws Exception {
 
-        when(projectDatabaseDao.getInstitutionalRoles()).thenReturn(new LinkedList<InstitutionalRole>());
+        when(projectDbDao.getInstitutionalRoles()).thenReturn(new LinkedList<InstitutionalRole>());
         RequestBuilder rb = post("/request_account").param("fullName", "Jane Doe").param("institution", "other")
                 .param("otherInstitution", "Test Inst").param("institutionalRoleId", "42")
                 .param("email", "test@test.org").param("phone", "12345");
@@ -129,7 +128,7 @@ public class RequestAccountControllerTest {
     @Test
     public void postAccountRequestMissingFullName() throws Exception {
 
-        when(projectDatabaseDao.getInstitutionalRoles()).thenReturn(new LinkedList<InstitutionalRole>());
+        when(projectDbDao.getInstitutionalRoles()).thenReturn(new LinkedList<InstitutionalRole>());
         RequestBuilder rb = post("/request_account").param("phone", "12345").param("email", "test@test.org")
                 .param("institution", "Test Inst").param("institutionalRoleId", "42");
         ResultActions ra = this.mockMvc.perform(rb);
@@ -144,7 +143,7 @@ public class RequestAccountControllerTest {
     @Test
     public void postAccountRequestMissingEmail() throws Exception {
 
-        when(projectDatabaseDao.getInstitutionalRoles()).thenReturn(new LinkedList<InstitutionalRole>());
+        when(projectDbDao.getInstitutionalRoles()).thenReturn(new LinkedList<InstitutionalRole>());
         RequestBuilder rb = post("/request_account").param("fullName", "Jane Doe")
                 .param("institution", "Test Inst").param("institutionalRoleId", "42").param("phone", "12345");
         ResultActions ra = this.mockMvc.perform(rb);
@@ -159,7 +158,7 @@ public class RequestAccountControllerTest {
     @Test
     public void postAccountRequestMissingInstitution() throws Exception {
 
-        when(projectDatabaseDao.getInstitutionalRoles()).thenReturn(new LinkedList<InstitutionalRole>());
+        when(projectDbDao.getInstitutionalRoles()).thenReturn(new LinkedList<InstitutionalRole>());
         RequestBuilder rb = post("/request_account").param("fullName", "Jane Doe").param("institutionalRoleId", "42")
                 .param("email", "test@test.org").param("phone", "12345");
         ResultActions ra = this.mockMvc.perform(rb);
@@ -174,7 +173,7 @@ public class RequestAccountControllerTest {
     @Test
     public void postAccountRequestMissingOtherInstitution() throws Exception {
 
-        when(projectDatabaseDao.getInstitutionalRoles()).thenReturn(new LinkedList<InstitutionalRole>());
+        when(projectDbDao.getInstitutionalRoles()).thenReturn(new LinkedList<InstitutionalRole>());
         RequestBuilder rb = post("/request_account").param("fullName", "Jane Doe").param("institution", "Other")
                 .param("institutionalRoleId", "42").param("email", "test@test.org").param("phone", "12345");
         ResultActions ra = this.mockMvc.perform(rb);
@@ -189,7 +188,7 @@ public class RequestAccountControllerTest {
     @Test
     public void postAccountRequestMissingInstitutionalRoleId() throws Exception {
 
-        when(projectDatabaseDao.getInstitutionalRoles()).thenReturn(new LinkedList<InstitutionalRole>());
+        when(projectDbDao.getInstitutionalRoles()).thenReturn(new LinkedList<InstitutionalRole>());
         RequestBuilder rb = post("/request_account").param("fullName", "Jane Doe")
                 .param("institution", "Test Institution").param("email", "test@test.org").param("phone", "12345");
         ResultActions ra = this.mockMvc.perform(rb);
@@ -204,7 +203,7 @@ public class RequestAccountControllerTest {
     @Test
     public void postAccountRequestInvalidEmail() throws Exception {
 
-        when(projectDatabaseDao.getInstitutionalRoles()).thenReturn(new LinkedList<InstitutionalRole>());
+        when(projectDbDao.getInstitutionalRoles()).thenReturn(new LinkedList<InstitutionalRole>());
         RequestBuilder rb = post("/request_account").param("fullName", "Jane Doe")
                 .param("institution", "Test Institution").param("institutionalRoleId", "42").param("email", "test")
                 .param("phone", "12345");

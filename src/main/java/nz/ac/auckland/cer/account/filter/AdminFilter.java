@@ -13,19 +13,19 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import nz.ac.auckland.cer.account.util.Util;
-import nz.ac.auckland.cer.project.dao.ProjectDatabaseDao;
-import nz.ac.auckland.cer.project.pojo.Adviser;
-import nz.ac.auckland.cer.project.pojo.Researcher;
-import nz.ac.auckland.cer.project.util.Person;
+import nz.ac.auckland.cer.common.db.project.dao.ProjectDbDao;
+import nz.ac.auckland.cer.common.db.project.pojo.Adviser;
+import nz.ac.auckland.cer.common.db.project.pojo.Researcher;
+import nz.ac.auckland.cer.common.db.project.util.Person;
+import nz.ac.auckland.cer.common.util.AuditLog;
 
 /*
  * TODO: Send e-mail if expected request attributes are not there
  */
 public class AdminFilter implements Filter {
 
-    @Autowired private ProjectDatabaseDao pdDao;
-    @Autowired private Util auditUtil;
+    @Autowired private ProjectDbDao pdDao;
+    @Autowired private AuditLog auditLog;
     private Logger log = Logger.getLogger(AdminFilter.class.getName());
     private Logger flog = Logger.getLogger("file." + AdminFilter.class.getName());
 
@@ -40,7 +40,7 @@ public class AdminFilter implements Filter {
             String cn = (String) request.getAttribute("cn");
             String eppn = (String) request.getAttribute("eppn");
             String o = (String) request.getAttribute("o");
-            flog.info(auditUtil.createAuditLogMessage(request, "eppn=" + eppn + " cn=\"" + cn +"\" shared-token=" + sharedToken));
+            flog.info(auditLog.createAuditLogMessage(request, "eppn=" + eppn + " cn=\"" + cn +"\" shared-token=" + sharedToken));
             if (cn == null || sharedToken == null || o == null) {
                 log.error("At least one mandatory Tuakiri attribute is null: cn='" + cn + "', shared-token='" + sharedToken + "', o='" + o + "'");
             }

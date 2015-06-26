@@ -10,10 +10,10 @@ import javax.validation.Valid;
 import nz.ac.auckland.cer.account.pojo.AccountRequest;
 import nz.ac.auckland.cer.account.util.EmailUtil;
 import nz.ac.auckland.cer.account.validation.RequestAccountValidator;
-import nz.ac.auckland.cer.project.dao.ProjectDatabaseDao;
-import nz.ac.auckland.cer.project.pojo.InstitutionalRole;
-import nz.ac.auckland.cer.project.util.AffiliationUtil;
-import nz.ac.auckland.cer.project.util.Person;
+import nz.ac.auckland.cer.common.db.project.dao.ProjectDbDao;
+import nz.ac.auckland.cer.common.db.project.pojo.InstitutionalRole;
+import nz.ac.auckland.cer.common.db.project.util.AffiliationUtil;
+import nz.ac.auckland.cer.common.db.project.util.Person;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +35,7 @@ import org.springframework.web.servlet.ModelAndView;
 public class AccountController {
 
     private Logger log = Logger.getLogger(AccountController.class.getName());
-    @Autowired private ProjectDatabaseDao pdDao;
+    @Autowired private ProjectDbDao pdDao;
     @Autowired private AffiliationUtil affUtil;
     @Autowired private EmailUtil emailUtil;
 

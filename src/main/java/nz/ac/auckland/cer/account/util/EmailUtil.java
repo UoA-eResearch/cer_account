@@ -8,10 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 
 import nz.ac.auckland.cer.account.pojo.AccountRequest;
+import nz.ac.auckland.cer.common.db.project.dao.ProjectDbDao;
+import nz.ac.auckland.cer.common.db.project.util.AffiliationUtil;
+import nz.ac.auckland.cer.common.db.project.util.Person;
 import nz.ac.auckland.cer.common.util.TemplateEmail;
-import nz.ac.auckland.cer.project.dao.ProjectDatabaseDao;
-import nz.ac.auckland.cer.project.util.AffiliationUtil;
-import nz.ac.auckland.cer.project.util.Person;
 
 public class EmailUtil {
 
@@ -21,7 +21,7 @@ public class EmailUtil {
 	@Autowired
 	private AffiliationUtil affUtil;
 	@Autowired
-	private ProjectDatabaseDao dbDao;
+	private ProjectDbDao dbDao;
 	private Resource accountRequestEmailBodyResource;
 	private Resource accountChangeRequestEmailBodyResource;
 	private Resource accountDeletionRequestEmailBodyResource;

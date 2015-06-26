@@ -14,12 +14,12 @@ import nz.ac.auckland.cer.account.pojo.AccountRequest;
 import nz.ac.auckland.cer.account.util.EmailUtil;
 import nz.ac.auckland.cer.account.util.Util;
 import nz.ac.auckland.cer.account.validation.RequestAccountValidator;
+import nz.ac.auckland.cer.common.db.project.dao.ProjectDbDao;
+import nz.ac.auckland.cer.common.db.project.pojo.Affiliation;
+import nz.ac.auckland.cer.common.db.project.pojo.InstitutionalRole;
+import nz.ac.auckland.cer.common.db.project.pojo.Researcher;
+import nz.ac.auckland.cer.common.db.project.util.AffiliationUtil;
 import nz.ac.auckland.cer.common.util.TemplateUtil;
-import nz.ac.auckland.cer.project.dao.ProjectDatabaseDao;
-import nz.ac.auckland.cer.project.pojo.Affiliation;
-import nz.ac.auckland.cer.project.pojo.InstitutionalRole;
-import nz.ac.auckland.cer.project.pojo.Researcher;
-import nz.ac.auckland.cer.project.util.AffiliationUtil;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +39,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 public class RequestAccountController {
 
-    @Autowired private ProjectDatabaseDao pdDao;
+    @Autowired private ProjectDbDao pdDao;
     @Autowired private AffiliationUtil affUtil;
     @Autowired private EmailUtil emailUtil;
     @Autowired private Util util;

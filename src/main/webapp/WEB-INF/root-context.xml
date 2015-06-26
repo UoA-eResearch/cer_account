@@ -26,7 +26,7 @@
     <property name="basename" value="messages" />
   </bean>
   
-  <bean id="affiliationUtil" class="nz.ac.auckland.cer.project.util.AffiliationUtil" />
+  <bean id="affiliationUtil" class="nz.ac.auckland.cer.common.db.project.util.AffiliationUtil" />
 
   <bean id="projectRestTemplate" class="org.springframework.web.client.RestTemplate">
     <property name="messageConverters">
@@ -58,7 +58,7 @@
     <property name="dataSource" ref="projectDataSource"/>
   </bean>    
 
-  <bean id="projectDatabaseDao" class="nz.ac.auckland.cer.project.dao.ProjectDatabaseDaoImpl">
+  <bean id="projectDatabaseDao" class="nz.ac.auckland.cer.common.db.project.dao.ProjectDbDaoImpl">
     <property name="sqlSessionFactory" ref="projectSqlSessionFactoryBean"/>
     <property name="restBaseUrl" value="${project.rest.baseurl}" />
     <property name="restTemplate" ref="projectRestTemplate" />
