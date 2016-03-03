@@ -1,3 +1,6 @@
+#group Application Support Team
+#requester __EMAIL__
+
 An account request for the NeSI Auckland cluster has arrived.
 
 Name: __NAME__
