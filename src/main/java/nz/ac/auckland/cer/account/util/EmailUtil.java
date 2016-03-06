@@ -112,6 +112,7 @@ public class EmailUtil {
 
 		Map<String, String> templateParams = new HashMap<String, String>();
 		templateParams.put("__FULL_NAME__", p.getFullName());
+		templateParams.put("__EMAIL__", p.getEmail());
 		String link = p.isResearcher() ? (this.researcherBaseUrl + p.getId())
 				: (this.adviserBaseUrl + p.getId());
 		templateParams.put("__LINK__", link);

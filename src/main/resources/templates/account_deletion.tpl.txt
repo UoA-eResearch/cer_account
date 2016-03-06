@@ -1,5 +1,9 @@
-__FULL_NAME__ requested the deletion of his/her cluster account.
+#group Application Support Team
+#requester __EMAIL__
+#tags no_feedback no_solved_notification
 
-Link to profile in project database:
+__FULL_NAME__ has requested that his or her cluster account be closed. Please
+close the account using grand_unified_user_deleter.
+
+__FULL_NAME__'s profile in the project database can be found here:
 __LINK__
-

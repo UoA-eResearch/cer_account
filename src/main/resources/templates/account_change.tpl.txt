@@ -1,7 +1,14 @@
-__OLD_FULL_NAME__ requested a change in his/her cluster account details:
+#group Application Support Team
+#requester __NEW_EMAIL__
+#tags no_feedback no_solved_notification
 
-If the e-mail changed, it has to be changed in LDAP, and on the
-researchers user profile manually by an adviser.
+__OLD_FULL_NAME__ has requested a change to his or her cluster account details.
+Please review the proposed changes and update __OLD_FULL_NAME__'s record
+in the project database accordingly.
+
+If a change to the email address has been requested, please also update the
+email address in LDAP by using the ldap_update_user command, and ensure that
+the Zendesk user accounts for __OLD_EMAIL__ and __NEW_EMAIL__ are merged.
 
 Old account details:
 
@@ -25,6 +32,5 @@ E-Mail: __NEW_EMAIL__
 Phone: __NEW_PHONE__
 Institutional Role: __NEW_INSTITUTIONAL_ROLE__
 
-Link to profile in project database:
+__OLD_FULL_NAME__'s profile in the project database can be found here:
 __LINK__
-
