@@ -1,19 +1,22 @@
 #group Application Support Team
 #requester __EMAIL__
+#tags no_feedback no_solved_notification
 
-An account request for the NeSI Auckland cluster has arrived.
+An account request for Pan, the NeSI Auckland cluster, has arrived.
 
-Name: __NAME__
+Name:        __NAME__
 Institution: __INSTITUTION__
-Division: __DIVISION__
-Department: __DEPARTMENT__
-E-Mail: __EMAIL__
-Phone: __PHONE__
+Division:    __DIVISION__
+Department:  __DEPARTMENT__
+Email:       __EMAIL__
+Phone:       __PHONE__
 
-A profile has been added to the project database in status "Pending".
+A profile for __NAME__ has been added to the project database with status
+"Pending". Please review __NAME__'s profile and create an account for
+him or her as appropriate.
 
-Link to profile in project database:
+__NAME__'s profile in the project database can be found here:
 __LINK__
 
-Command to create the new account:
+The command to create the new account is as follows:
 grand_unified_user_creator -i __RESEARCHER_DB_ID__ -a __ACCOUNT_NAME__
